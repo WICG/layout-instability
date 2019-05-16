@@ -48,8 +48,9 @@ urlPrefix: https://w3c.github.io/paint-timing/; spec: PAINT-TIMING;
 urlPrefix: https://www.w3.org/TR/css-box-3/; spec: CSS-BOX-3;
     type: dfn; url: #border-box; text: border box; 
 urlPrefix: https://www.w3.org/TR/css-break-3/; spec: CSS-BREAK-3;
-    type: dfn; url: #box-fragment; text: box fragment; 
-
+    type: dfn; url: #box-fragment; text: box fragment;
+urlPrefix: https://www.w3.org/TR/cssom-view-1/#css-pixels; spec: CSSOM-VIEW-1;
+    type: dfn; url: #css-pixels; text: CSS pixels;
 </pre>
 
 Introduction {#sec-intro}
@@ -59,7 +60,9 @@ Introduction {#sec-intro}
 
 <em>This section is non-normative.</em>
 
-When the layout of a page is unstable it leads to a very bad user experience. This shifting of DOM elements is often due to content loading asynchronously and displacing other elements on the page. The layout instability metric identifies these unstable pages by measuring the layout shift fraction of each frame on the page, allowing the user to compute an overall instability score for the page.
+When the layout of a page is unstable it leads to a very bad user experience.
+This shifting of DOM elements is often due to content loading asynchronously and displacing other elements on the page.
+The layout instability metric identifies these unstable pages by measuring the layout shift fraction of each animation frame on the page, allowing the user to compute an overall instability score for the page.
 
 </div>
 
@@ -69,25 +72,22 @@ Usage Example {#example}
 <pre class="example highlight">
     var observer = new PerformanceObserver(function(list) {
         var perfEntries = list.getEntries();
-        for (var i = 0; i < perfEntries.length; i++) {
+        for (let i = 0; i < perfEntries.length; i++) {
             // Process entries
-            // report back for analytics and monitoring
+            // Report back for analytics and monitoring
             // ...
         }
     });
 
-    // register observer for layout shift notifications
+    // Register observer for layout shift notifications
     observer.observe({entryTypes: ["layoutShift"]});
 </pre>
 
 Terminology {#sec-terminology}
 ==============================
-An <a>element</a>’s <dfn export>starting point</dfn> refers to the <a>element</a>'s <a>flow-relative offset</a> in the document.
+An <a>Element</a>’s <dfn export>starting point</dfn> refers to the <a>element</a>'s <a>flow-relative offset</a> in the document.
 
-The <dfn export>visual representation</dfn> of a <a href="https://www.w3.org/TR/html401/struct/global.html#h-7.5.3">block-level</a> <a>element</a> is its <a>border box</a>. The <a>visual representation</a> of an <a href="https://www.w3.org/TR/html401/struct/global.html#h-7.5.3">inline element</a> is the geometric union of its <a>box fragment</a>s, the first of which is used to determine its <a>starting point</a>. 
-
-
-
+The <dfn export>visual representation</dfn> of a <a href="https://www.w3.org/TR/html401/struct/global.html#h-7.5.3">block-level</a> <a>Element</a> is its <a>border box</a>. The <a>visual representation</a> of an <a href="https://www.w3.org/TR/html401/struct/global.html#h-7.5.3">inline element</a> is the geometric union of its <a>box fragment</a>s.
 
 {{LayoutShift}} interface {#sec-layout-shift}
 =======================================
@@ -102,30 +102,22 @@ The <dfn export>visual representation</dfn> of a <a href="https://www.w3.org/TR/
 
 * The {{PerformanceEntry/name}} attribute must return the {{DOMString}} <code>"layout-shift"</code>
 * The {{PerformanceEntry/entryType}} attribute must return <code>"layoutShift"</code>.
-* The {{PerformanceEntry/startTime}} attribute must return a {{DOMHighResTimeStamp}} of when the shift occured.
+* The {{PerformanceEntry/startTime}} attribute must return the value it was initialized to.
 * The {{PerformanceEntry/duration}} attribute must return 0.
-* The <dfn attribute for=LayoutShift>value</dfn> attribute's getter will return the value it is set to.
+* The <dfn attribute for=LayoutShift>value</dfn> will return the value it is set to.
 
-<dfn attribute for=PerformanceLongTaskTiming>attribution</dfn>
 A user agent implementing {{LayoutShift}} must perform the following steps:
 1. Run the <a>register a performance entry type</a> algorithm with <code>"layoustShift"</code> as input.
 
-
-NOTE: The <a>getEntriesByType</a> method will not return entries of this type.  To obtain instability events that occur before a <a>PerformanceObserver</a> has been registered, register the observer with <a>buffered</a> set to true.
-
-
-
-
 Processing model {#sec-processing-model}
 ========================================
-
 
 Modifications to the HTML specification {#sec-modifications-HTML}
 --------------------------------------------------------
 
 <em>This section will be removed once the <a href=https://html.spec.whatwg.org/multipage>HTML specification</a> has been modified.</em>
 
-For each <a>element</a>, there is a:
+For each <a>Element</a>, there is a:
 * <dfn>currentFrameStartingPoint</dfn> which is initially set to <code>null</code>.
 * <dfn>previousFrameStartingPoint</dfn> which is initially set to <code>null</code>.
 * <dfn>currentVisualRepresentation</dfn> which is initially set to <code>null</code>.
@@ -134,29 +126,30 @@ For each <a>element</a>, there is a:
 <div algorithm="additions to update rendering">
     In the <a>update the rendering</a> step of the <a>event loop processing model</a>, add a step right after the step that calls <a>mark paint timing</a>:
 
-    1. Invoke the algorithm to <a>evaluate the layout instability</a> of a document with the complete set of <a>element</a>s for that {{Document}}.
+    1. For each fully active {{Document}} in <em>docs</em>, invoke the algorithm to <a>evaluate the layout instability</a> of that {{Document}}.
 </div>
-
 
 Evaluate Layout Instability {#sec-eval-layout-instability}
 --------------------------------------------------------
 
 <div algorithm="evaluate the layout instability">
-    When asked to <dfn export>evaluate the layout instability</dfn>, with <var>elements</var> as the list of elements to be evaluated, run the following steps:
+    When asked to <dfn export>evaluate the layout instability</dfn> given an active {{Document}} <var>doc</var>, run the following steps:
 
+    1. Let <var>elements</var> be the list of current elements in <var>doc</var>.
     1. Let <var>unstable elements</var> be an empty list.
     1. Let <var>total width</var> be the current <a>viewport</a> width.
     1. Let <var>total height</var> be the current <a>viewport</a> height. 
     1. For each <var>element</var> of <var>elements</var>:
         1. Set <a>currentFrameStartingPoint</a> to the <a>starting point</a> of <var>element</var>.
         1. Set <a>currentVisualRepresentation</a> to the <a>visual representation</a> of <var>element</var>.
-        1. Let <var>unstable</var> be the boolean returned from calling <a>identify an unstable element</a> with <var>element</var>’s <a>currentFrameStartingPoint</a> and <a>previousFrameStartingPoint</a>.  
+        1. Let <var>unstable</var> be the boolean returned from calling <a>identify an unstable element</a> with <var>element</var>’s <a>currentFrameStartingPoint</a> and <a>previousFrameStartingPoint</a>. 
+        1. Set <var>shiftFraction</var> of the element to:
+            1. 0 if <a>previousFrameStartingPoint</a> is null.
+            1. The max distance the element has moved in any direction computed as the max(abs(<a>previousFrameStartingPoint</a>'s height - <a>currentFrameStartingPoint</a>'s height) / <var>total height</var> , abs(<a>previousFrameStartingPoint</a>'s width - <a>currentFrameStartingPoint</a>'s width) / <var>total width</var>).
         1. If <var>unstable</var> is true, add a tuple to <var>unstable elements</var> with:
             1. <a>currentVisualRepresentation</a> of <var>element</var>
             1. <a>previousVisualRepresentation</a> of <var>element</var>
-            1. <var ignore=''>shiftFraction</var> of <var>element</var>:
-                1. Set to 0 if <a>previousFrameStartingPoint</a> is null.
-                1. Set to the max(abs(<a>previousFrameStartingPoint</a>.height - <a>currentFrameStartingPoint</a>.height) / <var>total height</var> , abs(<a>previousFrameStartingPoint</a>.width - <a>currentFrameStartingPoint</a>.width) / <var>total width</var>).
+            1. <var>shiftFraction</var> of <var>element</var>:
         1. Set <a>previousFrameStartingPoint</a> point to <a>currentFrameStartingPoint</a>.
         1. Set <a>previousVisualRepresentation</a> to the <a>currentVisualRepresentation</a>.
     1. Call <a>compute the layout shift</a> with <var>unstable elements</var>.
@@ -168,16 +161,16 @@ Compute the Layout Shift {#sec-compute-layout-shift}
 <div algorithm="compute the layout shift">
     When asked to to <dfn export>compute the layout shift</dfn>, with <var>unstable elements</var>, a list of impacted <a>element</a>'s on the page, as input, run the following steps:
 
-    1. Let <var>impacted region</var> be initially set to empty.
+    1. Let <var>impacted region</var> be initially set to <code>null</code>.
     1. Let <var>max shift fraction</var> be initially set to 0.
     1. For each tuple <var>tuple</var> in <var>unstable elements</var>:
         1. Take the geometric union of <var>impacted region</var> with <var>tuple</var>’s <a>currentVisualRepresentation</a> and <var>tuple</var>’s <a>previousVisualRepresentation</a> if <a>previousVisualRepresentation</a> is not null.
-        1. If <var>tuple</var>’s <var>shiftFraction</var> > <var>max shift fraction</var>, <var>max shift fraction</var> equals <var>shiftFraction</var>.
+        1. Set <var>max shift fraction</var> equal to <var>shiftFraction</var> if <var>tuple</var>’s <var>shiftFraction</var> > <var>max shift fraction</var>.
     1. Let <var>impacted fraction</var> be the area of the <var>impacted region</var> divided by the area of the current <a>viewport</a>.
-    1. The <var>layout shift</var> is the <var>impacted fraction</var> multiplied by the <var>max shift fraction</var>.  
+    1. SEt <var>layout shift</var> to the <var>impacted fraction</var> multiplied by the <var>max shift fraction</var>.  
     1. If <var>layout shift</var> is greater than 0, create a new {{LayoutShift}} object |newEntry| and set its attributes as follows:
         1. Set |newEntry|'s {{PerformanceEntry/name}} attribute to <code>"layout-shift"</code>.
-        1. Set |newEntry|'s {{PerformanceEntry/entryType}} attribute to <code>layoutShift</code>.
+        1. Set |newEntry|'s {{PerformanceEntry/entryType}} attribute to <code>"layoutShift"</code>.
         1. Set |newEntry|'s {{PerformanceEntry/startTime}} attribute to <a>current high resolution time</a>.
         1. Set |newEntry|'s {{PerformanceEntry/duration}} attribute to 0.
         1. Set |newEntry|'s {{LayoutShift/value}} attribute to <var>layout shift</var>.
@@ -186,7 +179,6 @@ Compute the Layout Shift {#sec-compute-layout-shift}
 
 NOTE: This computation ensures that the layout shift takes into account both the fraction of the viewport that has been impacted by layout stability as well as the greatest impact to any given element in the viewport.  This is to recognize that a large element that moves only a small distance may have a small impact on the perceived stability of the page.
 
-
 Identify an Unstable Element {#sec-identify-unstable-element}
 --------------------------------------------------------------
 
@@ -194,7 +186,7 @@ Identify an Unstable Element {#sec-identify-unstable-element}
     When asked to <dfn export>identify an unstable element</dfn>, given <var>element</var> as input, run the following steps:
 
     1. If <var>element</var>’s <a>previousFrameStartingPoint</a> is null, return false.
-    1. If <a>currentFrameStartingPoint</a> is not at <a>previousFrameStartingPoint</a> and it has changed by more than 3 CSS pixels, return true.
+    1. If <a>currentFrameStartingPoint</a> is not at <a>previousFrameStartingPoint</a> and it has changed by more than 3 <a>CSS pixels</a>, return true.
     1. Return false.
 
 </div>
@@ -205,13 +197,10 @@ Example API Usage {#sec-example-api-usage}
 
 <em>This section is non-normative.</em>
 
-
 <h4 dfn>End of session signal</h4>
 A "final" penalty for the user's session can be reported by listening to the <a href="https://developers.google.com/web/updates/2018/07/page-lifecycle-api#event-visibilitychange">visibilitychange event</a>, and factoring in that last value at that time.
 
-
 <div>
-
 
 Security & privacy considerations {#priv-sec}
 ===============================================
