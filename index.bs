@@ -54,7 +54,7 @@ urlPrefix: https://www.w3.org/TR/cssom-view-1/; spec: CSSOM-VIEW-1;
 urlPrefix: https://www.w3.org/TR/css-values-4/; spec: CSS-VALUES-4;
     type: dfn; url: #pixel-unit; text: pixel units;
 urlPrefix: https://www.w3.org/TR/SVG/coords.html; spec: SVG;
-    type dfn; url: #InitialCoordinateSystem; text: initial coordinate;
+    type: dfn; url: #InitialCoordinateSystem; text: initial coordinate;
 </pre>
 
 Introduction {#sec-intro}
@@ -199,7 +199,7 @@ Identify an unstable element {#sec-identify-unstable-element}
     When asked to <dfn export>identify an unstable element</dfn>, given <var>element</var> as input, run the following steps:
 
     1. If <var>element</var>’s <a>previous frame starting point</a> is null, return false.
-    1. If <var>element</var>’s <a>previous frame starting point</a> does not equal <var>element</var>’s<a>currentFrameStartingPoint</a> and they differ by 3 or more units in the horizontal or vertical direction, return true.
+    1. If <var>element</var>’s <a>previous frame starting point</a> does not equal <var>element</var>’s <a>current frame starting point</a> and they differ by 3 or more units in the horizontal or vertical direction, return true.
     1. Return false.
 
 </div>
