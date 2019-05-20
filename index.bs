@@ -49,8 +49,12 @@ urlPrefix: https://www.w3.org/TR/css-box-3/; spec: CSS-BOX-3;
     type: dfn; url: #border-box; text: border box; 
 urlPrefix: https://www.w3.org/TR/css-break-3/; spec: CSS-BREAK-3;
     type: dfn; url: #box-fragment; text: box fragment;
-urlPrefix: https://www.w3.org/TR/cssom-view-1/#css-pixels; spec: CSSOM-VIEW-1;
+urlPrefix: https://www.w3.org/TR/cssom-view-1/; spec: CSSOM-VIEW-1;
     type: dfn; url: #css-pixels; text: CSS pixels;
+urlPrefix: https://www.w3.org/TR/css-values-4/; spec: CSS-VALUES-4;
+    type: dfn; url: #pixel-unit; text: pixel units;
+urlPrefix: https://www.w3.org/TR/SVG/coords.html; spec: SVG;
+    type dfn; url: #InitialCoordinateSystem; text: initial coordinate;
 </pre>
 
 Introduction {#sec-intro}
@@ -66,7 +70,7 @@ The layout instability metric identifies these unstable pages by measuring the l
 
 </div>
 
-Usage Example {#example}
+Usage example {#example}
 ------------------------
 
 <pre class="example highlight">
@@ -83,9 +87,18 @@ Usage Example {#example}
     observer.observe({entryTypes: ["layoutShift"]});
 </pre>
 
+<div class="non-normative">
+
+<em>This section is non-normative.</em>
+
+<h4 dfn>End of session signal</h4>
+A "final" penalty for the user's session can be reported by listening to the <a href="https://developers.google.com/web/updates/2018/07/page-lifecycle-api#event-visibilitychange">visibilitychange event</a>, and factoring in that last value at that time.
+
+</div>
+
 Terminology {#sec-terminology}
 ==============================
-An <a>Element</a>’s <dfn export>starting point</dfn> refers to the <a>element</a>'s <a>flow-relative offset</a> in the document.
+An <a>Element</a>’s <dfn export>starting point</dfn> refers to the <a>element</a>'s <a>flow-relative offset</a> in the <a>initial coordinate</a> space of the current document measured in <a>pixel units</a>.
 
 The <dfn export>visual representation</dfn> of a <a href="https://www.w3.org/TR/html401/struct/global.html#h-7.5.3">block-level</a> <a>Element</a> is its <a>border box</a>. The <a>visual representation</a> of an <a href="https://www.w3.org/TR/html401/struct/global.html#h-7.5.3">inline element</a> is the geometric union of its <a>box fragment</a>s.
 
@@ -118,10 +131,10 @@ Modifications to the HTML specification {#sec-modifications-HTML}
 <em>This section will be removed once the <a href=https://html.spec.whatwg.org/multipage>HTML specification</a> has been modified.</em>
 
 For each <a>Element</a>, there is a:
-* <dfn>currentFrameStartingPoint</dfn> which is initially set to <code>null</code>.
-* <dfn>previousFrameStartingPoint</dfn> which is initially set to <code>null</code>.
-* <dfn>currentVisualRepresentation</dfn> which is initially set to <code>null</code>.
-* <dfn>previousVisualRepresentation</dfn> with is initially set to <code>null</code>.
+* <dfn>current frame starting point</dfn> which is initially set to <code>null</code>.
+* <dfn>previous frame starting point</dfn> which is initially set to <code>null</code>.
+* <dfn>current visual representation</dfn> which is initially set to <code>null</code>.
+* <dfn>previous visual representation</dfn> with is initially set to <code>null</code>.
 
 <div algorithm="additions to update rendering">
     In the <a>update the rendering</a> step of the <a>event loop processing model</a>, add a step right after the step that calls <a>mark paint timing</a>:
@@ -129,78 +142,67 @@ For each <a>Element</a>, there is a:
     1. For each fully active {{Document}} in <em>docs</em>, invoke the algorithm to <a>evaluate the layout instability</a> of that {{Document}}.
 </div>
 
-Evaluate Layout Instability {#sec-eval-layout-instability}
+Evaluate layout instability {#sec-eval-layout-instability}
 --------------------------------------------------------
 
 <div algorithm="evaluate the layout instability">
     When asked to <dfn export>evaluate the layout instability</dfn> given an active {{Document}} <var>doc</var>, run the following steps:
 
     1. Let <var>elements</var> be the list of current elements in <var>doc</var>.
-    1. Let <var>unstable elements</var> be an empty list.
-    1. Let <var>total width</var> be the current <a>viewport</a> width.
-    1. Let <var>total height</var> be the current <a>viewport</a> height. 
+    1. Let <var>unstableElements</var> be an empty list.
+    1. Let <var>totalWidth</var> be the current <a>viewport</a> width.
+    1. Let <var>totalHeight</var> be the current <a>viewport</a> height. 
     1. For each <var>element</var> of <var>elements</var>:
-        1. Set <a>currentFrameStartingPoint</a> to the <a>starting point</a> of <var>element</var>.
-        1. Set <a>currentVisualRepresentation</a> to the <a>visual representation</a> of <var>element</var>.
-        1. Let <var>unstable</var> be the boolean returned from calling <a>identify an unstable element</a> with <var>element</var>’s <a>currentFrameStartingPoint</a> and <a>previousFrameStartingPoint</a>. 
-        1. Set <var>shiftFraction</var> of the element to:
-            1. 0 if <a>previousFrameStartingPoint</a> is null.
-            1. The max distance the element has moved in any direction computed as the max(abs(<a>previousFrameStartingPoint</a>'s height - <a>currentFrameStartingPoint</a>'s height) / <var>total height</var> , abs(<a>previousFrameStartingPoint</a>'s width - <a>currentFrameStartingPoint</a>'s width) / <var>total width</var>).
-        1. If <var>unstable</var> is true, add a tuple to <var>unstable elements</var> with:
-            1. <a>currentVisualRepresentation</a> of <var>element</var>
-            1. <a>previousVisualRepresentation</a> of <var>element</var>
+        1. Set <var>element</var>'s <a>current frame starting point</a> to the <a>starting point</a> of <var>element</var>.
+        1. Set <var>element</var>'s <a>current visual representation</a> to the <a>visual representation</a> of <var>element</var>.
+        1. Let <var>unstable</var> be the boolean returned from calling <a>identify an unstable element</a> with <var>element</var>’s <a>current frame starting point</a> and <a>previous frame starting point</a>. 
+        1. Set <var>element</var>'s <var>shiftFraction</var> to:
+            1. 0 if <a>previous frame starting point</a> is null.
+            1. The max distance the element has moved in any direction computed as the max(abs(<a>previous frame starting point</a>'s height - <a>current frame starting point</a>'s height) / <var>totalHeight</var> , abs(<a>previous frame starting point</a>'s width - <a>current frame starting point</a>'s width) / <var>totalWidth</var>).
+        1. If <var>unstable</var> is true, add a tuple to <var>unstableElements</var> with:
+            1. <a>current visual representation</a> of <var>element</var>
+            1. <a>previous visual representation</a> of <var>element</var>
             1. <var>shiftFraction</var> of <var>element</var>:
-        1. Set <a>previousFrameStartingPoint</a> point to <a>currentFrameStartingPoint</a>.
-        1. Set <a>previousVisualRepresentation</a> to the <a>currentVisualRepresentation</a>.
-    1. Call <a>compute the layout shift</a> with <var>unstable elements</var>.
+        1. Set <var>element</var>'s <a>previous frame starting point</a> point to <a>current frame starting point</a>.
+        1. Set <var>element</var>'s <a>previous visual representation</a> to the <a>current visual representation</a>.
+    1. Call <a>compute the layout shift</a> with <var>unstableElements</var>.
 </div>
 
-Compute the Layout Shift {#sec-compute-layout-shift}
+Compute the layout shift {#sec-compute-layout-shift}
 -----------------------------------------------------
 
 <div algorithm="compute the layout shift">
-    When asked to to <dfn export>compute the layout shift</dfn>, with <var>unstable elements</var>, a list of impacted <a>element</a>'s on the page, as input, run the following steps:
+    When asked to to <dfn export>compute the layout shift</dfn>, with <var>unstableElements</var>, a list of impacted <a>element</a>'s on the page, as input, run the following steps:
 
-    1. Let <var>impacted region</var> be initially set to <code>null</code>.
-    1. Let <var>max shift fraction</var> be initially set to 0.
-    1. For each tuple <var>tuple</var> in <var>unstable elements</var>:
-        1. Take the geometric union of <var>impacted region</var> with <var>tuple</var>’s <a>currentVisualRepresentation</a> and <var>tuple</var>’s <a>previousVisualRepresentation</a> if <a>previousVisualRepresentation</a> is not null.
-        1. Set <var>max shift fraction</var> equal to <var>shiftFraction</var> if <var>tuple</var>’s <var>shiftFraction</var> > <var>max shift fraction</var>.
-    1. Let <var>impacted fraction</var> be the area of the <var>impacted region</var> divided by the area of the current <a>viewport</a>.
-    1. SEt <var>layout shift</var> to the <var>impacted fraction</var> multiplied by the <var>max shift fraction</var>.  
-    1. If <var>layout shift</var> is greater than 0, create a new {{LayoutShift}} object |newEntry| and set its attributes as follows:
+    1. Let <var>impactedRegion</var> be initially set to an empty set of rectangles.
+    1. Let <var>maxShiftFraction</var> be initially set to 0.
+    1. For each tuple <var>tuple</var> in <var>unstableElements</var>:
+        1. If <a>previous visual representation</a> is not null, set <var>impactedRegion</var> to the the geometric union of <var>impactedRegion</var> with <var>tuple</var>’s <a>current visual representation</a> and <var>tuple</var>’s <a>previous visual representation</a>.
+        1. Set <var>maxShiftFraction</var> to <var>shiftFraction</var> if <var>tuple</var>’s <var>shiftFraction</var> > <var>maxShiftFraction</var>.
+    1. Let <var>impactedFraction</var> be the area of the <var>impactedRegion</var> divided by the area of the current <a>viewport</a>.
+    1. Set <var>layoutShift</var> to the <var>impactedFraction</var> multiplied by the <var>maxShiftFraction</var>.  
+    1. If <var>layoutShift</var> is greater than 0, create a new {{LayoutShift}} object |newEntry| and set its attributes as follows:
         1. Set |newEntry|'s {{PerformanceEntry/name}} attribute to <code>"layout-shift"</code>.
         1. Set |newEntry|'s {{PerformanceEntry/entryType}} attribute to <code>"layoutShift"</code>.
         1. Set |newEntry|'s {{PerformanceEntry/startTime}} attribute to <a>current high resolution time</a>.
         1. Set |newEntry|'s {{PerformanceEntry/duration}} attribute to 0.
-        1. Set |newEntry|'s {{LayoutShift/value}} attribute to <var>layout shift</var>.
+        1. Set |newEntry|'s {{LayoutShift/value}} attribute to <var>layoutShift</var>.
     1. <a href="https://w3c.github.io/performance-timeline/#dfn-queue-a-performanceentry">Queue the PerformanceEntry</a> |newEntry| object.
 </div>
 
 NOTE: This computation ensures that the layout shift takes into account both the fraction of the viewport that has been impacted by layout stability as well as the greatest impact to any given element in the viewport.  This is to recognize that a large element that moves only a small distance may have a small impact on the perceived stability of the page.
 
-Identify an Unstable Element {#sec-identify-unstable-element}
+Identify an unstable element {#sec-identify-unstable-element}
 --------------------------------------------------------------
 
 <div algorithm="identify an unstable element">
     When asked to <dfn export>identify an unstable element</dfn>, given <var>element</var> as input, run the following steps:
 
-    1. If <var>element</var>’s <a>previousFrameStartingPoint</a> is null, return false.
-    1. If <a>currentFrameStartingPoint</a> is not at <a>previousFrameStartingPoint</a> and it has changed by more than 3 <a>CSS pixels</a>, return true.
+    1. If <var>element</var>’s <a>previous frame starting point</a> is null, return false.
+    1. If <var>element</var>’s <a>previous frame starting point</a> does not equal <var>element</var>’s<a>currentFrameStartingPoint</a> and they differ by 3 or more units in the horizontal or vertical direction, return true.
     1. Return false.
 
 </div>
-
-Example API Usage {#sec-example-api-usage}
--------------------------------------------
-<div class="non-normative">
-
-<em>This section is non-normative.</em>
-
-<h4 dfn>End of session signal</h4>
-A "final" penalty for the user's session can be reported by listening to the <a href="https://developers.google.com/web/updates/2018/07/page-lifecycle-api#event-visibilitychange">visibilitychange event</a>, and factoring in that last value at that time.
-
-<div>
 
 Security & privacy considerations {#priv-sec}
 ===============================================
