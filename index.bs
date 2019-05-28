@@ -149,7 +149,7 @@ For each <a>Element</a>, there is a:
     1. For each fully active {{Document}} in <em>docs</em>, invoke the algorithm to <a>evaluate the layout instability</a> of that {{Document}}.
 </div>
 
-Evaluate layo ut instability {#sec-eval-layout-instability}
+Evaluate layout instability {#sec-eval-layout-instability}
 --------------------------------------------------------
 
 <div algorithm="evaluate the layout instability">
@@ -159,13 +159,17 @@ Evaluate layo ut instability {#sec-eval-layout-instability}
     1. Let <var>unstableElements</var> be an empty list.
     1. Let <var>totalWidth</var> be the current <a>visual viewport width</a>.
     1. Let <var>totalHeight</var> be the current <a>visual viewport height</a>. 
+    1. Let <var>viewportDistance</var> be max(<var>totalWidth</var>, <var>totalHeight</var>).
     1. For each <var>element</var> of <var>elements</var>:
         1. Set <var>element</var>'s <a>current frame starting point</a> to the <a>starting point</a> of <var>element</var>.
         1. Set <var>element</var>'s <a>current visual representation</a> to the <a>visual representation</a> of <var>element</var>.
         1. Let <var>unstable</var> be the boolean returned from calling <a>identify an unstable element</a> with <var>element</var>’s <a>current frame starting point</a> and <a>previous frame starting point</a>. 
         1. Set <var>element</var>'s <var>shiftFraction</var> to:
             1. 0 if <a>previous frame starting point</a> is null.
-            1. The max distance the element has moved in any direction computed as the max(abs(<a>previous frame starting point</a>'s y-value - <a>current frame starting point</a>'s y-value) / max(<var>totalWidth</var>, <var>totalHeight</var>), abs(<a>previous frame starting point</a>'s x-value - <a>current frame starting point</a>'s x-value) / max(<var>totalWidth</var>, <var>totalHeight</var>)).
+            1. The max distance the element has moved in any direction computed by:
+                1. Let <var>verticalDistance</var> be abs(<a>previous frame starting point</a>'s y-value - <a>current frame starting point</a>'s y-value) / <var>viewportDistance</var>.
+                1. Let <var>horizontalDistance</var> be abs(<a>previous frame starting point</a>'s x-value - <a>current frame starting point</a>'s x-value) / <var>viewportDistance</var>.
+                1. Take the max(<var>verticalDistance</var>, <var>horizontalDistance</var>).
         1. If <var>unstable</var> is true, add a tuple to <var>unstableElements</var> with:
             1. <a>current visual representation</a> of <var>element</var>
             1. <a>previous visual representation</a> of <var>element</var>
