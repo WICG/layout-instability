@@ -17,6 +17,7 @@ Complain About: accidental-2119 yes
 <pre class=anchors>
 urlPrefix: https://dom.spec.whatwg.org/; spec: DOM;
     type: dfn; url: #interface-element; text: element
+    type: dfn; url: #concept-shadow-including-descendant; text: shadow-including descendants;
 urlPrefix: https://www.w3.org/TR/css-writing-modes-4/; spec: CSS-WRITING-MODES-4;
     type: dfn; url: #flow-relative; text: flow-relative offset; 
 urlPrefix: https://w3c.github.io/performance-timeline/; spec: PERFORMANCE-TIMELINE-2;
@@ -53,8 +54,14 @@ urlPrefix: https://www.w3.org/TR/cssom-view-1/; spec: CSSOM-VIEW-1;
     type: dfn; url: #css-pixels; text: CSS pixels;
 urlPrefix: https://www.w3.org/TR/css-values-4/; spec: CSS-VALUES-4;
     type: dfn; url: #pixel-unit; text: pixel units;
-urlPrefix: https://www.w3.org/TR/SVG/coords.html; spec: SVG;
-    type: dfn; url: #InitialCoordinateSystem; text: initial coordinate;
+urlPrefix: https://wicg.github.io/visual-viewport/index.html; spec: VISUAL-VIEWPORT;
+    type: dfn; url: #dom-visualviewport-width; text: visual viewport width;
+    type: dfn; url: #dom-visualviewport-height; text: visual viewport height;
+urlPrefix: https://www.w3.org/TR/CSS2/visudet.html; spec: CSS2;
+    type: dfn; url: #containing-block-details; text: initial containing block;
+    
+
+
 </pre>
 
 Introduction {#sec-intro}
@@ -98,7 +105,7 @@ A "final" penalty for the user's session can be reported by listening to the <a 
 
 Terminology {#sec-terminology}
 ==============================
-An <a>Element</a>’s <dfn export>starting point</dfn> refers to the <a>element</a>'s <a>flow-relative offset</a> in the <a>initial coordinate</a> space of the current document measured in <a>pixel units</a>.
+An <a>Element</a>’s <dfn export>starting point</dfn> refers to the <a>element</a>'s <a>flow-relative offset</a> in the coordinate space of the <a>initial containing block</a> of the current document measured in <a>pixel units</a>.
 
 The <dfn export>visual representation</dfn> of a <a href="https://www.w3.org/TR/html401/struct/global.html#h-7.5.3">block-level</a> <a>Element</a> is its <a>border box</a>. The <a>visual representation</a> of an <a href="https://www.w3.org/TR/html401/struct/global.html#h-7.5.3">inline element</a> is the geometric union of its <a>box fragment</a>s.
 
@@ -142,23 +149,23 @@ For each <a>Element</a>, there is a:
     1. For each fully active {{Document}} in <em>docs</em>, invoke the algorithm to <a>evaluate the layout instability</a> of that {{Document}}.
 </div>
 
-Evaluate layout instability {#sec-eval-layout-instability}
+Evaluate layo ut instability {#sec-eval-layout-instability}
 --------------------------------------------------------
 
 <div algorithm="evaluate the layout instability">
     When asked to <dfn export>evaluate the layout instability</dfn> given an active {{Document}} <var>doc</var>, run the following steps:
 
-    1. Let <var>elements</var> be the list of current elements in <var>doc</var>.
+    1. Let <var>elements</var> be the set of <a>shadow-including descendants</a> of the <var>doc</var>.
     1. Let <var>unstableElements</var> be an empty list.
-    1. Let <var>totalWidth</var> be the current <a>viewport</a> width.
-    1. Let <var>totalHeight</var> be the current <a>viewport</a> height. 
+    1. Let <var>totalWidth</var> be the current <a>visual viewport width</a>.
+    1. Let <var>totalHeight</var> be the current <a>visual viewport height</a>. 
     1. For each <var>element</var> of <var>elements</var>:
         1. Set <var>element</var>'s <a>current frame starting point</a> to the <a>starting point</a> of <var>element</var>.
         1. Set <var>element</var>'s <a>current visual representation</a> to the <a>visual representation</a> of <var>element</var>.
         1. Let <var>unstable</var> be the boolean returned from calling <a>identify an unstable element</a> with <var>element</var>’s <a>current frame starting point</a> and <a>previous frame starting point</a>. 
         1. Set <var>element</var>'s <var>shiftFraction</var> to:
             1. 0 if <a>previous frame starting point</a> is null.
-            1. The max distance the element has moved in any direction computed as the max(abs(<a>previous frame starting point</a>'s height - <a>current frame starting point</a>'s height) / <var>totalHeight</var> , abs(<a>previous frame starting point</a>'s width - <a>current frame starting point</a>'s width) / <var>totalWidth</var>).
+            1. The max distance the element has moved in any direction computed as the max(abs(<a>previous frame starting point</a>'s y-value - <a>current frame starting point</a>'s y-value) / max(<var>totalWidth</var>, <var>totalHeight</var>), abs(<a>previous frame starting point</a>'s x-value - <a>current frame starting point</a>'s x-value) / max(<var>totalWidth</var>, <var>totalHeight</var>)).
         1. If <var>unstable</var> is true, add a tuple to <var>unstableElements</var> with:
             1. <a>current visual representation</a> of <var>element</var>
             1. <a>previous visual representation</a> of <var>element</var>
@@ -174,12 +181,12 @@ Compute the layout shift {#sec-compute-layout-shift}
 <div algorithm="compute the layout shift">
     When asked to to <dfn export>compute the layout shift</dfn>, with <var>unstableElements</var>, a list of impacted <a>element</a>'s on the page, as input, run the following steps:
 
-    1. Let <var>impactedRegion</var> be initially set to an empty set of rectangles.
+    1. Let <var>impactedRegion</var> be a two-dimensional geometric region which is initially empty (that is, it contains no points).
     1. Let <var>maxShiftFraction</var> be initially set to 0.
     1. For each tuple <var>tuple</var> in <var>unstableElements</var>:
-        1. If <a>previous visual representation</a> is not null, set <var>impactedRegion</var> to the the geometric union of <var>impactedRegion</var> with <var>tuple</var>’s <a>current visual representation</a> and <var>tuple</var>’s <a>previous visual representation</a>.
+        1. If <a>previous visual representation</a> is not null, expand <var>impactedRegion</var> to additionally contain all points that lie within <var>tuple</var>'s <a>current visual representation</a>, <var>tuple</var>'s <a>previous visual representation</a>, or both.
         1. Set <var>maxShiftFraction</var> to <var>shiftFraction</var> if <var>tuple</var>’s <var>shiftFraction</var> > <var>maxShiftFraction</var>.
-    1. Let <var>impactedFraction</var> be the area of the <var>impactedRegion</var> divided by the area of the current <a>viewport</a>.
+    1. Let <var>impactedFraction</var> be the area of the <a>initial containing block</a> of the <var>impactedRegion</var> divided by the area of the current <a>viewport</a>.
     1. Set <var>layoutShift</var> to the <var>impactedFraction</var> multiplied by the <var>maxShiftFraction</var>.  
     1. If <var>layoutShift</var> is greater than 0, create a new {{LayoutShift}} object |newEntry| and set its attributes as follows:
         1. Set |newEntry|'s {{PerformanceEntry/name}} attribute to <code>"layout-shift"</code>.
@@ -199,8 +206,10 @@ Identify an unstable element {#sec-identify-unstable-element}
     When asked to <dfn export>identify an unstable element</dfn>, given <var>element</var> as input, run the following steps:
 
     1. If <var>element</var>’s <a>previous frame starting point</a> is null, return false.
-    1. If <var>element</var>’s <a>previous frame starting point</a> does not equal <var>element</var>’s <a>current frame starting point</a> and they differ by 3 or more units in the horizontal or vertical direction, return true.
+    1. If <var>element</var>’s <a>previous frame starting point</a> does not equal <var>element</var>’s <a>current frame starting point</a> and they differ by 3 or more pixel units in the horizontal or vertical direction, return true.
     1. Return false.
+
+NOTE: Updating an element's CSS transform doesn't cause it to be an unstable element.
 
 </div>
 
