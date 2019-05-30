@@ -1,6 +1,6 @@
 <pre class=metadata>
 Title: Layout Instability API
-Status: ED
+Status: CG-Draft
 Shortname: layout-instability
 Group: WICG
 Level: 1
