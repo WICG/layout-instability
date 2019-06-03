@@ -71,9 +71,9 @@ Introduction {#sec-intro}
 
 <em>This section is non-normative.</em>
 
-When the layout of a page is unstable it leads to a very bad user experience.
-This shifting of DOM elements is often due to content loading asynchronously and displacing other elements on the page.
-The layout instability metric identifies these unstable pages by measuring the layout shift fraction of each animation frame on the page, allowing the user to compute an overall instability score for the page.
+The shifting of DOM elements on a webpage detracts from the user's experience, and occurs frequently on the web today.
+This shifting is often due to content loading asynchronously and displacing other elements on the page.
+The layout instability metric identifies these unstable pages by computing a value (the "layout shift") for each animation frame on the page, allowing the developer to compute an overall instability score for the page.
 
 </div>
 
@@ -105,9 +105,9 @@ A "final" penalty for the user's session can be reported by listening to the <a 
 
 Terminology {#sec-terminology}
 ==============================
-An <a>Element</a>’s <dfn export>starting point</dfn> refers to the <a>element</a>'s <a>flow-relative offset</a> in the coordinate space of the <a>initial containing block</a> of the current document measured in <a>pixel units</a>.
+An <a>element</a>’s <dfn export>starting point</dfn> refers to the <a>element</a>'s <a>flow-relative offset</a> in the coordinate space of the <a>initial containing block</a> of the current document measured in <a>pixel units</a>.
 
-The <dfn export>visual representation</dfn> of a <a href="https://www.w3.org/TR/html401/struct/global.html#h-7.5.3">block-level</a> <a>Element</a> is its <a>border box</a>. The <a>visual representation</a> of an <a href="https://www.w3.org/TR/html401/struct/global.html#h-7.5.3">inline element</a> is the geometric union of its <a>box fragment</a>s.
+The <dfn export>visual representation</dfn> of a <a href="https://www.w3.org/TR/html401/struct/global.html#h-7.5.3">block-level</a> <a>element</a> is its <a>border box</a>. The <a>visual representation</a> of an <a href="https://www.w3.org/TR/html401/struct/global.html#h-7.5.3">inline element</a> is the geometric union of its <a>box fragment</a>s.
 
 {{LayoutShift}} interface {#sec-layout-shift}
 =======================================
@@ -121,13 +121,13 @@ The <dfn export>visual representation</dfn> of a <a href="https://www.w3.org/TR/
 {{LayoutShift}} extends the following attributes of {{PerformanceEntry}} interface:
 
 * The {{PerformanceEntry/name}} attribute must return the {{DOMString}} <code>"layout-shift"</code>
-* The {{PerformanceEntry/entryType}} attribute must return <code>"layoutShift"</code>.
-* The {{PerformanceEntry/startTime}} attribute must return the value it was initialized to.
-* The {{PerformanceEntry/duration}} attribute must return 0.
-* The <dfn attribute for=LayoutShift>value</dfn> will return the value it is set to.
+* The {{PerformanceEntry/entryType}} attribute's getter must return <code>"layoutShift"</code>.
+* The {{PerformanceEntry/startTime}} attribute's getter must return the value it was initialized to.
+* The {{PerformanceEntry/duration}} attribute's getter must return 0.
+* The <dfn attribute for=LayoutShift>value</dfn> attribute's getter must return the value computed by <a>Compute the layout shift</a>.
 
 A user agent implementing {{LayoutShift}} must perform the following steps:
-1. Run the <a>register a performance entry type</a> algorithm with <code>"layoustShift"</code> as input.
+1. Run the <a>register a performance entry type</a> algorithm with <code>"layoutShift"</code> as input.
 
 Processing model {#sec-processing-model}
 ========================================
@@ -137,7 +137,7 @@ Modifications to the HTML specification {#sec-modifications-HTML}
 
 <em>This section will be removed once the <a href=https://html.spec.whatwg.org/multipage>HTML specification</a> has been modified.</em>
 
-For each <a>Element</a>, there is a:
+For each <a>element</a>, there is a:
 * <dfn>current frame starting point</dfn> which is initially set to <code>null</code>.
 * <dfn>previous frame starting point</dfn> which is initially set to <code>null</code>.
 * <dfn>current visual representation</dfn> which is initially set to <code>null</code>.
@@ -166,7 +166,7 @@ Evaluate layout instability {#sec-eval-layout-instability}
         1. Let <var>unstable</var> be the boolean returned from calling <a>identify an unstable element</a> with <var>element</var>’s <a>current frame starting point</a> and <a>previous frame starting point</a>. 
         1. Set <var>element</var>'s <var>shiftFraction</var> to:
             1. 0 if <a>previous frame starting point</a> is null.
-            1. The max distance the element has moved in any direction computed by:
+            1. The max distance the element has moved in any direction, which is computed as follows:
                 1. Let <var>verticalDistance</var> be abs(<a>previous frame starting point</a>'s y-value - <a>current frame starting point</a>'s y-value) / <var>viewportDistance</var>.
                 1. Let <var>horizontalDistance</var> be abs(<a>previous frame starting point</a>'s x-value - <a>current frame starting point</a>'s x-value) / <var>viewportDistance</var>.
                 1. Take the max(<var>verticalDistance</var>, <var>horizontalDistance</var>).
@@ -183,22 +183,24 @@ Compute the layout shift {#sec-compute-layout-shift}
 -----------------------------------------------------
 
 <div algorithm="compute the layout shift">
-    When asked to to <dfn export>compute the layout shift</dfn>, with <var>unstableElements</var>, a list of impacted <a>element</a>'s on the page, as input, run the following steps:
+    When asked to to <dfn export>compute the layout shift</dfn>, with <var>unstableElements</var>, a list of tuples, one for each impacted <a>element</a> on the page, as input, run the following steps:
 
     1. Let <var>impactedRegion</var> be a two-dimensional geometric region which is initially empty (that is, it contains no points).
     1. Let <var>maxShiftFraction</var> be initially set to 0.
     1. For each tuple <var>tuple</var> in <var>unstableElements</var>:
         1. If <a>previous visual representation</a> is not null, expand <var>impactedRegion</var> to additionally contain all points that lie within <var>tuple</var>'s <a>current visual representation</a>, <var>tuple</var>'s <a>previous visual representation</a>, or both.
         1. Set <var>maxShiftFraction</var> to <var>shiftFraction</var> if <var>tuple</var>’s <var>shiftFraction</var> > <var>maxShiftFraction</var>.
-    1. Let <var>impactedFraction</var> be the area of the <a>initial containing block</a> of the <var>impactedRegion</var> divided by the area of the current <a>viewport</a>.
+    1. Subtract from <var>impactedRegion</var> all points that lie outside of the <a>viewport</a>.
+    1. Let <var>impactedFraction</var> be the area of the <var>impactedRegion</var> divided by the area of the current <a>viewport</a>.
     1. Set <var>layoutShift</var> to the <var>impactedFraction</var> multiplied by the <var>maxShiftFraction</var>.  
-    1. If <var>layoutShift</var> is greater than 0, create a new {{LayoutShift}} object |newEntry| and set its attributes as follows:
+    1. If <var>layoutShift</var> is greater than 0:
+        1. Create a new {{LayoutShift}} object |newEntry|.
         1. Set |newEntry|'s {{PerformanceEntry/name}} attribute to <code>"layout-shift"</code>.
         1. Set |newEntry|'s {{PerformanceEntry/entryType}} attribute to <code>"layoutShift"</code>.
         1. Set |newEntry|'s {{PerformanceEntry/startTime}} attribute to <a>current high resolution time</a>.
         1. Set |newEntry|'s {{PerformanceEntry/duration}} attribute to 0.
         1. Set |newEntry|'s {{LayoutShift/value}} attribute to <var>layoutShift</var>.
-    1. <a href="https://w3c.github.io/performance-timeline/#dfn-queue-a-performanceentry">Queue the PerformanceEntry</a> |newEntry| object.
+        1. <a href="https://w3c.github.io/performance-timeline/#dfn-queue-a-performanceentry">Queue the PerformanceEntry</a> |newEntry| object.
 </div>
 
 NOTE: This computation ensures that the layout shift takes into account both the fraction of the viewport that has been impacted by layout stability as well as the greatest impact to any given element in the viewport.  This is to recognize that a large element that moves only a small distance may have a small impact on the perceived stability of the page.
@@ -221,5 +223,5 @@ Security & privacy considerations {#priv-sec}
 ===============================================
 
 Layout instability bears an indirect relationship to <a href="https://w3c.github.io/resource-timing/">resource timing</a>, as slow resources could cause intermediate layouts that would not otherwise be performed. Resource timing information can be used by malicious websites for <a>statistical fingerprinting</a>.
-The layout instability API only reports instability in the current browsing context. It does not directly provide any aggregate instability scores. Developers can implement such aggregation manually, but browsing contexts with different <a href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin">origins</a> would need to cooperate to share instability scores.
+The layout instability API only reports instability in the current browsing context. It does not directly provide any aggregation of instability scores across multiple browsing contexts. Developers can implement such aggregation manually, but browsing contexts with different <a href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin">origins</a> would need to cooperate to share instability scores.
 
