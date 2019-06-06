@@ -129,7 +129,7 @@ A user agent implementing {{LayoutShift}} must perform the following steps:
 Processing model {#sec-processing-model}
 ========================================
 
-Modifications to the HTML specification {#sec-modifications-HTML}
+Modifications to the HTML specification {#sec-modifications-HTML-spec}
 --------------------------------------------------------
 
 <em>This section will be removed once the <a href=https://html.spec.whatwg.org/multipage>HTML specification</a> has been modified.</em>
