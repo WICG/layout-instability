@@ -5,6 +5,7 @@ SOURCE_BRANCH="master"
 TARGET_BRANCH="gh-pages"
 
 function doCompile {
+  chmod 755 ./compile.sh
   ./compile.sh
 }
 
