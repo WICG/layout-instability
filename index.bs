@@ -54,14 +54,11 @@ urlPrefix: https://www.w3.org/TR/cssom-view-1/; spec: CSSOM-VIEW-1;
     type: dfn; url: #css-pixels; text: CSS pixels;
 urlPrefix: https://www.w3.org/TR/css-values-4/; spec: CSS-VALUES-4;
     type: dfn; url: #pixel-unit; text: pixel units;
+urlPrefix: https://www.w3.org/TR/CSS2/visudet.html; spec: CSS2;
+    type: dfn; url: #containing-block-details; text: initial containing block;
 urlPrefix: https://wicg.github.io/visual-viewport/index.html; spec: VISUAL-VIEWPORT;
     type: dfn; url: #dom-visualviewport-width; text: visual viewport width;
     type: dfn; url: #dom-visualviewport-height; text: visual viewport height;
-urlPrefix: https://www.w3.org/TR/CSS2/visudet.html; spec: CSS2;
-    type: dfn; url: #containing-block-details; text: initial containing block;
-    
-
-
 </pre>
 
 Introduction {#sec-intro}
