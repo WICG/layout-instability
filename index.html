@@ -1215,7 +1215,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 872cce6d3026423d677f3bd5837f1a1a46299a04" name="generator">
   <link href="https://wicg.github.io/layout-instability" rel="canonical">
-  <meta content="6414b12bc16e2d97392274ce579cc09c769842d5" name="document-revision">
+  <meta content="ccf1cb93dfff589b5e95190b8b1df50d063c8769" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1473,7 +1473,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Layout Instability API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-06-06">6 June 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-06-14">14 June 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1592,11 +1592,7 @@ observer<c- p>.</c->observe<c- p>({</c->entryTypes<c- o>:</c-> <c- p>[</c-><c- u
     <li data-md>
      <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="LayoutShift" data-dfn-type="attribute" data-export id="dom-layoutshift-value"><code class="highlight">value</code></dfn> attribute’s getter must return the value computed by <a data-link-type="dfn" href="#compute-the-layout-shift" id="ref-for-compute-the-layout-shift">Compute the layout shift</a>.</p>
    </ul>
-   <p>A user agent implementing <code class="idl"><a data-link-type="idl" href="#layoutshift" id="ref-for-layoutshift②">LayoutShift</a></code> must perform the following steps:</p>
-   <ol>
-    <li data-md>
-     <p>Run the <a data-link-type="dfn" href="https://w3c.github.io/performance-timeline/#dfn-register-a-performance-entry-type" id="ref-for-dfn-register-a-performance-entry-type">register a performance entry type</a> algorithm with <code class="highlight"><c- u>"layoutShift"</c-></code> as input.</p>
-   </ol>
+   <p class="note" role="note"><span>Note:</span> A user agent implementing <code class="idl"><a data-link-type="idl" href="#layoutshift" id="ref-for-layoutshift②">LayoutShift</a></code> would need to include <code class="highlight"><c- u>"layoutShift"</c-></code> in <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/performance-timeline/#supportedentrytypes-attribute" id="ref-for-supportedentrytypes-attribute">supportedEntryTypes</a></code> for <code class="idl"><a data-link-type="idl" href="https://html.spec.whatwg.org/multipage/window-object.html#window" id="ref-for-window">Window</a></code> contexts. This allows developers to detect support for layout instability.</p>
    <h2 class="heading settled" data-level="4" id="sec-processing-model"><span class="secno">4. </span><span class="content">Processing model</span><a class="self-link" href="#sec-processing-model"></a></h2>
    <h3 class="heading settled" data-level="4.1" id="sec-modifications-HTML-spec"><span class="secno">4.1. </span><span class="content">Modifications to the HTML specification</span><a class="self-link" href="#sec-modifications-HTML-spec"></a></h3>
    <p><em>This section will be removed once the <a href="https://html.spec.whatwg.org/multipage">HTML specification</a> has been modified.</em></p>
@@ -1718,7 +1714,7 @@ observer<c- p>.</c->observe<c- p>({</c->entryTypes<c- o>:</c-> <c- p>[</c-><c- u
       </ol>
     </ol>
    </div>
-   <p class="note" role="note"><span>NOTE:</span> This computation ensures that the layout shift takes into account both the fraction of the viewport that has been impacted by layout stability as well as the greatest impact to any given element in the viewport.  This is to recognize that a large element that moves only a small distance may have a small impact on the perceived stability of the page.</p>
+   <p class="note" role="note"><span>NOTE:</span> This computation ensures that the layout shift takes into account both the fraction of the viewport that has been impacted by layout stability as well as the greatest impact to any given element in the viewport.  This is to recognize that a large element that moves only a small distance can have a small impact on the perceived stability of the page.</p>
    <h3 class="heading settled" data-level="4.4" id="sec-identify-unstable-element"><span class="secno">4.4. </span><span class="content">Identify an unstable element</span><a class="self-link" href="#sec-identify-unstable-element"></a></h3>
    <div class="algorithm" data-algorithm="identify an unstable element">
      When asked to <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="identify-an-unstable-element">identify an unstable element</dfn>, given <var>element</var> as input, run the following steps: 
@@ -1961,6 +1957,12 @@ The layout instability API only reports instability in the current browsing cont
     <li><a href="#ref-for-dfn-current-high-resolution-time">4.3. Compute the layout shift</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-window">
+   <a href="https://html.spec.whatwg.org/multipage/window-object.html#window">https://html.spec.whatwg.org/multipage/window-object.html#window</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-window">3. LayoutShift interface</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-event-loop-processing-model">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model">https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model</a><b>Referenced in:</b>
    <ul>
@@ -2006,17 +2008,17 @@ The layout instability API only reports instability in the current browsing cont
     <li><a href="#ref-for-dom-performanceentry-name①">4.3. Compute the layout shift</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-dfn-register-a-performance-entry-type">
-   <a href="https://w3c.github.io/performance-timeline/#dfn-register-a-performance-entry-type">https://w3c.github.io/performance-timeline/#dfn-register-a-performance-entry-type</a><b>Referenced in:</b>
-   <ul>
-    <li><a href="#ref-for-dfn-register-a-performance-entry-type">3. LayoutShift interface</a>
-   </ul>
-  </aside>
   <aside class="dfn-panel" data-for="term-for-dom-performanceentry-starttime">
    <a href="https://w3c.github.io/performance-timeline/#dom-performanceentry-starttime">https://w3c.github.io/performance-timeline/#dom-performanceentry-starttime</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-dom-performanceentry-starttime">3. LayoutShift interface</a>
     <li><a href="#ref-for-dom-performanceentry-starttime①">4.3. Compute the layout shift</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-supportedentrytypes-attribute">
+   <a href="https://w3c.github.io/performance-timeline/#supportedentrytypes-attribute">https://w3c.github.io/performance-timeline/#supportedentrytypes-attribute</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-supportedentrytypes-attribute">3. LayoutShift interface</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-sec-privacy-security">
@@ -2092,6 +2094,7 @@ The layout instability API only reports instability in the current browsing cont
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
+     <li><span class="dfn-paneled" id="term-for-window" style="color:initial">Window</span>
      <li><span class="dfn-paneled" id="term-for-event-loop-processing-model" style="color:initial">event loop processing model</span>
      <li><span class="dfn-paneled" id="term-for-update-the-rendering" style="color:initial">update the rendering</span>
     </ul>
@@ -2107,8 +2110,8 @@ The layout instability API only reports instability in the current browsing cont
      <li><span class="dfn-paneled" id="term-for-dom-performanceentry-duration" style="color:initial">duration</span>
      <li><span class="dfn-paneled" id="term-for-dom-performanceentry-entrytype" style="color:initial">entryType</span>
      <li><span class="dfn-paneled" id="term-for-dom-performanceentry-name" style="color:initial">name</span>
-     <li><span class="dfn-paneled" id="term-for-dfn-register-a-performance-entry-type" style="color:initial">register a performance entry type</span>
      <li><span class="dfn-paneled" id="term-for-dom-performanceentry-starttime" style="color:initial">startTime</span>
+     <li><span class="dfn-paneled" id="term-for-supportedentrytypes-attribute" style="color:initial">supportedEntryTypes</span>
     </ul>
    <li>
     <a data-link-type="biblio">[resource-timing-1]</a> defines the following terms:
