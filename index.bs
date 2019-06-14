@@ -31,6 +31,8 @@ urlPrefix: https://w3c.github.io/performance-timeline/; spec: PERFORMANCE-TIMELI
     type: dfn; url: #dfn-queue-a-performanceentry; text: Queue the PerformanceEntry;
     type: dfn; url: #getentriesbytype-method-0; text: getEntriesByType;
     type: dfn; url: #dom-performanceobserver; text: PerformanceObserver;
+    type: attribute; for: PerformanceObserver;
+        text: supportedEntryTypes; url: #supportedentrytypes-attribute;
     type: dfn; url: #dom-performanceobserverinit-buffered; text: buffered;
 urlPrefix: https://w3c.github.io/resource-timing/; spec: RESOURCE-TIMING;
     type: dfn; url: #sec-privacy-security; text: statistical fingerprinting;
@@ -123,8 +125,7 @@ The <dfn export>visual representation</dfn> of a <a href="https://www.w3.org/TR/
 * The {{PerformanceEntry/duration}} attribute's getter must return 0.
 * The <dfn attribute for=LayoutShift>value</dfn> attribute's getter must return the value computed by <a>Compute the layout shift</a>.
 
-A user agent implementing {{LayoutShift}} must perform the following steps:
-1. Run the <a>register a performance entry type</a> algorithm with <code>"layoutShift"</code> as input.
+Note: A user agent implementing {{LayoutShift}} would need to include <code>"layoutShift"</code> in {{PerformanceObserver/supportedEntryTypes}} for {{Window}} contexts. This allows developers to detect support for layout instability.
 
 Processing model {#sec-processing-model}
 ========================================
@@ -200,7 +201,7 @@ Compute the layout shift {#sec-compute-layout-shift}
         1. <a href="https://w3c.github.io/performance-timeline/#dfn-queue-a-performanceentry">Queue the PerformanceEntry</a> |newEntry| object.
 </div>
 
-NOTE: This computation ensures that the layout shift takes into account both the fraction of the viewport that has been impacted by layout stability as well as the greatest impact to any given element in the viewport.  This is to recognize that a large element that moves only a small distance may have a small impact on the perceived stability of the page.
+NOTE: This computation ensures that the layout shift takes into account both the fraction of the viewport that has been impacted by layout stability as well as the greatest impact to any given element in the viewport.  This is to recognize that a large element that moves only a small distance can have a small impact on the perceived stability of the page.
 
 Identify an unstable element {#sec-identify-unstable-element}
 --------------------------------------------------------------
