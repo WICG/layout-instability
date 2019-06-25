@@ -61,6 +61,11 @@ urlPrefix: https://www.w3.org/TR/CSS2/visudet.html; spec: CSS2;
 urlPrefix: https://wicg.github.io/visual-viewport/index.html; spec: VISUAL-VIEWPORT;
     type: dfn; url: #dom-visualviewport-width; text: visual viewport width;
     type: dfn; url: #dom-visualviewport-height; text: visual viewport height;
+urlPrefix: https://www.w3.org/TR/uievents/; spec: UIEVENTS;
+    type: dfn; url: #mousedown; text: mousedown;
+    type: dfn; url: #keydown; text: keydown;
+urlPrefix: https://w3c.github.io/pointerevents/; spec: POINTEREVENTS;
+    type: dfn; url: #the-pointerup-event; text: pointerup;
 </pre>
 
 Introduction {#sec-intro}
@@ -210,6 +215,7 @@ Identify an unstable element {#sec-identify-unstable-element}
     When asked to <dfn export>identify an unstable element</dfn>, given <var>element</var> as input, run the following steps:
 
     1. If <var>element</var>’s <a>previous frame starting point</a> is null, return false.
+    1. If a <a>mousedown</a>, <a>keydown</a>, or <a>pointerup</a> user input event has happened within 500ms of the <a>current high resolution time</a>, return false.  
     1. If <var>element</var>’s <a>previous frame starting point</a> does not equal <var>element</var>’s <a>current frame starting point</a> and they differ by 3 or more pixel units in the horizontal or vertical direction, return true.
     1. Return false.
 
@@ -222,4 +228,3 @@ Security & privacy considerations {#priv-sec}
 
 Layout instability bears an indirect relationship to <a href="https://w3c.github.io/resource-timing/">resource timing</a>, as slow resources could cause intermediate layouts that would not otherwise be performed. Resource timing information can be used by malicious websites for <a>statistical fingerprinting</a>.
 The layout instability API only reports instability in the current browsing context. It does not directly provide any aggregation of instability scores across multiple browsing contexts. Developers can implement such aggregation manually, but browsing contexts with different <a href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin">origins</a> would need to cooperate to share instability scores.
-
