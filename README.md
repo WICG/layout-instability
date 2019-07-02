@@ -114,6 +114,7 @@ The developer can compute the DCLS score by summing the LS scores:
 
 ```javascript
 addEventListener("load", () => {
+  let DCLS = 0;
   new PerformanceObserver((list) => {
       list.getEntries().forEach((entry) => { DCLS += entry.value; });
   }).observe({type: "layout-shift", buffered: true});
