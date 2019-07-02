@@ -108,17 +108,15 @@ interface LayoutShift : PerformanceEntry {
 
 The entry's `value` attribute is the LS score.  Its
 [entryType](https://w3c.github.io/performance-timeline/#dom-performanceentry-entrytype)
-attribute is `"layoutShift"`.
+attribute is `"layout-shift"`.
 
 The developer can compute the DCLS score by summing the LS scores:
 
 ```javascript
 addEventListener("load", () => {
-  DCLS = performance.getEntriesByType("layoutShift").reduce(
-      (score, entry) => { return score + entry.value; }, 0);
   new PerformanceObserver((list) => {
       list.getEntries().forEach((entry) => { DCLS += entry.value; });
-  }).observe({entryTypes: ["layoutShift"]});
+  }).observe({type: "layout-shift", buffered: true});
 });
 ```
 
