@@ -131,7 +131,7 @@ A "final" DCLS score for the user's session can be reported by listening to the
 [visibilitychange event](https://developers.google.com/web/updates/2018/07/page-lifecycle-api#event-visibilitychange),
 and using the value of `DCLS` at that time.
 
-A [demo page](https://output.jsbin.com/gemufev) illustrating the use of this
+A [demo page](https://output.jsbin.com/zajamil/quiet) illustrating the use of this
 code can be viewed in Chrome 76+ with the command-line flag
 `--enable-blink-features=LayoutInstabilityAPI`, or in Chrome 73-75 with the
 command-line flag `--enable-blink-features=LayoutJankAPI`.
