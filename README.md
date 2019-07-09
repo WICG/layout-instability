@@ -197,7 +197,7 @@ addEventListener("load", () => {
 By passing `buffered: true` to
 [observe](https://w3c.github.io/performance-timeline/#dom-performanceobserver-observe),
 the observer is immediately notified of any layout shifts that occurred before
-it was registered.  (Layout shift entries are not available from the
+it was registered.  (Layout shift entries are *not* available from the
 [Performance Timeline](https://w3c.github.io/performance-timeline/#performance-timeline)
 through `getEntriesByType`.)
 
