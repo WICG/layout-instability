@@ -121,9 +121,9 @@ The observer's callback receives one or more `LayoutShift` entries:
 
 ```idl
 interface LayoutShift : PerformanceEntry {
-    readonly attribute double value;
-    readonly attribute boolean hadRecentInput;
-    readonly attribute DOMHighResTimeStamp lastInputTime;
+    double value;
+    boolean hadRecentInput;
+    DOMHighResTimeStamp lastInputTime;
 };
 ```
 
