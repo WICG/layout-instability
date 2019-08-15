@@ -274,6 +274,7 @@ events are also not excluding inputs.
     readonly attribute long value;
     readonly attribute boolean hadRecentInput;
     readonly attribute DOMHighResTimeStamp lastInputTime;
+    [Default] object toJSON();
   };
 </pre>
 
