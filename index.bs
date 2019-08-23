@@ -270,6 +270,7 @@ events are also not excluding inputs.
 =======================================
 
 <pre class="idl">
+  [Exposed=Window]
   interface LayoutShift : PerformanceEntry {
     readonly attribute long value;
     readonly attribute boolean hadRecentInput;
