@@ -210,6 +210,14 @@ code can be viewed in Chrome 76+ with the command-line flag
 `--enable-blink-features=LayoutInstabilityAPI`, or in Chrome 73-75 with the
 command-line flag `--enable-blink-features=LayoutJankAPI`.
 
+### Limitations
+
+The Layout Instability API can perform poorly in certain scenarios:
+
+* Layout-inducing animations are penalized by the API, which means that some carousels could contribute to the CLS score of a website.
+
+* While the API tries to use heuristics for animations and user input, those heuristics won't work well for every website.
+
 ### Privacy and Security
 
 Layout instability bears an indirect relationship to resource timing, as slow
