@@ -210,6 +210,26 @@ code can be viewed in Chrome 76+ with the command-line flag
 `--enable-blink-features=LayoutInstabilityAPI`, or in Chrome 73-75 with the
 command-line flag `--enable-blink-features=LayoutJankAPI`.
 
+### Limitations
+
+The presence of "layout instability" as defined by this metric correlates
+only imperfectly with the user experience of "jumpy" websites.
+
+It's possible for a website to seem jumpy, but score well on CLS.  For example,
+rebuilding the DOM with entirely new elements does not trigger a layout shift.
+
+Conversely, it's possible for a website to provide a smooth user experience, but
+score poorly on CLS.  For example, an image carousel that animates a layout
+property such as [`left`](https://developer.mozilla.org/en-US/docs/Web/CSS/left)
+will produce a layout shift on every frame of the animation.  (Carousel authors are
+advised to use [`transform`](https://developer.mozilla.org/en-US/docs/Web/CSS/transform)
+instead, which avoids this problem.)
+
+The metric tries to make some allowances ([transform changes](#Transform-Changes),
+[recent input](#Recent-Input-Exclusion)) for visual updates that are not likely
+to negatively impact the user experience.  But these are in essence heuristics,
+and not guaranteed to work well in every case.
+
 ### Privacy and Security
 
 Layout instability bears an indirect relationship to resource timing, as slow
