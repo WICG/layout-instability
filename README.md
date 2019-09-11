@@ -117,11 +117,6 @@ distances.
 The layout shift (LS) score is equal to the impact fraction multiplied by the
 distance fraction.
 
-The user agent may trade off precision for efficiency in the computation of
-LS scores.  It is intended that the LS score have a correspondence to the
-perceptual severity of the instability, but not that all user agents produce
-exactly the same LS scores for a given page.
-
 ### Performance API
 
 Animation frames with non-zero LS scores will notify a registered
@@ -239,6 +234,27 @@ The metric tries to make some allowances ([transform changes](#Transform-Changes
 [recent input](#Recent-Input-Exclusion)) for visual updates that are not likely
 to negatively impact the user experience.  But these are in essence heuristics,
 and not guaranteed to work well in every case.
+
+### Precision, Variance, and Evolution
+
+We provide a reasonably precise method of computing scores for layout instability,
+but the score remains an [approximation](#Limitations) of the user experience.
+
+We expect developers to use the score as a signal, and not to rely on its exact
+numeric value in a manner such that the correctness of their page would be impacted
+by a minor deviation in it.
+
+The user agent may trade off precision for efficiency in the computation of
+LS scores.  It is intended that the LS score have a correspondence to the
+perceptual severity of the instability, but not that all user agents produce
+exactly the same LS scores for a given page.
+
+We expect the definition of the layout instability metric to evolve over time;
+it should not be considered "frozen" merely because a spec has been produced.
+
+We hope that such evolution can occur with sufficient cooperation between
+implementers, so that browsers do not vary so significantly that developers
+must choose between optimizing for one implementation over another.
 
 ### Privacy and Security
 
