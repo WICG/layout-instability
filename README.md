@@ -19,40 +19,34 @@ layout instability in the document during that frame.  An animation frame with
 no layout instability has an LS score of 0.  Higher LS scores correspond to
 greater instability.
 
-The LS score is based on a set of [shifting elements](#Shifting-Elements) and two
+The LS score is based on a set of [shifting nodes](#Shifting-Nodes) and two
 intermediate values, the [impact fraction](#Impact-Fraction) and the
 [distance fraction](#Distance-Fraction).
 
-### Shifting Elements
+### Shifting Nodes
 
-A **shifting element** is one whose visual representation starts in a
-significantly different location than it did in the previous animation frame
-(for a reason other than [transform change](#Transform-Changes)).
-"Starts" refers here to the element's
+A **shifting node** is a DOM node whose visual representation starts in a
+different location than it did in the previous animation frame for a reason
+other than [transform change](#Transform-Changes) or [scrolling](#Scrolling).
+
+"Starts" refers here to the node's
 [flow-relative](https://www.w3.org/TR/css-writing-modes-4/#flow-relative) offset
-in the document.
+- for example, its top left corner in a horizontal left-to-right writing mode.
 
-The visual representation of a block-level element is its
-[border box](https://www.w3.org/TR/css-box-3/#border-box).  The visual
-representation of an inline element is the geometric union of its
-[box fragments](https://www.w3.org/TR/css-break-3/#box-fragment), the first of
-which determines its starting location.
+The visual representation of a node is the space occupied by its
+[box fragments](https://drafts.csswg.org/css-break-4/#fragment)
+(for elements) or [line boxes](https://www.w3.org/TR/css-text-3/#line-breaking) (for text nodes).
 
 Note that:
 
-* An element that changes in size (for example, by having children appended),
-  but starts at the same offset, is not a shifting element.
+* A node that changes in size (for example, by having children appended),
+  but starts at the same offset, is not a shifting node.
 
-* An element whose start location changes two or more times during the same
+* A node whose start location changes two or more times during the same
   animation frame (for example, from
   [forced synchronous layouts](https://developers.google.com/web/fundamentals/performance/rendering/avoid-large-complex-layouts-and-layout-thrashing#avoid_forced_synchronous_layouts)),
   but is ultimately painted at the same location as the previous frame, is not
-  a shifting element.
-
-* An element whose start location changes by less than 3 CSS pixels is not a
-  shifting element.  This threshold was chosen to avoid penalizing trivial
-  movements.  It also allows some animations (but a broader allowance is
-  described in "Transform Changes" below).
+  a shifting node.
 
 ### Transform Changes
 
@@ -69,11 +63,26 @@ the layout instability metric doesn't treat transform-changing elements, or
 their descendants, as shifting elements (unless their layout is affected in some
 other way at the same time).
 
+### Scrolling
+
+To be a shifting node, the start location must change relative to the document
+origin, the viewport, and every containing scrollable area.  This ensures that
+
+* scrolling a simple element doesn't produce a layout shift
+  (though this changes its location relative to the viewport);
+
+* scrolling with a `position: fixed` element doesn't produce a layout shift
+  (though this changes the fixed element's location relative to the document origin); and
+
+* scrolling an `overflow: scroll` container doesn't produce a layout shift
+  (though this changes the locations of descendant elements
+  relative to both the viewport and the document origin).
+
 ### Impact Fraction
 
 The **impact region** of an animation frame is the geometric union of the
 previous-frame and current-frame visual representations, intersected with the
-viewport, of all shifting elements in that frame.
+viewport, of all shifting nodes in that frame.
 
 The **impact fraction** of an animation frame is the fraction of the viewport that
 is occupied by the impact region.
@@ -86,11 +95,11 @@ to half its height.  The impact fraction for this animation frame is 0.75.*
 
 ### Distance Fraction
 
-The **move distance** of a shifting element is the distance it has moved on
-the horizontal or vertical axis (whichever is greater).
+The **move distance** of a shifting node is the distance it has moved on
+the horizontal or vertical axis (whichever is greater), relative to the viewport.
 
 The **distance fraction** of an animation frame is the greatest move distance
-of any shifting element in that frame, divided by the width or height
+of any shifting node in that frame, divided by the width or height
 (whichever is greater) of the viewport.
 
 ![Illustration of shifting elements on a device, with their move distances
