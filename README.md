@@ -30,8 +30,8 @@ different location than it did in the previous animation frame for a reason
 other than [transform change](#Transform-Changes) or [scrolling](#Scrolling).
 
 "Starts" refers here to the node's
-[flow-relative](https://www.w3.org/TR/css-writing-modes-4/#flow-relative) offset
-- for example, its top left corner in a horizontal left-to-right writing mode.
+[flow-relative](https://www.w3.org/TR/css-writing-modes-4/#flow-relative) offset - for
+example, its top left corner in a horizontal left-to-right writing mode.
 
 The visual representation of a node is the space occupied by its
 [box fragments](https://drafts.csswg.org/css-break-4/#fragment)
