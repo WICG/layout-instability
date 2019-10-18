@@ -85,7 +85,9 @@ specification presents a method for a user agent to compute the layout shift
 value.
 
 The layout shift value is expected to have a general correspondence to
-the severity of layout instability at a particular time.
+the severity of layout instability at a particular time.  The method of computing
+it considers both the area of the region impacted by instability and the distance
+by which elements on the page are shifted.
 
 The developer can use the layout shift values that are reported by this API
 to compute a cumulative score (the "cumulative layout shift score").
