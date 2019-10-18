@@ -1213,9 +1213,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version cb5a17652cb33dffd20b8b6a876bb811c1f749a9" name="generator">
+  <meta content="Bikeshed version 98212c11613b78977e54b28cc53499f2ee83d388" name="generator">
   <link href="https://wicg.github.io/layout-instability" rel="canonical">
-  <meta content="0fea94ba4dd4b26838e0c30cb09303be2ea17afb" name="document-revision">
+  <meta content="ba0f51e198fd97802b32205a6329bb11ea355557" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1473,7 +1473,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Layout Instability API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-09-11">11 September 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-18">18 October 2019</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1554,8 +1554,17 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
 and occurs frequently on the web today. This shifting is often due to content
 loading asynchronously and displacing other elements on the page.</p>
     <p>The layout Instability API identifies these unstable pages by reporting a value
-(the "layout shift") for each animation frame in the user’s session, allowing
-the developer to compute a cumulative layout shift score for the page.</p>
+(the "layout shift") for each animation frame in the user’s session.  This
+specification presents a method for a user agent to compute the layout shift
+value.</p>
+    <p>The layout shift value is expected to have a general correspondence to
+the severity of layout instability at a particular time.  The method of computing
+it considers both the area of the region impacted by instability and the distance
+by which elements on the page are shifted.</p>
+    <p>The developer can use the layout shift values that are reported by this API
+to compute a cumulative score (the "cumulative layout shift score").</p>
+    <p>The cumulative layout shift score is expected to have a general correspondence to
+the severity of layout instability for the lifetime of a page.</p>
     <h3 class="heading settled" data-level="1.1" id="end-of-session"><span class="secno">1.1. </span><span class="content">End of session signal</span><a class="self-link" href="#end-of-session"></a></h3>
     <p><em>This section is non-normative.</em></p>
     <p>The developer can compute a cumulative layout shift score by summing the layout
@@ -2316,7 +2325,7 @@ The layout instability API only reports instability in the current browsing cont
    <dt id="biblio-paint-timing">[PAINT-TIMING]
    <dd>Shubhie Panicker. <a href="https://www.w3.org/TR/paint-timing/">Paint Timing 1</a>. 7 September 2017. WD. URL: <a href="https://www.w3.org/TR/paint-timing/">https://www.w3.org/TR/paint-timing/</a>
    <dt id="biblio-performance-timeline-2">[PERFORMANCE-TIMELINE-2]
-   <dd>Ilya Grigorik. <a href="https://www.w3.org/TR/performance-timeline-2/">Performance Timeline Level 2</a>. 26 June 2019. WD. URL: <a href="https://www.w3.org/TR/performance-timeline-2/">https://www.w3.org/TR/performance-timeline-2/</a>
+   <dd>Ilya Grigorik. <a href="https://www.w3.org/TR/performance-timeline-2/">Performance Timeline Level 2</a>. 17 September 2019. WD. URL: <a href="https://www.w3.org/TR/performance-timeline-2/">https://www.w3.org/TR/performance-timeline-2/</a>
    <dt id="biblio-resource-timing-1">[RESOURCE-TIMING-1]
    <dd>Arvind Jain; et al. <a href="https://www.w3.org/TR/resource-timing-1/">Resource Timing Level 1</a>. 30 March 2017. CR. URL: <a href="https://www.w3.org/TR/resource-timing-1/">https://www.w3.org/TR/resource-timing-1/</a>
    <dt id="biblio-rfc2119">[RFC2119]
