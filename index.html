@@ -1167,6 +1167,18 @@ Possible extra rowspan handling
 		margin-left: auto;
 		margin-right: auto;
 	}
+	.overlarge {
+		/* Magic to create good table positioning:
+		   "content column" is 50ems wide at max; less on smaller screens.
+		   Extra space (after ToC + content) is empty on the right.
+
+		   1. When table < content column, centers table in column.
+		   2. When content < table < available, left-aligns.
+		   3. When table > available, fills available + scroll bar.
+		*/ 
+		display: grid;
+		grid-template-columns: minmax(0, 50em);
+	}
 	.overlarge > table {
 		/* limit preferred width of table */
 		max-width: 50em;
@@ -1176,7 +1188,6 @@ Possible extra rowspan handling
 
 	@media (min-width: 55em) {
 		.overlarge {
-			margin-left: calc(13px + 26.5rem - 50vw);
 			margin-right: calc(13px + 26.5rem - 50vw);
 			max-width: none;
 		}
@@ -1184,14 +1195,12 @@ Possible extra rowspan handling
 	@media screen and (min-width: 78em) {
 		body:not(.toc-inline) .overlarge {
 			/* 30.5em body padding 50em content area */
-			margin-left: calc(40em - 50vw) !important;
 			margin-right: calc(40em - 50vw) !important;
 		}
 	}
 	@media screen and (min-width: 90em) {
 		body:not(.toc-inline) .overlarge {
 			/* 4em html margin 30.5em body padding 50em content area */
-			margin-left: 0 !important;
 			margin-right: calc(84.5em - 100vw) !important;
 		}
 	}
@@ -1213,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 98212c11613b78977e54b28cc53499f2ee83d388" name="generator">
+  <meta content="Bikeshed version 5721fde7f6b8111f662b83b678f9e181a9838206" name="generator">
   <link href="https://wicg.github.io/layout-instability" rel="canonical">
-  <meta content="ba0f51e198fd97802b32205a6329bb11ea355557" name="document-revision">
+  <meta content="cbf530f7345de54bbfd4fe5010b5b9f2816249eb" name="document-revision">
 <style>/* style-md-lists */
 
 /* This is a weird hack for me not yet following the commonmark spec
@@ -1473,7 +1482,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Layout Instability API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2019-10-18">18 October 2019</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-02-26">26 February 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1487,7 +1496,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2019 the Contributors to the Layout Instability API Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2020 the Contributors to the Layout Instability API Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
 A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available. </p>
    <hr title="Separator for header">
   </div>
@@ -1574,18 +1583,22 @@ and taking the value of the cumulative layout shift score at that time.</p>
     <p>This strategy is illustrated in the usage example.</p>
     <h3 class="heading settled" data-level="1.2" id="example"><span class="secno">1.2. </span><span class="content">Usage example</span><a class="self-link" href="#example"></a></h3>
     <p><em>This section is non-normative.</em></p>
-<pre class="example highlight" id="example-7ea3aa6b"><a class="self-link" href="#example-7ea3aa6b"></a><c- c1>// Stores the current layout shift score for the page.</c->
+<pre class="example highlight" id="example-0bb99929"><a class="self-link" href="#example-0bb99929"></a><c- c1>// Stores the current layout shift score for the page.</c->
 <c- a>let</c-> cumulativeLayoutShiftScore <c- o>=</c-> <c- mi>0</c-><c- p>;</c->
 
-<c- c1>// Detects new layout shift occurrences and updates the</c->
-<c- c1>// `cumulativeLayoutShiftScore` variable.</c->
-<c- kr>const</c-> observer <c- o>=</c-> <c- k>new</c-> PerformanceObserver<c- p>((</c->list<c- p>)</c-> <c- p>=></c-> <c- p>{</c->
-  <c- k>for</c-> <c- p>(</c-><c- kr>const</c-> entry <c- k>of</c-> list<c- p>.</c->getEntries<c- p>())</c-> <c- p>{</c->
+<c- a>function</c-> updateCLS<c- p>(</c->entries<c- p>)</c-> <c- p>{</c->
+  <c- k>for</c-> <c- p>(</c-><c- kr>const</c-> entry <c- k>of</c-> entries<c- p>)</c-> <c- p>{</c->
     <c- c1>// Only count layout shifts without recent user input.</c->
     <c- k>if</c-> <c- p>(</c-><c- o>!</c->entry<c- p>.</c->hadRecentInput<c- p>)</c-> <c- p>{</c->
       cumulativeLayoutShiftScore <c- o>+=</c-> entry<c- p>.</c->value<c- p>;</c->
     <c- p>}</c->
   <c- p>}</c->
+<c- p>}</c->
+
+<c- c1>// Detects new layout shift occurrences and updates the</c->
+<c- c1>// `cumulativeLayoutShiftScore` variable.</c->
+<c- kr>const</c-> observer <c- o>=</c-> <c- k>new</c-> PerformanceObserver<c- p>((</c->list<c- p>)</c-> <c- p>=></c-> <c- p>{</c->
+  updateCLS<c- p>(</c->list<c- p>.</c->getEntries<c- p>());</c->
 <c- p>});</c->
 
 observer<c- p>.</c->observe<c- p>({</c->type<c- o>:</c-> <c- t>'layout-shift'</c-><c- p>,</c-> buffered<c- o>:</c-> <c- kc>true</c-><c- p>});</c->
@@ -1595,7 +1608,7 @@ observer<c- p>.</c->observe<c- p>({</c->type<c- o>:</c-> <c- t>'layout-shift'</c
 document<c- p>.</c->addEventListener<c- p>(</c-><c- t>'visibilitychange'</c-><c- p>,</c-> <c- p>()</c-> <c- p>=></c-> <c- p>{</c->
   <c- k>if</c-> <c- p>(</c->document<c- p>.</c->visibilityState <c- o>===</c-> <c- t>'hidden'</c-><c- p>)</c-> <c- p>{</c->
     <c- c1>// Force any pending records to be dispatched.</c->
-    observer<c- p>.</c->takeRecords<c- p>();</c->
+    updateCLS<c- p>(</c->observer<c- p>.</c->takeRecords<c- p>());</c->
 
     <c- c1>// Send the final score to your analytics back end</c->
     <c- c1>// (assumes `sendToAnalytics` is defined elsewhere).</c->
@@ -1605,7 +1618,7 @@ document<c- p>.</c->addEventListener<c- p>(</c-><c- t>'visibilitychange'</c-><c-
 </pre>
     <p>The layout shift score is only one signal, which correlates in an approximate
 manner with the user experience of "jumpiness".</p>
-    <p>Developers should avoid relying on the precise value of the layout shift score,
+    <p>Developers are advised to avoid relying on the precise value of the layout shift score,
 as the metric might evolve over time, and user agents might compromise precision
 in the interest of calculation efficiency.</p>
    </div>
@@ -2305,7 +2318,7 @@ The layout instability API only reports instability in the current browsing cont
    <dt id="biblio-css-overflow-3">[CSS-OVERFLOW-3]
    <dd>David Baron; Elika Etemad; Florian Rivoal. <a href="https://www.w3.org/TR/css-overflow-3/">CSS Overflow Module Level 3</a>. 31 July 2018. WD. URL: <a href="https://www.w3.org/TR/css-overflow-3/">https://www.w3.org/TR/css-overflow-3/</a>
    <dt id="biblio-css-text-3">[CSS-TEXT-3]
-   <dd>Elika Etemad; Koji Ishii; Florian Rivoal. <a href="https://www.w3.org/TR/css-text-3/">CSS Text Module Level 3</a>. 12 December 2018. WD. URL: <a href="https://www.w3.org/TR/css-text-3/">https://www.w3.org/TR/css-text-3/</a>
+   <dd>Elika Etemad; Koji Ishii; Florian Rivoal. <a href="https://www.w3.org/TR/css-text-3/">CSS Text Module Level 3</a>. 13 November 2019. WD. URL: <a href="https://www.w3.org/TR/css-text-3/">https://www.w3.org/TR/css-text-3/</a>
    <dt id="biblio-css-transforms-1">[CSS-TRANSFORMS-1]
    <dd>Simon Fraser; et al. <a href="https://www.w3.org/TR/css-transforms-1/">CSS Transforms Module Level 1</a>. 14 February 2019. CR. URL: <a href="https://www.w3.org/TR/css-transforms-1/">https://www.w3.org/TR/css-transforms-1/</a>
    <dt id="biblio-css-values-4">[CSS-VALUES-4]
@@ -2319,13 +2332,13 @@ The layout instability API only reports instability in the current browsing cont
    <dt id="biblio-dom">[DOM]
    <dd>Anne van Kesteren. <a href="https://dom.spec.whatwg.org/">DOM Standard</a>. Living Standard. URL: <a href="https://dom.spec.whatwg.org/">https://dom.spec.whatwg.org/</a>
    <dt id="biblio-hr-time-2">[HR-TIME-2]
-   <dd>Ilya Grigorik; James Simonsen; Jatinder Mann. <a href="https://www.w3.org/TR/hr-time-2/">High Resolution Time Level 2</a>. 26 June 2019. CR. URL: <a href="https://www.w3.org/TR/hr-time-2/">https://www.w3.org/TR/hr-time-2/</a>
+   <dd>Ilya Grigorik. <a href="https://www.w3.org/TR/hr-time-2/">High Resolution Time Level 2</a>. 21 November 2019. REC. URL: <a href="https://www.w3.org/TR/hr-time-2/">https://www.w3.org/TR/hr-time-2/</a>
    <dt id="biblio-html">[HTML]
    <dd>Anne van Kesteren; et al. <a href="https://html.spec.whatwg.org/multipage/">HTML Standard</a>. Living Standard. URL: <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
    <dt id="biblio-paint-timing">[PAINT-TIMING]
    <dd>Shubhie Panicker. <a href="https://www.w3.org/TR/paint-timing/">Paint Timing 1</a>. 7 September 2017. WD. URL: <a href="https://www.w3.org/TR/paint-timing/">https://www.w3.org/TR/paint-timing/</a>
    <dt id="biblio-performance-timeline-2">[PERFORMANCE-TIMELINE-2]
-   <dd>Ilya Grigorik. <a href="https://www.w3.org/TR/performance-timeline-2/">Performance Timeline Level 2</a>. 17 September 2019. WD. URL: <a href="https://www.w3.org/TR/performance-timeline-2/">https://www.w3.org/TR/performance-timeline-2/</a>
+   <dd>Ilya Grigorik. <a href="https://www.w3.org/TR/performance-timeline-2/">Performance Timeline Level 2</a>. 24 October 2019. WD. URL: <a href="https://www.w3.org/TR/performance-timeline-2/">https://www.w3.org/TR/performance-timeline-2/</a>
    <dt id="biblio-resource-timing-1">[RESOURCE-TIMING-1]
    <dd>Arvind Jain; et al. <a href="https://www.w3.org/TR/resource-timing-1/">Resource Timing Level 1</a>. 30 March 2017. CR. URL: <a href="https://www.w3.org/TR/resource-timing-1/">https://www.w3.org/TR/resource-timing-1/</a>
    <dt id="biblio-rfc2119">[RFC2119]
