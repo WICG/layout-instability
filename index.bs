@@ -152,7 +152,7 @@ Usage example {#example}
 The layout shift score is only one signal, which correlates in an approximate
 manner with the user experience of "jumpiness".
 
-Developers have to avoid relying on the precise value of the layout shift score,
+Developers are advised to avoid relying on the precise value of the layout shift score,
 as the metric might evolve over time, and user agents might compromise precision
 in the interest of calculation efficiency.
 
