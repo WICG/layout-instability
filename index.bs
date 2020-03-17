@@ -102,8 +102,6 @@ the severity of layout instability for the lifetime of a page.
 End of session signal {#end-of-session}
 ---------------------------------------
 
-<em>This section is non-normative.</em>
-
 The developer can compute a cumulative layout shift score by summing the layout
 shift values as they are reported to the observer.
 
@@ -116,24 +114,25 @@ This strategy is illustrated in the usage example.
 Source attribution {#source-attribution}
 ----------------------------------------
 
-<em>This section is non-normative.</em>
-
 In addition to the layout shift value, the API reports a sampling of up to five
 DOM elements whose layout shifts most substantially contributed to the layout
-shit value for an animation frame.
+shift value for an animation frame.
 
-It is possible that the true "root cause" of the instability will be one or more
-steps removed from the DOM elements that experience a layout shift. For example,
-a newly inserted element might cause a shift in content below it. The
+It is possible that the true "root cause" of instability will be only
+indirectly related to the DOM element that experiences a layout shift.
+For example, if a newly inserted element shifts content below it, the
 <a href="#dom-layoutshift-sources">sources</a>
-attribute will report only shifted elements, and not the inserted element.
-Nevertheless, we expect this reporting to be of significant value to developers
-who are attempting to diagnose an occurrence of layout instability.
+attribute will report only the shifted elements, and not the inserted element.
+
+We do not believe it is feasible for the user agent to understand causes
+of instability at the level of indirection necessary for a meaningful "root
+cause" attribution. However, we expect that the more straightforward
+reporting of shifted elements presented in this API will nevertheless be
+of significant value to developers who are attempting to diagnose an
+occurrence of layout instability.
 
 Usage example {#example}
 ------------------------
-
-<em>This section is non-normative.</em>
 
 <pre class="example highlight">
     // Stores the current layout shift score for the page.
@@ -287,7 +286,8 @@ The <dfn export>distance fraction</dfn> of a {{Document}} |D| is the lesser of
     distance</a>, or
 * 1.0.
 
-The <dfn export>node impact region</dfn> of a {{Node}} |N| is the set containing
+The <dfn export>node impact region</dfn> of an <a>unstable</a> {{Node}} |N|
+is the set containing
 
 * every point in the <a>visual representation</a> of |N|, and
 * every point in the <a>previous frame visual representation</a> of |N|.
@@ -365,6 +365,9 @@ contexts. This allows developers to detect support for the Layout Instability AP
   };
 </pre>
 
+All attributes have the values which are assigned to them by the steps to
+<a>create the attribution</a>.
+
 Processing model {#sec-processing-model}
 ========================================
 
@@ -412,7 +415,7 @@ Report the layout shift sources {#sec-report-layout-shift-sources}
 ------------------------------------------------------------------
 
 <div algorithm="report the layout shift sources">
-When asked to <dfn export>report the layout shift sources</dfn> for an active
+When asked to <dfn>report the layout shift sources</dfn> for an active
 {{Document}} |D|, run the following steps:
 
 1. Let |S| be any set which satisfies these constraints:
@@ -425,6 +428,9 @@ When asked to <dfn export>report the layout shift sources</dfn> for an active
         such that the area of the <a>node impact region</a> of |u| is
         greater than the area of the <a>node impact region</a> of any
         member of |S|.
+    * |S| does not contain a {{Node}} whose
+        <a href="https://dom.spec.whatwg.org/#concept-tree-root">root</a>
+        is a <a href="https://dom.spec.whatwg.org/#concept-shadow-root">shadow root</a>.
 1. Return a {{FrozenArray}} containing one {{LayoutShiftAttribution}} object
     for each member |s| of |S|, created by running the algorithm to
     <a>create the attribution</a> for |s|.
@@ -432,17 +438,17 @@ When asked to <dfn export>report the layout shift sources</dfn> for an active
 </div>
 
 <div algorithm="create the attribution">
-When asked to <dfn export>create the attribution</dfn> for a {{Node}} |N|,
+When asked to <dfn>create the attribution</dfn> for a {{Node}} |N|,
 run the following steps:
 
 1. Create a new {{LayoutShiftAttribution}} object |A|.
 1. Set the <dfn attribute for=LayoutShiftAttribution>node</dfn> attribute
     of |A| to |N|.
 1. Set the <dfn attribute for=LayoutShiftAttribution>previousRect</dfn> attribute
-    to the smallest <a>Rectangle</a> containing the <a>previous frame visual
+    of |A| to the smallest <a>Rectangle</a> containing the <a>previous frame visual
     representation</a> of |N|.
 1. Set the <dfn attribute for=LayoutShiftAttribution>currentRect</dfn> attribute
-    to the smallest <a>Rectangle</a> containing the <a>visual
+    of |A| to the smallest <a>Rectangle</a> containing the <a>visual
     representation</a> of |N|.
 1. Return |A|.
 
