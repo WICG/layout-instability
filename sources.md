@@ -1,8 +1,8 @@
 ## CLS Shifted Element Surfacing
 
-* [WICG tracking bug](github.com/WICG/layout-instability/issues/11)
-* [Spec PR](github.com/WICG/layout-instability/pull/32/files)
-* [Chromium tracking bug](crbug.com/1053510)
+* [WICG tracking bug](https://github.com/WICG/layout-instability/issues/11)
+* [Spec PR](https://github.com/WICG/layout-instability/pull/32/files)
+* [Chromium tracking bug](http://crbug.com/1053510)
 
 ### Overview
 
