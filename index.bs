@@ -66,6 +66,8 @@ urlPrefix: https://www.w3.org/TR/geometry-1/; spec: GEOMETRY-1;
     type: dfn; url: #domrectreadonly; text: DOMRectReadOnly
 urlPrefix: https://www.w3.org/TR/geometry-1/; spec: GEOMETRY-1;
     type: dfn; url: #rectangle; text: Rectangle
+urlPrefix: https://wicg.github.io/element-timing/; spec: ELEMENT-TIMING;
+    type: dfn; url: #get-an-element; text: get an element;
 </pre>
 <pre class=link-defaults>
 spec:css-transforms-1; type:dfn; text:local coordinate system
@@ -102,6 +104,8 @@ the severity of layout instability for the lifetime of a page.
 End of session signal {#end-of-session}
 ---------------------------------------
 
+<em>This section is non-normative.</em>
+
 The developer can compute a cumulative layout shift score by summing the layout
 shift values as they are reported to the observer.
 
@@ -113,6 +117,8 @@ This strategy is illustrated in the usage example.
 
 Source attribution {#source-attribution}
 ----------------------------------------
+
+<em>This section is non-normative.</em>
 
 In addition to the layout shift value, the API reports a sampling of up to five
 DOM elements whose layout shifts most substantially contributed to the layout
@@ -133,6 +139,8 @@ occurrence of layout instability.
 
 Usage example {#example}
 ------------------------
+
+<em>This section is non-normative.</em>
 
 <pre class="example highlight">
     // Stores the current layout shift score for the page.
@@ -340,7 +348,7 @@ events are also not excluding inputs.
     readonly attribute long value;
     readonly attribute boolean hadRecentInput;
     readonly attribute DOMHighResTimeStamp lastInputTime;
-    readonly attribute FrozenArray&lt;LayoutShiftAttribution&gt; sources;
+    readonly attribute sequence&lt;LayoutShiftAttribution&gt; sources;
     [Default] object toJSON();
   };
 </pre>
@@ -418,32 +426,42 @@ Report the layout shift sources {#sec-report-layout-shift-sources}
 When asked to <dfn>report the layout shift sources</dfn> for an active
 {{Document}} |D|, run the following steps:
 
-1. Let |S| be any set which satisfies these constraints:
-    * Each member of |S| is in the <a>unstable node set</a> of |D|.
-    * |S| contains at least 1 member, and not more than 5 members.
-    * |S| does not contain two members |s1| and |s2| such that the
-        <a>node impact region</a> of |s1| is a subset of the
-        <a>node impact region</a> of |s2|.
-    * The <a>unstable node set</a> of |D| does not contain any member |u|
-        such that the area of the <a>node impact region</a> of |u| is
-        greater than the area of the <a>node impact region</a> of any
-        member of |S|.
-    * |S| does not contain a {{Node}} whose
-        <a href="https://dom.spec.whatwg.org/#concept-tree-root">root</a>
-        is a <a href="https://dom.spec.whatwg.org/#concept-shadow-root">shadow root</a>.
-1. Return a {{FrozenArray}} containing one {{LayoutShiftAttribution}} object
-    for each member |s| of |S|, created by running the algorithm to
-    <a>create the attribution</a> for |s|.
+1. Let |C| be an empty sequence of {{LayoutShiftAttribution}} objects.
+
+1. For each member |N| of the <a>unstable node set</a> of |D|, run these steps:
+
+    1. Let |NA| be the result of running the algorithm to
+        <a>create the attribution</a> for |N| and |D|.
+    1. If there exists any member |existing| of |C| such that the
+        <a>node impact region</a> of |N| is a subset of the
+        <a>node impact region</a> of |existing|, then do nothing.
+    1. Otherwise, if there exists any member |existing| of |C| such
+        that the <a>node impact region</a> of |existing| is a subset
+        of the <a>node impact region</a> of |N|, then replace
+        |existing| with |NA| in |C|.
+    1. Otherwise, if there are fewer than 5 members of |C|, then
+        append |NA| to |C|.
+    1. Otherwise, run these steps:
+
+        1. Let |smallest| be the first member of |C| whose
+            <a>node impact region</a> is not greater in area than
+            the <a>node impact region</a> of any other member of |C|.
+        1. If the area of the <a>node impact region</a> of |N| is
+            greater than the area of the <a>node impact region</a>
+            of |smallest|, then replace |smallest| with |NA| in |C|.
+
+1. Return |C|.
 
 </div>
 
 <div algorithm="create the attribution">
-When asked to <dfn>create the attribution</dfn> for a {{Node}} |N|,
-run the following steps:
+When asked to <dfn>create the attribution</dfn> for a {{Node}} |N|
+and an active {{Document}} |D|, run the following steps:
 
 1. Create a new {{LayoutShiftAttribution}} object |A|.
 1. Set the <dfn attribute for=LayoutShiftAttribution>node</dfn> attribute
-    of |A| to |N|.
+    of |A| to the result of running the <a>get an element</a>
+    algorithm with |N| and |D| as inputs.
 1. Set the <dfn attribute for=LayoutShiftAttribution>previousRect</dfn> attribute
     of |A| to the smallest <a>Rectangle</a> containing the <a>previous frame visual
     representation</a> of |N|.
@@ -451,6 +469,13 @@ run the following steps:
     of |A| to the smallest <a>Rectangle</a> containing the <a>visual
     representation</a> of |N|.
 1. Return |A|.
+
+Note: The use of the <a>get an element</a> algorithm above ensures that
+the <a href="#dom-layoutshiftattribution-node">node</a> attribute is null if the attributed node is no longer
+attached, or is inside a shadow root.
+
+Issue: The <a>get an element</a> algorithm should be moved out of the
+Element Timing spec and into a place more suitable for reuse here.
 
 </div>
 
