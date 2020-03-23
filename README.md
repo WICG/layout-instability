@@ -128,6 +128,7 @@ interface LayoutShift : PerformanceEntry {
     double value;
     boolean hadRecentInput;
     DOMHighResTimeStamp lastInputTime;
+    sequence<LayoutShiftAttribution> sources;
 };
 ```
 
@@ -137,6 +138,8 @@ attribute is `"layout-shift"`.
 
 The `hadRecentInput` and `lastInputTime` attributes are described in
 [Recent Input Exclusion](#Recent-Input-Exclusion).
+
+The `sources` attribute is described in [Source Attribution](#Source-Attribution).
 
 ### Cumulative Scores
 
@@ -180,6 +183,82 @@ different threshold can do so by examining the `lastInputTime`.
 Events caused by pointer movement or scrolling do not count as "input" for the
 purpose of the recent input exclusion and the input-related attributes on the
 `LayoutShift` entry.
+
+### Source Attribution
+
+_NOTE: The `sources` attribute is not yet implemented in any browser, and its
+definition is still under active development._
+
+On a complex website, it can be difficult to understand the cause of a high
+CLS score given only the numeric values in the `value` attribute of the
+`LayoutShift` entries.
+
+The `sources` attribute connects the `LayoutShift` back to the specific DOM
+elements that experienced the shift, so that the developer has more insight
+into the causes of layout instability on their site.
+
+The `sources` attribute is an array of up to 5 `LayoutShiftAttribution` objects:
+
+```idl
+interface LayoutShiftAttribution {
+    Node node;
+    DOMRect previousRect;
+    DOMRect currentRect;
+};
+```
+
+Each attribution contains a reference to a [shifted](#Shifting-Nodes) DOM node
+along with rects that describe its visual representation in the viewport
+before and after the shift.
+
+#### Prioritization by Impact
+
+If more than 5 nodes have shifted in a single animation frame, the user agent
+selects the top 5 to attribute in `sources`, based on two principles:
+
+* If two nodes have shifted, and one fully contains the other (visually), only
+  the larger node is attributed.  This means for example that if a container node
+  shifts, we would not generally need to attribute all of its descendants,
+  even though they too have shifted.
+
+* If, after the elimination described above, there are still more than 5 shifted
+  nodes eligible for attribution, they are prioritized by the size of their
+  contribution to the [impact region](#Impact-Fraction).  That is, nodes
+  occupying a greater area within the viewport are preferred.
+
+We limit the number of attributions to 5 for the following reasons:
+
+* In a large DOM, many nodes may shift at once, and it may be infeasible
+  for user agents to report the full set of shifted nodes in a performant way.
+
+* It may be cumbersome for developers to receive the full set of shifted nodes,
+  and would encourage them to write non-performant code to examine such a set.
+
+* Given the hierarchical nature of DOM, surfacing a small number of high level
+  shifted elements is usually sufficient to understand the cause of layout
+  instability.  Limiting to 5 with prioritization improves the signal to noise
+  ratio of the report.
+
+#### Caveat: Causality
+
+It is possible that the true "root cause" of instability will be only
+indirectly related to the DOM element that experiences a layout shift.
+For example, if a newly inserted element shifts content below it,
+the sources attribute will report only the shifted elements,
+and not the inserted element.
+
+We do not believe it is feasible for the user agent to understand
+causes of instability at the level of indirection necessary
+for a meaningful "root cause" attribution. However, we expect that
+the more straightforward reporting of shifted elements in `sources`
+will nevertheless be of significant value to developers
+who are attempting to diagnose an occurrence of layout instability.
+
+#### Specification
+
+The updates to the Layout Instability API specification to incorporate
+and explain the `sources` attribute are tracked in
+[issue #11](https://github.com/WICG/layout-instability/issues/11).
 
 ### Computing DCLS with the API
 
