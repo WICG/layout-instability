@@ -193,9 +193,9 @@ On a complex website, it can be difficult to understand the cause of a high
 CLS score given only the numeric values in the `value` attribute of the
 `LayoutShift` entries.
 
-The `sources` attribute connects the `LayoutShift` back to the specific DOM
-elements that experienced the shift, so that the developer has more insight
-into the causes of layout instability on their site.
+To aid that effort, the `sources` attribute connects the `LayoutShift`
+back to the specific DOM elements that experienced the shift.  This gives
+the developer more insight into the causes of layout instability on their site.
 
 The `sources` attribute is an array of up to 5 `LayoutShiftAttribution` objects:
 
@@ -213,8 +213,9 @@ before and after the shift.
 
 #### Prioritization by Impact
 
-If more than 5 nodes have shifted in a single animation frame, the user agent
-selects the top 5 to attribute in `sources`, based on two principles:
+Many nodes may shift in a single animation frame, but the user agent
+selects no more than 5 to attribute in `sources`, and tries to avoid
+redundancy. The method of selection follows these principles:
 
 * If two nodes have shifted, and one fully contains the other (visually), only
   the larger node is attributed.  This means for example that if a container node
@@ -244,7 +245,7 @@ We limit the number of attributions to 5 for the following reasons:
 It is possible that the true "root cause" of instability will be only
 indirectly related to the DOM element that experiences a layout shift.
 For example, if a newly inserted element shifts content below it,
-the sources attribute will report only the shifted elements,
+the `sources` attribute will report only the shifted elements,
 and not the inserted element.
 
 We do not believe it is feasible for the user agent to understand
