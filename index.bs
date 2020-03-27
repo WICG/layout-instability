@@ -62,6 +62,12 @@ urlPrefix: https://wicg.github.io/visual-viewport/index.html; spec: VISUAL-VIEWP
     type: dfn; url: #dom-visualviewport-height; text: visual viewport height;
 urlPrefix: https://www.w3.org/TR/css-text-3/; spec: CSS-TEXT-3;
     type: dfn; url: #line-breaking; text: line box;
+urlPrefix: https://www.w3.org/TR/geometry-1/; spec: GEOMETRY-1;
+    type: dfn; url: #domrectreadonly; text: DOMRectReadOnly
+urlPrefix: https://www.w3.org/TR/geometry-1/; spec: GEOMETRY-1;
+    type: dfn; url: #rectangle; text: Rectangle
+urlPrefix: https://wicg.github.io/element-timing/; spec: ELEMENT-TIMING;
+    type: dfn; url: #get-an-element; text: get an element;
 </pre>
 <pre class=link-defaults>
 spec:css-transforms-1; type:dfn; text:local coordinate system
@@ -108,6 +114,28 @@ A "final" score for the user's session can be reported by listening to the
 and taking the value of the cumulative layout shift score at that time.
 
 This strategy is illustrated in the usage example.
+
+Source attribution {#source-attribution}
+----------------------------------------
+
+<em>This section is non-normative.</em>
+
+In addition to the layout shift value, the API reports a sampling of up to five
+DOM elements whose layout shifts most substantially contributed to the layout
+shift value for an animation frame.
+
+It is possible that the true "root cause" of instability will be only
+indirectly related to the DOM element that experiences a layout shift.
+For example, if a newly inserted element shifts content below it, the
+<a href="#dom-layoutshift-sources">sources</a>
+attribute will report only the shifted elements, and not the inserted element.
+
+We do not believe it is feasible for the user agent to understand causes
+of instability at the level of indirection necessary for a meaningful "root
+cause" attribution. However, we expect that the more straightforward
+reporting of shifted elements presented in this API will nevertheless be
+of significant value to developers who are attempting to diagnose an
+occurrence of layout instability.
 
 Usage example {#example}
 ------------------------
@@ -266,12 +294,15 @@ The <dfn export>distance fraction</dfn> of a {{Document}} |D| is the lesser of
     distance</a>, or
 * 1.0.
 
-The <dfn export>impact region</dfn> of a {{Document}} |D| is the set containing
+The <dfn export>node impact region</dfn> of an <a>unstable</a> {{Node}} |N|
+is the set containing
 
-* every point in the <a>visual representation</a> of any {{Node}} in the
-    <a>unstable node set</a> of |D|, and
-* every point in the <a>previous frame visual representation</a> of any {{Node}}
-    in the <a>unstable node set</a> of |D|.
+* every point in the <a>visual representation</a> of |N|, and
+* every point in the <a>previous frame visual representation</a> of |N|.
+
+The <dfn export>impact region</dfn> of a {{Document}} |D| is the set containing
+every point in the <a>node impact region</a> of any {{Node}} in the
+<a>unstable node set</a> of |D|.
 
 The <dfn export>impact fraction</dfn> of a {{Document}} |D| is the area of the
 <a>impact region</a> divided by the area of the <a>viewport</a>.
@@ -317,6 +348,7 @@ events are also not excluding inputs.
     readonly attribute long value;
     readonly attribute boolean hadRecentInput;
     readonly attribute DOMHighResTimeStamp lastInputTime;
+    readonly attribute sequence&lt;LayoutShiftAttribution&gt; sources;
     [Default] object toJSON();
   };
 </pre>
@@ -328,6 +360,42 @@ A user agent implementing the Layout Instability API MUST include
 <code>"layout-shift"</code> in {{PerformanceObserver/supportedEntryTypes}} for
 <a href="https://html.spec.whatwg.org/multipage/window-object.html#the-window-object">Window</a>
 contexts. This allows developers to detect support for the Layout Instability API.
+
+{{LayoutShiftAttribution}} interface {#sec-layout-shift-attribution}
+====================================================================
+
+<pre class="idl">
+  [Exposed=Window]
+  interface LayoutShiftAttribution {
+    readonly attribute Node? node;
+    readonly attribute DOMRectReadOnly previousRect;
+    readonly attribute DOMRectReadOnly currentRect;
+  };
+</pre>
+
+Each {{LayoutShiftAttribution}} is associated with a {{Node}} (its
+<dfn>associated node</dfn>).
+
+The getter of the <a href="#dom-layoutshiftattribution-node">node</a> attribute
+of a {{LayoutShiftAttribution}} instance |A| invokes the <a>get an element</a>
+algorithm with the <a>associated node</a> of |A|, and the <a>node document</a>
+of the <a>associated node</a> of |A|, as inputs, and returns the result of
+that algorithm.
+
+Note: The use of the <a>get an element</a> algorithm ensures that
+the <a href="#dom-layoutshiftattribution-node">node</a> attribute
+is null if the attributed node is no longer connected, or is inside a shadow root.
+
+Issue: The <a>get an element</a> algorithm should be moved out of the
+Element Timing spec and into a place more suitable for reuse here.
+
+Issue: The <a>get an element</a> algorithm should be generalized to accept
+{{Node}} instead of {{Element}}.
+
+The <a href="#dom-layoutshiftattribution-node">previousRect</a>
+and <a href="#dom-layoutshiftattribution-node">currentRect</a>
+attributes have the values which are assigned to them by the steps to
+<a>create the attribution</a>.
 
 Processing model {#sec-processing-model}
 ========================================
@@ -364,8 +432,64 @@ When asked to <dfn export>report the layout shift</dfn> for an active
     1. Set |newEntry|'s <dfn attribute for=LayoutShift>hadRecentInput</dfn>
         attribute to <code>true</code> if {{LayoutShift/lastInputTime}} is less
         than 500 milliseconds in the past, and <code>false</code> otherwise.
+    1. Set |newEntry|'s <dfn attribute for=LayoutShift>sources</dfn> attribute
+        to the result of invoking the algorithm to <a>report the layout shift
+        sources</a> for |D|.
     1. <a href="https://w3c.github.io/performance-timeline/#dfn-queue-a-performanceentry">Queue the PerformanceEntry</a>
         |newEntry| object.
+
+</div>
+
+Report the layout shift sources {#sec-report-layout-shift-sources}
+------------------------------------------------------------------
+
+<div algorithm="report the layout shift sources">
+When asked to <dfn>report the layout shift sources</dfn> for an active
+{{Document}} |D|, run the following steps:
+
+1. Let |C| be an empty <a href="https://infra.spec.whatwg.org/#list">list</a> of {{Node}} objects.
+
+1. For each member |N| of the <a>unstable node set</a> of |D|, run these steps:
+
+    1. If there exists any member |existingNode| of |C| such that the
+        <a>node impact region</a> of |N| is a subset of the
+        <a>node impact region</a> of |existingNode|, then continue.
+    1. Otherwise, if there exists any member |existingNode| of |C| such
+        that the <a>node impact region</a> of |existingNode| is a subset
+        of the <a>node impact region</a> of |N|, then <a href="https://infra.spec.whatwg.org/#list-replace">replace</a>
+        the first such member |existingNode| with |N| in |C|.
+    1. Otherwise, if there are fewer than 5 members of |C|, then
+        <a href="https://infra.spec.whatwg.org/#list-append">append</a> |N| to |C|.
+    1. Otherwise, run these steps:
+
+        1. Let |smallest| be the first member of |C| whose
+            <a>node impact region</a> is not greater in area than
+            the <a>node impact region</a> of any other member of |C|.
+        1. If the area of the <a>node impact region</a> of |N| is
+            greater than the area of the <a>node impact region</a>
+            of |smallest|, then
+            <a href="https://infra.spec.whatwg.org/#list-replace">replace</a>
+            |smallest| with |N| in |C|.
+
+1. Return a <a>sequence</a> of {{LayoutShiftAttribution}} objects created
+    by running the algorithm to <a>create the attribution</a> once
+    for each member of |C|.
+
+</div>
+
+<div algorithm="create the attribution">
+When asked to <dfn>create the attribution</dfn> for a {{Node}} |N|,
+run the following steps:
+
+1. Create a new {{LayoutShiftAttribution}} object |A|.
+1. Set the <a>associated node</a> of |A| to |N|.
+1. Set the <dfn attribute for=LayoutShiftAttribution>previousRect</dfn> attribute
+    of |A| to the smallest <a>Rectangle</a> containing the <a>previous frame visual
+    representation</a> of |N|.
+1. Set the <dfn attribute for=LayoutShiftAttribution>currentRect</dfn> attribute
+    of |A| to the smallest <a>Rectangle</a> containing the <a>visual
+    representation</a> of |N|.
+1. Return |A|.
 
 </div>
 
