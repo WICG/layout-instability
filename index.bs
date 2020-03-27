@@ -416,7 +416,7 @@ When asked to <dfn export>report the layout shift</dfn> for an active
 {{Document}} |D|, run the following steps:
 
 1. If the current <a>layout shift value</a> of |D| is not 0:
-    1. Create a new {{LayoutShift}} object |newEntry|.
+    1. Create a new {{LayoutShift}} object |newEntry| with |D|'s [=relevant realm=].
     1. Set |newEntry|'s {{PerformanceEntry/name}} attribute to
         <code>"layout-shift"</code>.
     1. Set |newEntry|'s {{PerformanceEntry/entryType}} attribute to
@@ -481,7 +481,7 @@ When asked to <dfn>report the layout shift sources</dfn> for an active
 When asked to <dfn>create the attribution</dfn> for a {{Node}} |N|,
 run the following steps:
 
-1. Create a new {{LayoutShiftAttribution}} object |A|.
+1. Create a new {{LayoutShiftAttribution}} object |A| with |N|'s [=relevant realm=].
 1. Set the <a>associated node</a> of |A| to |N|.
 1. Set the <dfn attribute for=LayoutShiftAttribution>previousRect</dfn> attribute
     of |A| to the smallest <a>Rectangle</a> containing the <a>previous frame visual
