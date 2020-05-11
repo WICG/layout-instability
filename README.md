@@ -186,8 +186,8 @@ purpose of the recent input exclusion and the input-related attributes on the
 
 ### Source Attribution
 
-_NOTE: The `sources` attribute is not yet implemented in any browser, and its
-definition is still under active development._
+_NOTE: The `sources` attribute is currently only available in Chrome 84+ with
+"Experimental Web Platform features" enabled (chrome://flags)._
 
 On a complex website, it can be difficult to understand the cause of a high
 CLS score given only the numeric values in the `value` attribute of the
