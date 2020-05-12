@@ -4,9 +4,9 @@ Status: CG-Draft
 Shortname: layout-instability
 Group: WICG
 Level: 1
-Editor: Steve Kobes, Google, https://google.com, skobes@chromium.org
-        Nicolás Peña Moreno, Google, https://google.com, npm@chromium.org
-        Emily Hanley, Google, https://google.com, eyaich@chromium.org
+Editor: Steve Kobes, Google https://google.com, skobes@chromium.org
+        Nicolás Peña Moreno, Google https://google.com, npm@chromium.org
+        Emily Hanley, Google https://google.com, eyaich@chromium.org
 URL: https://wicg.github.io/layout-instability
 Repository: https://github.com/WICG/layout-instability
 Abstract: This document defines an API that provides web page authors with insights into the stability of their pages based on movements of the elements on the page.
