@@ -356,7 +356,7 @@ events are also not excluding inputs.
 All attributes have the values which are assigned to them by the steps to
 <a>report the layout shift</a>.
 
-A user agent implementing the Layout Instability API MUST include
+A user agent implementing the Layout Instability API must include
 <code>"layout-shift"</code> in {{PerformanceObserver/supportedEntryTypes}} for
 <a href="https://html.spec.whatwg.org/multipage/window-object.html#the-window-object">Window</a>
 contexts. This allows developers to detect support for the Layout Instability API.
