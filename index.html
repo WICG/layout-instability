@@ -1175,7 +1175,7 @@ Possible extra rowspan handling
 		   1. When table < content column, centers table in column.
 		   2. When content < table < available, left-aligns.
 		   3. When table > available, fills available + scroll bar.
-		*/ 
+		*/
 		display: grid;
 		grid-template-columns: minmax(0, 50em);
 	}
@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 4be3a54e, updated Mon May 4 06:47:10 2020 -0700" name="generator">
+  <meta content="Bikeshed version 04c91f0f, updated Mon Jun 29 08:51:04 2020 +0200" name="generator">
   <link href="https://wicg.github.io/layout-instability" rel="canonical">
-  <meta content="2f60ce199065ca937c329eeaf13b93f9f95a38cc" name="document-revision">
+  <meta content="ed13f5b837609cdff0a6fb364b047484ade9c712" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1482,7 +1482,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Layout Instability API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-05-12">12 May 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-06-29">29 June 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1782,7 +1782,7 @@ gesture.</p>
 };
 </pre>
    <p>All attributes have the values which are assigned to them by the steps to <a data-link-type="dfn" href="#report-the-layout-shift" id="ref-for-report-the-layout-shift①">report the layout shift</a>.</p>
-   <p>A user agent implementing the Layout Instability API MUST include <code class="highlight"><c- u>"layout-shift"</c-></code> in <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/performance-timeline/#supportedentrytypes-attribute" id="ref-for-supportedentrytypes-attribute">supportedEntryTypes</a></code> for <a href="https://html.spec.whatwg.org/multipage/window-object.html#the-window-object">Window</a> contexts. This allows developers to detect support for the Layout Instability API.</p>
+   <p>A user agent implementing the Layout Instability API must include <code class="highlight"><c- u>"layout-shift"</c-></code> in <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/performance-timeline/#supportedentrytypes-attribute" id="ref-for-supportedentrytypes-attribute">supportedEntryTypes</a></code> for <a href="https://html.spec.whatwg.org/multipage/window-object.html#the-window-object">Window</a> contexts. This allows developers to detect support for the Layout Instability API.</p>
    <h2 class="heading settled" data-level="4" id="sec-layout-shift-attribution"><span class="secno">4. </span><span class="content"><code class="idl"><a data-link-type="idl" href="#layoutshiftattribution" id="ref-for-layoutshiftattribution①">LayoutShiftAttribution</a></code> interface</span><a class="self-link" href="#sec-layout-shift-attribution"></a></h2>
 <pre class="idl highlight def">[<a class="idl-code" data-link-type="extended-attribute" href="https://heycam.github.io/webidl/#Exposed" id="ref-for-Exposed①"><c- g>Exposed</c-></a>=<c- n>Window</c->]
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="layoutshiftattribution"><code class="highlight"><c- g>LayoutShiftAttribution</c-></code></dfn> {
@@ -2478,9 +2478,9 @@ The layout instability API only reports instability in the current browsing cont
    <dt id="biblio-css-break-4">[CSS-BREAK-4]
    <dd>Rossen Atanassov; Elika Etemad. <a href="https://www.w3.org/TR/css-break-4/">CSS Fragmentation Module Level 4</a>. 18 December 2018. WD. URL: <a href="https://www.w3.org/TR/css-break-4/">https://www.w3.org/TR/css-break-4/</a>
    <dt id="biblio-css-display-3">[CSS-DISPLAY-3]
-   <dd>Tab Atkins Jr.; Elika Etemad. <a href="https://www.w3.org/TR/css-display-3/">CSS Display Module Level 3</a>. 11 July 2019. CR. URL: <a href="https://www.w3.org/TR/css-display-3/">https://www.w3.org/TR/css-display-3/</a>
+   <dd>Tab Atkins Jr.; Elika Etemad. <a href="https://www.w3.org/TR/css-display-3/">CSS Display Module Level 3</a>. 19 May 2020. CR. URL: <a href="https://www.w3.org/TR/css-display-3/">https://www.w3.org/TR/css-display-3/</a>
    <dt id="biblio-css-overflow-3">[CSS-OVERFLOW-3]
-   <dd>David Baron; Elika Etemad; Florian Rivoal. <a href="https://www.w3.org/TR/css-overflow-3/">CSS Overflow Module Level 3</a>. 31 July 2018. WD. URL: <a href="https://www.w3.org/TR/css-overflow-3/">https://www.w3.org/TR/css-overflow-3/</a>
+   <dd>David Baron; Elika Etemad; Florian Rivoal. <a href="https://www.w3.org/TR/css-overflow-3/">CSS Overflow Module Level 3</a>. 3 June 2020. WD. URL: <a href="https://www.w3.org/TR/css-overflow-3/">https://www.w3.org/TR/css-overflow-3/</a>
    <dt id="biblio-css-text-3">[CSS-TEXT-3]
    <dd>Elika Etemad; Koji Ishii; Florian Rivoal. <a href="https://www.w3.org/TR/css-text-3/">CSS Text Module Level 3</a>. 29 April 2020. WD. URL: <a href="https://www.w3.org/TR/css-text-3/">https://www.w3.org/TR/css-text-3/</a>
    <dt id="biblio-css-transforms-1">[CSS-TRANSFORMS-1]
