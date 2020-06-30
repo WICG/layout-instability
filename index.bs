@@ -268,7 +268,7 @@ Layout Shift Value {#sec-layout-shift-value}
 --------------------------------------------
 
 The <dfn export>viewport base distance</dfn> is the greater of the <a>visual
-viewport width</a> or the <a>visual viewport height</a>.
+viewport width</a> and the <a>visual viewport height</a>.
 
 The <dfn export>move vector</dfn> of a {{Node}} |N| is the two-dimensional
 offset in <a>pixel units</a> from
@@ -281,7 +281,7 @@ offset in <a>pixel units</a> from
 The <dfn export>move distance</dfn> of a {{Node}} |N| is the greater of
 
 * the absolute value of the horizontal component of the <a>move vector</a> of
-    |N|, or
+    |N|, and
 * the absolute value of the vertical component of the <a>move vector</a> of |N|.
 
 The <dfn export>maximum move distance</dfn> of a {{Document}} |D| is the
@@ -291,7 +291,7 @@ greatest <a>move distance</a> of any {{Node}} in the <a>unstable node set</a> of
 The <dfn export>distance fraction</dfn> of a {{Document}} |D| is the lesser of
 
 * the <a>maximum move distance</a> of |D| divided by the <a>viewport base
-    distance</a>, or
+    distance</a>, and
 * 1.0.
 
 The <dfn export>node impact region</dfn> of an <a>unstable</a> {{Node}} |N|
