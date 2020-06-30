@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 04c91f0f, updated Mon Jun 29 08:51:04 2020 +0200" name="generator">
   <link href="https://wicg.github.io/layout-instability" rel="canonical">
-  <meta content="ed13f5b837609cdff0a6fb364b047484ade9c712" name="document-revision">
+  <meta content="5a5126f5956c290d12ca72c8405e34a582d66374" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1482,7 +1482,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Layout Instability API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-06-29">29 June 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-06-30">30 June 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1717,7 +1717,7 @@ containing every <a data-link-type="dfn" href="#unstable" id="ref-for-unstable�
 any node, and therefore the unstable node set is empty.</p>
    <h3 class="heading settled" data-level="2.3" id="sec-layout-shift-value"><span class="secno">2.3. </span><span class="content">Layout Shift Value</span><a class="self-link" href="#sec-layout-shift-value"></a></h3>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="viewport-base-distance">viewport base distance</dfn> is the greater of the <a data-link-type="dfn" href="https://wicg.github.io/visual-viewport/index.html#dom-visualviewport-width" id="ref-for-dom-visualviewport-width">visual
-viewport width</a> or the <a data-link-type="dfn" href="https://wicg.github.io/visual-viewport/index.html#dom-visualviewport-height" id="ref-for-dom-visualviewport-height">visual viewport height</a>.</p>
+viewport width</a> and the <a data-link-type="dfn" href="https://wicg.github.io/visual-viewport/index.html#dom-visualviewport-height" id="ref-for-dom-visualviewport-height">visual viewport height</a>.</p>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="move-vector">move vector</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#node" id="ref-for-node⑥">Node</a></code> <var>N</var> is the two-dimensional
 offset in <a data-link-type="dfn" href="https://www.w3.org/TR/css-values-4/#pixel-unit" id="ref-for-pixel-unit③">pixel units</a> from</p>
    <ul>
@@ -1729,7 +1729,7 @@ offset in <a data-link-type="dfn" href="https://www.w3.org/TR/css-values-4/#pixe
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="move-distance">move distance</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#node" id="ref-for-node⑦">Node</a></code> <var>N</var> is the greater of</p>
    <ul>
     <li data-md>
-     <p>the absolute value of the horizontal component of the <a data-link-type="dfn" href="#move-vector" id="ref-for-move-vector">move vector</a> of <var>N</var>, or</p>
+     <p>the absolute value of the horizontal component of the <a data-link-type="dfn" href="#move-vector" id="ref-for-move-vector">move vector</a> of <var>N</var>, and</p>
     <li data-md>
      <p>the absolute value of the vertical component of the <a data-link-type="dfn" href="#move-vector" id="ref-for-move-vector①">move vector</a> of <var>N</var>.</p>
    </ul>
@@ -1739,7 +1739,7 @@ greatest <a data-link-type="dfn" href="#move-distance" id="ref-for-move-distance
    <ul>
     <li data-md>
      <p>the <a data-link-type="dfn" href="#maximum-move-distance" id="ref-for-maximum-move-distance">maximum move distance</a> of <var>D</var> divided by the <a data-link-type="dfn" href="#viewport-base-distance" id="ref-for-viewport-base-distance">viewport base
-distance</a>, or</p>
+distance</a>, and</p>
     <li data-md>
      <p>1.0.</p>
    </ul>
