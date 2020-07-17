@@ -95,19 +95,17 @@ the severity of layout instability at a particular time.  The method of computin
 it considers both the area of the region impacted by instability and the distance
 by which elements on the page are shifted.
 
-The developer can use the layout shift values that are reported by this API
-to compute a cumulative score (the "cumulative layout shift score").
-
-The cumulative layout shift score is expected to have a general correspondence to
-the severity of layout instability for the lifetime of a page.
-
-End of session signal {#end-of-session}
+Cumulative Layout Shift (CLS) {#cumulative-layout-shift}
 ---------------------------------------
 
 <em>This section is non-normative.</em>
 
-The developer can compute a cumulative layout shift score by summing the layout
-shift values as they are reported to the observer.
+The developer can use the layout shift values that are reported by this API
+to compute a cumulative score (the "cumulative layout shift score"),
+by summing the layout shift values as they are reported to the observer.
+
+The cumulative layout shift score is expected to have a general correspondence to
+the severity of layout instability for the lifetime of a page.
 
 A "final" score for the user's session can be reported by listening to the
 <a href="https://developers.google.com/web/updates/2018/07/page-lifecycle-api#event-visibilitychange">visibilitychange event</a>,
