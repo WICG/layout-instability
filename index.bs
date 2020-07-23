@@ -100,16 +100,34 @@ Cumulative Layout Shift (CLS) {#cumulative-layout-shift}
 
 <em>This section is non-normative.</em>
 
-The developer can use the layout shift values that are reported by this API
-to compute a cumulative score (the "cumulative layout shift score"),
-by summing the layout shift values as they are reported to the observer.
+The layout shift value represents a single point in time, but it is also useful
+to have a value to represent the total instability of the page for the period of
+time the user spends on it.
+
+To that end we propose two values that a user agent or a developer is able to compute to
+obtain such a representation.  (These definitions are non-normative, because the
+API does not expose these values.)
+
+* The <dfn export>document cumulative layout shift (DCLS) score</dfn> is the
+    sum of every <a>layout shift value</a> that is reported inside a single
+    <a href="https://html.spec.whatwg.org/multipage/browsers.html#browsing-context">browsing context</a>.
+    (The DCLS score does not account for layout instability inside descendant browsing contexts.)
+
+* The <dfn export>cumulative layout shift (CLS) score</dfn> is the sum of every
+    <a>layout shift value</a> that is reported inside a <a>top-level browsing context</a>,
+    plus a fraction of each <a>layout shift value</a> that is reported inside any
+    descendant browsing context, where that fraction, for each such occurrence, is
+    the fraction of the top-level viewport that is occupied by the viewport of the
+    descendant browsing context.
 
 The cumulative layout shift score is expected to have a general correspondence to
 the severity of layout instability for the lifetime of a page.
 
-A "final" score for the user's session can be reported by listening to the
-<a href="https://developers.google.com/web/updates/2018/07/page-lifecycle-api#event-visibilitychange">visibilitychange event</a>,
-and taking the value of the cumulative layout shift score at that time.
+The developer can use the layout shift values that are reported by this API
+to compute the DCLS or CLS scores, by summing the layout shift values
+as they are reported to the observer, and taking the "final" score at the time
+of the
+<a href="https://developers.google.com/web/updates/2018/07/page-lifecycle-api#event-visibilitychange">visibilitychange event</a>.
 
 This strategy is illustrated in the usage example.
 
