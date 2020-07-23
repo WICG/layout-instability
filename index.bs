@@ -100,7 +100,7 @@ Cumulative Layout Shift (CLS) {#cumulative-layout-shift}
 
 <em>This section is non-normative.</em>
 
-The layout shift value represents a single point in time, but it is also useful
+The <a>layout shift value</a> represents a single point in time, but it is also useful
 to have a value to represent the total instability of the page for the period of
 time the user spends on it.
 
@@ -123,10 +123,9 @@ API does not expose these values.)
 The cumulative layout shift score is expected to have a general correspondence to
 the severity of layout instability for the lifetime of a page.
 
-The developer can use the layout shift values that are reported by this API
-to compute the DCLS or CLS scores, by summing the layout shift values
-as they are reported to the observer, and taking the "final" score at the time
-of the
+The developer can use this API to compute the DCLS or CLS scores,
+by summing the values as they are reported to the observer,
+and taking the "final" score at the time of the
 <a href="https://developers.google.com/web/updates/2018/07/page-lifecycle-api#event-visibilitychange">visibilitychange event</a>.
 
 This strategy is illustrated in the usage example.
