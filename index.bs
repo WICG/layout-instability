@@ -95,23 +95,38 @@ the severity of layout instability at a particular time.  The method of computin
 it considers both the area of the region impacted by instability and the distance
 by which elements on the page are shifted.
 
-The developer can use the layout shift values that are reported by this API
-to compute a cumulative score (the "cumulative layout shift score").
-
-The cumulative layout shift score is expected to have a general correspondence to
-the severity of layout instability for the lifetime of a page.
-
-End of session signal {#end-of-session}
+Cumulative Layout Shift (CLS) {#cumulative-layout-shift}
 ---------------------------------------
 
 <em>This section is non-normative.</em>
 
-The developer can compute a cumulative layout shift score by summing the layout
-shift values as they are reported to the observer.
+The <a>layout shift value</a> represents a single point in time, but it is also useful
+to have a value to represent the total instability of the page for the period of
+time the user spends on it.
 
-A "final" score for the user's session can be reported by listening to the
-<a href="https://developers.google.com/web/updates/2018/07/page-lifecycle-api#event-visibilitychange">visibilitychange event</a>,
-and taking the value of the cumulative layout shift score at that time.
+To that end we propose two values that a user agent or a developer is able to compute to
+obtain such a representation.  (These definitions are non-normative, because the
+API does not expose these values.)
+
+* The <dfn export>document cumulative layout shift (DCLS) score</dfn> is the
+    sum of every <a>layout shift value</a> that is reported inside a single
+    <a href="https://html.spec.whatwg.org/multipage/browsers.html#browsing-context">browsing context</a>.
+    (The DCLS score does not account for layout instability inside descendant browsing contexts.)
+
+* The <dfn export>cumulative layout shift (CLS) score</dfn> is the sum of every
+    <a>layout shift value</a> that is reported inside a <a>top-level browsing context</a>,
+    plus a fraction (the <a>subframe weighting factor</a>) of each <a>layout shift value</a> that is reported inside any <a href="https://html.spec.whatwg.org/multipage/browsers.html#list-of-the-descendant-browsing-contexts">descendant browsing context</a>.
+
+* The <dfn export>subframe weighting factor</dfn> for a <a>layout shift value</a>
+    in a <a>child browsing context</a> is the fraction of the top-level <a>viewport</a> that is occupied by the <a>viewport</a> of the child browsing context.
+
+The cumulative layout shift score is expected to have a general correspondence to
+the severity of layout instability for the lifetime of a page.
+
+The developer can use this API to compute the DCLS or CLS scores,
+by summing the values as they are reported to the observer,
+and taking the "final" score at the time of the
+<a href="https://w3c.github.io/page-visibility/#dom-document-onvisibilitychange">visibilitychange event</a>.
 
 This strategy is illustrated in the usage example.
 
