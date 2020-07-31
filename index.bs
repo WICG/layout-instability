@@ -115,10 +115,10 @@ API does not expose these values.)
 
 * The <dfn export>cumulative layout shift (CLS) score</dfn> is the sum of every
     <a>layout shift value</a> that is reported inside a <a>top-level browsing context</a>,
-    plus a fraction of each <a>layout shift value</a> that is reported inside any
-    descendant browsing context, where that fraction, for each such occurrence, is
-    the fraction of the top-level viewport that is occupied by the viewport of the
-    descendant browsing context.
+    plus a fraction (the <a>subframe weighting factor</a>) of each <a>layout shift value</a> that is reported inside any descendant browsing context.
+
+* The <dfn export>subframe weighting factor</dfn> for a <a>layout shift value</a>
+    in a <a>child browsing context</a> is the fraction of the top-level <a>viewport</a> that is occupied by the <a>viewport</a> of the child browsing context.
 
 The cumulative layout shift score is expected to have a general correspondence to
 the severity of layout instability for the lifetime of a page.
@@ -126,7 +126,7 @@ the severity of layout instability for the lifetime of a page.
 The developer can use this API to compute the DCLS or CLS scores,
 by summing the values as they are reported to the observer,
 and taking the "final" score at the time of the
-<a href="https://developers.google.com/web/updates/2018/07/page-lifecycle-api#event-visibilitychange">visibilitychange event</a>.
+<a href="https://w3c.github.io/page-visibility/#dom-document-onvisibilitychange">visibilitychange event</a>.
 
 This strategy is illustrated in the usage example.
 
