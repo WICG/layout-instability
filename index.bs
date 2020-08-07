@@ -322,6 +322,12 @@ every point in the <a>node impact region</a> of any {{Node}} in the
 The <dfn export>impact fraction</dfn> of a {{Document}} |D| is the area of the
 <a>impact region</a> divided by the area of the <a>viewport</a>.
 
+NOTE: Computing the area of the impact region is an instance of the
+<a href="https://en.wikipedia.org/wiki/Klee's_measure_problem">Klee measure
+problem</a> in two dimensions. A solution using a sweep line and a segment tree,
+with time complexity <i>O</i>(<i>n</i> lg <i>n</i>) for <i>n</i> unstable nodes,
+is described <a href="http://jeffe.cs.illinois.edu/open/klee.html">here</a>.
+
 The <dfn export>layout shift value</dfn> of a {{Document}} |D| is the <a>impact
 fraction</a> of |D| multiplied by the <a>distance fraction</a> of |D|.
 
