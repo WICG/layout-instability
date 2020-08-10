@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version f539c4af, updated Mon Aug 10 11:34:58 2020 -0700" name="generator">
   <link href="https://wicg.github.io/layout-instability" rel="canonical">
-  <meta content="f6e608a4538296aa43ad277fa3d47b4da127ba6e" name="document-revision">
+  <meta content="3f1d40c0ac28270da70110adb724d1305f9cd969" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1651,9 +1651,11 @@ document<c- p>.</c->addEventListener<c- p>(</c-><c- t>'visibilitychange'</c-><c-
 </pre>
     <p>The layout shift score is only one signal, which correlates in an approximate
 manner with the user experience of "jumpiness".</p>
-    <p>Developers are advised to avoid relying on the precise value of the layout shift score,
-as the metric might evolve over time, and user agents might compromise precision
-in the interest of calculation efficiency.</p>
+    <p>Developers are advised not to worry about small variations between
+layout shift scores; this metric is not intended to be a
+high-precision value, and user agents might compromise precision
+in the interest of calculation efficiency.
+Moreover, the definition of the metric might evolve over time.</p>
    </div>
    <h2 class="heading settled" data-level="2" id="sec-terminology"><span class="secno">2. </span><span class="content">Terminology</span><a class="self-link" href="#sec-terminology"></a></h2>
    <h3 class="heading settled" data-level="2.1" id="sec-basic-concepts"><span class="secno">2.1. </span><span class="content">Basic Concepts</span><a class="self-link" href="#sec-basic-concepts"></a></h3>
