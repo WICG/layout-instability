@@ -323,7 +323,7 @@ The <dfn export>impact fraction</dfn> of a {{Document}} |D| is the area of the
 <a>impact region</a> divided by the area of the <a>viewport</a>.
 
 NOTE: Computing the area of the impact region is an instance of the
-<a href="https://en.wikipedia.org/wiki/Klee's_measure_problem">Klee measure
+<a href="https://en.wikipedia.org/wiki/Klee%27s_measure_problem">Klee measure
 problem</a> in two dimensions. A solution using a sweep line and a segment tree,
 with time complexity <i>O</i>(<i>n</i> lg <i>n</i>) for <i>n</i> unstable nodes,
 is described <a href="http://jeffe.cs.illinois.edu/open/klee.html">here</a>.
