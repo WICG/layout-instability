@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 04c91f0f, updated Mon Jun 29 08:51:04 2020 +0200" name="generator">
+  <meta content="Bikeshed version f539c4af, updated Mon Aug 10 11:34:58 2020 -0700" name="generator">
   <link href="https://wicg.github.io/layout-instability" rel="canonical">
-  <meta content="5a5126f5956c290d12ca72c8405e34a582d66374" name="document-revision">
+  <meta content="f6e608a4538296aa43ad277fa3d47b4da127ba6e" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1482,7 +1482,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Layout Instability API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-06-30">30 June 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-08-10">10 August 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1523,7 +1523,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
     <li>
      <a href="#sec-intro"><span class="secno">1</span> <span class="content">Introduction</span></a>
      <ol class="toc">
-      <li><a href="#end-of-session"><span class="secno">1.1</span> <span class="content">End of session signal</span></a>
+      <li><a href="#cumulative-layout-shift"><span class="secno">1.1</span> <span class="content">Cumulative Layout Shift (CLS)</span></a>
       <li><a href="#source-attribution"><span class="secno">1.2</span> <span class="content">Source attribution</span></a>
       <li><a href="#example"><span class="secno">1.3</span> <span class="content">Usage example</span></a>
      </ol>
@@ -1575,16 +1575,30 @@ value.</p>
 the severity of layout instability at a particular time.  The method of computing
 it considers both the area of the region impacted by instability and the distance
 by which elements on the page are shifted.</p>
-    <p>The developer can use the layout shift values that are reported by this API
-to compute a cumulative score (the "cumulative layout shift score").</p>
+    <h3 class="heading settled" data-level="1.1" id="cumulative-layout-shift"><span class="secno">1.1. </span><span class="content">Cumulative Layout Shift (CLS)</span><a class="self-link" href="#cumulative-layout-shift"></a></h3>
+    <p><em>This section is non-normative.</em></p>
+    <p>The <a data-link-type="dfn" href="#layout-shift-value" id="ref-for-layout-shift-value">layout shift value</a> represents a single point in time, but it is also useful
+to have a value to represent the total instability of the page for the period of
+time the user spends on it.</p>
+    <p>To that end we propose two values that a user agent or a developer is able to compute to
+obtain such a representation.  (These definitions are non-normative, because the
+API does not expose these values.)</p>
+    <ul>
+     <li data-md>
+      <p>The <dfn data-dfn-type="dfn" data-export id="document-cumulative-layout-shift-dcls-score">document cumulative layout shift (DCLS) score<a class="self-link" href="#document-cumulative-layout-shift-dcls-score"></a></dfn> is the
+sum of every <a data-link-type="dfn" href="#layout-shift-value" id="ref-for-layout-shift-value①">layout shift value</a> that is reported inside a single <a href="https://html.spec.whatwg.org/multipage/browsers.html#browsing-context">browsing context</a>.
+(The DCLS score does not account for layout instability inside descendant browsing contexts.)</p>
+     <li data-md>
+      <p>The <dfn data-dfn-type="dfn" data-export id="cumulative-layout-shift-cls-score">cumulative layout shift (CLS) score<a class="self-link" href="#cumulative-layout-shift-cls-score"></a></dfn> is the sum of every <a data-link-type="dfn" href="#layout-shift-value" id="ref-for-layout-shift-value②">layout shift value</a> that is reported inside a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#top-level-browsing-context" id="ref-for-top-level-browsing-context">top-level browsing context</a>,
+plus a fraction (the <a data-link-type="dfn" href="#subframe-weighting-factor" id="ref-for-subframe-weighting-factor">subframe weighting factor</a>) of each <a data-link-type="dfn" href="#layout-shift-value" id="ref-for-layout-shift-value③">layout shift value</a> that is reported inside any <a href="https://html.spec.whatwg.org/multipage/browsers.html#list-of-the-descendant-browsing-contexts">descendant browsing context</a>.</p>
+     <li data-md>
+      <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="subframe-weighting-factor">subframe weighting factor</dfn> for a <a data-link-type="dfn" href="#layout-shift-value" id="ref-for-layout-shift-value④">layout shift value</a> in a <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/browsers.html#child-browsing-context" id="ref-for-child-browsing-context">child browsing context</a> is the fraction of the top-level <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport">viewport</a> that is occupied by the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport①">viewport</a> of the child browsing context.</p>
+    </ul>
     <p>The cumulative layout shift score is expected to have a general correspondence to
 the severity of layout instability for the lifetime of a page.</p>
-    <h3 class="heading settled" data-level="1.1" id="end-of-session"><span class="secno">1.1. </span><span class="content">End of session signal</span><a class="self-link" href="#end-of-session"></a></h3>
-    <p><em>This section is non-normative.</em></p>
-    <p>The developer can compute a cumulative layout shift score by summing the layout
-shift values as they are reported to the observer.</p>
-    <p>A "final" score for the user’s session can be reported by listening to the <a href="https://developers.google.com/web/updates/2018/07/page-lifecycle-api#event-visibilitychange">visibilitychange event</a>,
-and taking the value of the cumulative layout shift score at that time.</p>
+    <p>The developer can use this API to compute the DCLS or CLS scores,
+by summing the values as they are reported to the observer,
+and taking the "final" score at the time of the <a href="https://w3c.github.io/page-visibility/#dom-document-onvisibilitychange">visibilitychange event</a>.</p>
     <p>This strategy is illustrated in the usage example.</p>
     <h3 class="heading settled" data-level="1.2" id="source-attribution"><span class="secno">1.2. </span><span class="content">Source attribution</span><a class="self-link" href="#source-attribution"></a></h3>
     <p><em>This section is non-normative.</em></p>
@@ -1662,11 +1676,11 @@ follows:</p>
      <p>If <var>N</var> is an <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#element" id="ref-for-element①">Element</a></code> which generates one or more <a data-link-type="dfn" href="https://drafts.csswg.org/css-display-3/#box" id="ref-for-box①">boxes</a>, the visual
 representation of <var>N</var> is the set of all points that lie within the bounds of
 any <a data-link-type="dfn" href="https://drafts.csswg.org/css-break-4/#fragment" id="ref-for-fragment①">fragment</a> of any <a data-link-type="dfn" href="https://drafts.csswg.org/css-display-3/#box" id="ref-for-box②">box</a> generated by <var>N</var>, in the coordinate
-space of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport">viewport</a>, excluding any points that lie outside of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport①">viewport</a>.</p>
+space of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport②">viewport</a>, excluding any points that lie outside of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport③">viewport</a>.</p>
     <li data-md>
      <p>If <var>N</var> is a <a data-link-type="dfn" href="https://drafts.csswg.org/css-display-3/#text-nodes" id="ref-for-text-nodes①">text node</a>, the visual representation of <var>N</var> is the set of
-all points that lie within the bounds of any <a data-link-type="dfn" href="https://www.w3.org/TR/css-text-3/#line-breaking" id="ref-for-line-breaking①">line box</a> generated by <var>N</var>, in the coordinate space of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport②">viewport</a>, excluding any points
-that lie outside of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport③">viewport</a>.</p>
+all points that lie within the bounds of any <a data-link-type="dfn" href="https://www.w3.org/TR/css-text-3/#line-breaking" id="ref-for-line-breaking①">line box</a> generated by <var>N</var>, in the coordinate space of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport④">viewport</a>, excluding any points
+that lie outside of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport⑤">viewport</a>.</p>
    </ul>
    <p>A condition holds <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="in-the-previous-frame">in the previous frame</dfn> if it was true at the
 point in time immediately after the most recently completed invocation of the <a data-link-type="dfn" href="#report-the-layout-shift" id="ref-for-report-the-layout-shift">report the layout shift</a> algorithm.</p>
@@ -1691,7 +1705,7 @@ or vertical direction.</p>
        <p>a <a data-link-type="dfn" href="https://drafts.csswg.org/css-display-3/#text-nodes" id="ref-for-text-nodes②">text node</a>; and</p>
      </ul>
     <li data-md>
-     <p><var>N</var> <a data-link-type="dfn" href="#has-shifted" id="ref-for-has-shifted">has shifted</a> in the coordinate space of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport④">viewport</a>; and</p>
+     <p><var>N</var> <a data-link-type="dfn" href="#has-shifted" id="ref-for-has-shifted">has shifted</a> in the coordinate space of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport⑥">viewport</a>; and</p>
     <li data-md>
      <p><var>N</var> <a data-link-type="dfn" href="#has-shifted" id="ref-for-has-shifted①">has shifted</a> in the coordinate space of the <a data-link-type="dfn" href="https://www.w3.org/TR/CSS2/visudet.html#containing-block-details" id="ref-for-containing-block-details">initial containing
 block</a>; and</p>
@@ -1722,9 +1736,9 @@ viewport width</a> and the <a data-link-type="dfn" href="https://wicg.github.io/
 offset in <a data-link-type="dfn" href="https://www.w3.org/TR/css-values-4/#pixel-unit" id="ref-for-pixel-unit③">pixel units</a> from</p>
    <ul>
     <li data-md>
-     <p>the <a data-link-type="dfn" href="#previous-frame-starting-point" id="ref-for-previous-frame-starting-point①">previous frame starting point</a> of <var>N</var> in the coordinate space of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport⑤">viewport</a>, to</p>
+     <p>the <a data-link-type="dfn" href="#previous-frame-starting-point" id="ref-for-previous-frame-starting-point①">previous frame starting point</a> of <var>N</var> in the coordinate space of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport⑦">viewport</a>, to</p>
     <li data-md>
-     <p>the <a data-link-type="dfn" href="#starting-point" id="ref-for-starting-point②">starting point</a> of <var>N</var> in the coordinate space of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport⑥">viewport</a>.</p>
+     <p>the <a data-link-type="dfn" href="#starting-point" id="ref-for-starting-point②">starting point</a> of <var>N</var> in the coordinate space of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport⑧">viewport</a>.</p>
    </ul>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="move-distance">move distance</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#node" id="ref-for-node⑦">Node</a></code> <var>N</var> is the greater of</p>
    <ul>
@@ -1752,7 +1766,11 @@ distance</a>, and</p>
    </ul>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="impact-region">impact region</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document③">Document</a></code> <var>D</var> is the set containing
 every point in the <a data-link-type="dfn" href="#node-impact-region" id="ref-for-node-impact-region">node impact region</a> of any <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#node" id="ref-for-node①⓪">Node</a></code> in the <a data-link-type="dfn" href="#unstable-node-set" id="ref-for-unstable-node-set②">unstable node set</a> of <var>D</var>.</p>
-   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="impact-fraction">impact fraction</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document④">Document</a></code> <var>D</var> is the area of the <a data-link-type="dfn" href="#impact-region" id="ref-for-impact-region">impact region</a> divided by the area of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport⑦">viewport</a>.</p>
+   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="impact-fraction">impact fraction</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document④">Document</a></code> <var>D</var> is the area of the <a data-link-type="dfn" href="#impact-region" id="ref-for-impact-region">impact region</a> divided by the area of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport⑨">viewport</a>.</p>
+   <p class="note" role="note"><span>NOTE:</span> Computing the area of the impact region is an instance of the <a href="https://en.wikipedia.org/wiki/Klee%27s_measure_problem">Klee measure
+problem</a> in two dimensions. A solution using a sweep line and a segment tree,
+with time complexity <i>O</i>(<i>n</i> lg <i>n</i>) for <i>n</i> unstable nodes,
+is described <a href="http://jeffe.cs.illinois.edu/open/klee.html">here</a>.</p>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="layout-shift-value">layout shift value</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document⑤">Document</a></code> <var>D</var> is the <a data-link-type="dfn" href="#impact-fraction" id="ref-for-impact-fraction">impact
 fraction</a> of <var>D</var> multiplied by the <a data-link-type="dfn" href="#distance-fraction" id="ref-for-distance-fraction">distance fraction</a> of <var>D</var>.</p>
    <p class="note" role="note"><span>NOTE:</span> The layout shift value takes into account both the fraction of the
@@ -1763,7 +1781,7 @@ instability of the page.</p>
    <h3 class="heading settled" data-level="2.4" id="sec-input-exclusion"><span class="secno">2.4. </span><span class="content">Input Exclusion</span><a class="self-link" href="#sec-input-exclusion"></a></h3>
    <p>An <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="excluding-input">excluding input</dfn> is any event from an input device which
 signals a user’s active interaction with the document, or any event which
-directly changes the size of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport⑧">viewport</a>.</p>
+directly changes the size of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport①⓪">viewport</a>.</p>
    <p>Excluding inputs generally include <a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a>, <a href="https://www.w3.org/TR/uievents/#keydown">keydown</a>, and <a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a>.
 However, an event whose only effect is to begin or update a fling or scroll
 gesture is not an excluding input.</p>
@@ -1815,7 +1833,7 @@ following step after the step that invokes the <a data-link-type="dfn" href="htt
      When asked to <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="report-the-layout-shift">report the layout shift</dfn> for an active <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document⑧">Document</a></code> <var>D</var>, run the following steps: 
     <ol>
      <li data-md>
-      <p>If the current <a data-link-type="dfn" href="#layout-shift-value" id="ref-for-layout-shift-value">layout shift value</a> of <var>D</var> is not 0:</p>
+      <p>If the current <a data-link-type="dfn" href="#layout-shift-value" id="ref-for-layout-shift-value⑤">layout shift value</a> of <var>D</var> is not 0:</p>
       <ol>
        <li data-md>
         <p>Create a new <code class="idl"><a data-link-type="idl" href="#layoutshift" id="ref-for-layoutshift①">LayoutShift</a></code> object <var>newEntry</var> with <var>D</var>’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-realm" id="ref-for-concept-relevant-realm">relevant realm</a>.</p>
@@ -1830,7 +1848,7 @@ high resolution time</a>.</p>
         <p>Set <var>newEntry</var>’s <code class="idl"><a data-link-type="idl" href="https://w3c.github.io/performance-timeline/#dom-performanceentry-duration" id="ref-for-dom-performanceentry-duration">duration</a></code> attribute to 0.</p>
        <li data-md>
         <p>Set <var>newEntry</var>’s <dfn class="dfn-paneled idl-code" data-dfn-for="LayoutShift" data-dfn-type="attribute" data-export id="dom-layoutshift-value"><code class="highlight">value</code></dfn> attribute to
-the current <a data-link-type="dfn" href="#layout-shift-value" id="ref-for-layout-shift-value①">layout shift value</a> of <var>D</var>.</p>
+the current <a data-link-type="dfn" href="#layout-shift-value" id="ref-for-layout-shift-value⑥">layout shift value</a> of <var>D</var>.</p>
        <li data-md>
         <p>Set <var>newEntry</var>’s <dfn class="dfn-paneled idl-code" data-dfn-for="LayoutShift" data-dfn-type="attribute" data-export id="dom-layoutshift-lastinputtime"><code class="highlight">lastInputTime</code></dfn> attribute to the time of the most recent <a data-link-type="dfn" href="#excluding-input" id="ref-for-excluding-input">excluding input</a>, or 0 if
 no excluding input has occurred during the browsing session.</p>
@@ -2055,8 +2073,10 @@ The layout instability API only reports instability in the current browsing cont
   <ul class="index">
    <li><a href="#associated-node">associated node</a><span>, in §4</span>
    <li><a href="#create-the-attribution">create the attribution</a><span>, in §5.2</span>
+   <li><a href="#cumulative-layout-shift-cls-score">cumulative layout shift (CLS) score</a><span>, in §1.1</span>
    <li><a href="#dom-layoutshiftattribution-currentrect">currentRect</a><span>, in §5.2</span>
    <li><a href="#distance-fraction">distance fraction</a><span>, in §2.3</span>
+   <li><a href="#document-cumulative-layout-shift-dcls-score">document cumulative layout shift (DCLS) score</a><span>, in §1.1</span>
    <li><a href="#excluding-input">excluding input</a><span>, in §2.4</span>
    <li><a href="#dom-layoutshift-hadrecentinput">hadRecentInput</a><span>, in §5.1</span>
    <li><a href="#has-not-shifted">has not shifted</a><span>, in §2.2</span>
@@ -2080,6 +2100,7 @@ The layout instability API only reports instability in the current browsing cont
    <li><a href="#report-the-layout-shift-sources">report the layout shift sources</a><span>, in §5.2</span>
    <li><a href="#dom-layoutshift-sources">sources</a><span>, in §5.1</span>
    <li><a href="#starting-point">starting point</a><span>, in §2.1</span>
+   <li><a href="#subframe-weighting-factor">subframe weighting factor</a><span>, in §1.1</span>
    <li><a href="#dom-layoutshift-tojson">toJSON()</a><span>, in §3</span>
    <li><a href="#unstable">unstable</a><span>, in §2.2</span>
    <li><a href="#unstable-node-set">unstable node set</a><span>, in §2.2</span>
@@ -2160,10 +2181,11 @@ The layout instability API only reports instability in the current browsing cont
   <aside class="dfn-panel" data-for="term-for-viewport">
    <a href="https://www.w3.org/TR/cssom-view-1/#viewport">https://www.w3.org/TR/cssom-view-1/#viewport</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-viewport">2.1. Basic Concepts</a> <a href="#ref-for-viewport①">(2)</a> <a href="#ref-for-viewport②">(3)</a> <a href="#ref-for-viewport③">(4)</a>
-    <li><a href="#ref-for-viewport④">2.2. Unstable Nodes</a>
-    <li><a href="#ref-for-viewport⑤">2.3. Layout Shift Value</a> <a href="#ref-for-viewport⑥">(2)</a> <a href="#ref-for-viewport⑦">(3)</a>
-    <li><a href="#ref-for-viewport⑧">2.4. Input Exclusion</a>
+    <li><a href="#ref-for-viewport">1.1. Cumulative Layout Shift (CLS)</a> <a href="#ref-for-viewport①">(2)</a>
+    <li><a href="#ref-for-viewport②">2.1. Basic Concepts</a> <a href="#ref-for-viewport③">(2)</a> <a href="#ref-for-viewport④">(3)</a> <a href="#ref-for-viewport⑤">(4)</a>
+    <li><a href="#ref-for-viewport⑥">2.2. Unstable Nodes</a>
+    <li><a href="#ref-for-viewport⑦">2.3. Layout Shift Value</a> <a href="#ref-for-viewport⑧">(2)</a> <a href="#ref-for-viewport⑨">(3)</a>
+    <li><a href="#ref-for-viewport①⓪">2.4. Input Exclusion</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-document">
@@ -2236,6 +2258,12 @@ The layout instability API only reports instability in the current browsing cont
     <li><a href="#ref-for-dfn-current-high-resolution-time">5.1. Report the layout shift</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-child-browsing-context">
+   <a href="https://html.spec.whatwg.org/multipage/browsers.html#child-browsing-context">https://html.spec.whatwg.org/multipage/browsers.html#child-browsing-context</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-child-browsing-context">1.1. Cumulative Layout Shift (CLS)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-event-loop-processing-model">
    <a href="https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model">https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model</a><b>Referenced in:</b>
    <ul>
@@ -2247,6 +2275,12 @@ The layout instability API only reports instability in the current browsing cont
    <ul>
     <li><a href="#ref-for-concept-relevant-realm">5.1. Report the layout shift</a>
     <li><a href="#ref-for-concept-relevant-realm①">5.2. Report the layout shift sources</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-top-level-browsing-context">
+   <a href="https://html.spec.whatwg.org/multipage/browsers.html#top-level-browsing-context">https://html.spec.whatwg.org/multipage/browsers.html#top-level-browsing-context</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-top-level-browsing-context">1.1. Cumulative Layout Shift (CLS)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-update-the-rendering">
@@ -2431,8 +2465,10 @@ The layout instability API only reports instability in the current browsing cont
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
     <ul>
+     <li><span class="dfn-paneled" id="term-for-child-browsing-context" style="color:initial">child browsing context</span>
      <li><span class="dfn-paneled" id="term-for-event-loop-processing-model" style="color:initial">event loop processing model</span>
      <li><span class="dfn-paneled" id="term-for-concept-relevant-realm" style="color:initial">relevant realm</span>
+     <li><span class="dfn-paneled" id="term-for-top-level-browsing-context" style="color:initial">top-level browsing context</span>
      <li><span class="dfn-paneled" id="term-for-update-the-rendering" style="color:initial">update the rendering</span>
     </ul>
    <li>
@@ -2540,6 +2576,12 @@ The layout instability API only reports instability in the current browsing cont
 Element Timing spec and into a place more suitable for reuse here.<a href="#issue-fa232fd7"> ↵ </a></div>
    <div class="issue"> The <a data-link-type="dfn" href="https://wicg.github.io/element-timing/#get-an-element">get an element</a> algorithm should be generalized to accept <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#node">Node</a></code> instead of <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#element">Element</a></code>.<a href="#issue-96ebd277"> ↵ </a></div>
   </div>
+  <aside class="dfn-panel" data-for="subframe-weighting-factor">
+   <b><a href="#subframe-weighting-factor">#subframe-weighting-factor</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-subframe-weighting-factor">1.1. Cumulative Layout Shift (CLS)</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="starting-point">
    <b><a href="#starting-point">#starting-point</a></b><b>Referenced in:</b>
    <ul>
@@ -2655,7 +2697,8 @@ Element Timing spec and into a place more suitable for reuse here.<a href="#issu
   <aside class="dfn-panel" data-for="layout-shift-value">
    <b><a href="#layout-shift-value">#layout-shift-value</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-layout-shift-value">5.1. Report the layout shift</a> <a href="#ref-for-layout-shift-value①">(2)</a>
+    <li><a href="#ref-for-layout-shift-value">1.1. Cumulative Layout Shift (CLS)</a> <a href="#ref-for-layout-shift-value①">(2)</a> <a href="#ref-for-layout-shift-value②">(3)</a> <a href="#ref-for-layout-shift-value③">(4)</a> <a href="#ref-for-layout-shift-value④">(5)</a>
+    <li><a href="#ref-for-layout-shift-value⑤">5.1. Report the layout shift</a> <a href="#ref-for-layout-shift-value⑥">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="excluding-input">
