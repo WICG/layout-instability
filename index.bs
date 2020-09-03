@@ -483,6 +483,10 @@ When asked to <dfn>report the layout shift sources</dfn> for an active
         the first such member |existingNode| with |N| in |C|.
     1. Otherwise, if there are fewer than 5 members of |C|, then
         <a href="https://infra.spec.whatwg.org/#list-append">append</a> |N| to |C|.
+
+        NOTE: The choice of 5 is arbitrary but it balances providing detailed attribution while not
+        having a prohibitive memory cost or being spammy in the set of nodes exposed.
+
     1. Otherwise, run these steps:
 
         1. Let |smallest| be the first member of |C| whose
