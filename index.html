@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version f539c4af, updated Mon Aug 10 11:34:58 2020 -0700" name="generator">
+  <meta content="Bikeshed version 64239377, updated Wed Sep 2 16:55:52 2020 -0700" name="generator">
   <link href="https://wicg.github.io/layout-instability" rel="canonical">
-  <meta content="3f1d40c0ac28270da70110adb724d1305f9cd969" name="document-revision">
+  <meta content="0ba125637ee5ee5ca4527a998ece82b8d6d90bcd" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1482,7 +1482,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Layout Instability API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-08-10">10 August 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-09-03">3 September 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1883,6 +1883,8 @@ that the <a data-link-type="dfn" href="#node-impact-region" id="ref-for-node-imp
 of the <a data-link-type="dfn" href="#node-impact-region" id="ref-for-node-impact-region④">node impact region</a> of <var>N</var>, then <a href="https://infra.spec.whatwg.org/#list-replace">replace</a> the first such member <var>existingNode</var> with <var>N</var> in <var>C</var>.</p>
        <li data-md>
         <p>Otherwise, if there are fewer than 5 members of <var>C</var>, then <a href="https://infra.spec.whatwg.org/#list-append">append</a> <var>N</var> to <var>C</var>.</p>
+        <p class="note" role="note"><span>NOTE:</span> The choice of 5 is arbitrary but it balances providing detailed attribution while not
+having a prohibitive memory cost or being spammy in the set of nodes exposed.</p>
        <li data-md>
         <p>Otherwise, run these steps:</p>
         <ol>
