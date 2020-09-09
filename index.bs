@@ -70,7 +70,6 @@ urlPrefix: https://wicg.github.io/element-timing/; spec: ELEMENT-TIMING;
     type: dfn; url: #get-an-element; text: get an element;
 </pre>
 <pre class=link-defaults>
-spec:css-transforms-1; type:dfn; text:local coordinate system
 spec:css-break-4; type:dfn; text:fragment
 </pre>
 
@@ -215,12 +214,21 @@ is defined as follows:
 * If |N| is an {{Element}} which generates one or more <a>boxes</a>, the
     starting point of |N| in |C| is the two-dimensional offset in <a>pixel
     units</a> from the origin of |C| to the <a>flow-relative</a> starting corner
-    of the first <a>fragment</a> of the <a>principal box</a> of |N|.
+    of the first <a>fragment</a> of the <a>principal box</a> of |N|, calculated
+    as if every <a>transformed element</a> in the <a>node document</a> of |N|
+    had a <a>transformation matrix</a> equal to the identity matrix.
 
 * If |N| is a <a>text node</a>, the starting point of |N| in |C| is the
     two-dimensional offset in <a>pixel units</a> from the origin of C to the
     <a>flow-relative</a> starting corner of the first <a>line box</a> generated
-    by |N|.
+    by |N|, calculated as if every <a>transformed element</a> in the
+    <a>node document</a> of |N| had a <a>transformation matrix</a> equal
+    to the identity matrix.
+
+NOTE: The CSS transform is ignored for the calculation of the starting point,
+to ensure that a node is not made unstable by a transform change. However, the CSS
+transform is not ignored for the calculation of the visual representation and
+the associated exclusion of points outside of the viewport.
 
 The <dfn export>visual representation</dfn> of a {{Node}} |N| is defined as
 follows:
@@ -269,11 +277,14 @@ A {{Node}} |N| is <dfn export>unstable</dfn> if:
 * there does not exist an {{Element}} |P| such that
     1. currently and <a>in the previous frame</a>, |P| is in the <a>containing
         block chain</a> of |N|, and
-    1. currently and <a>in the previous frame</a>, |P| has a <a>local coordinate
-        system</a> or a <a>scrollable overflow region</a>, and
+    1. currently and <a>in the previous frame</a>, |P| has a <a>scrollable
+        overflow region</a>, and
     1. |P| is not <a>unstable</a>, and
-    1. |N| <a>has not shifted</a> in the coordinate space of the <a>local
-        coordinate system</a> or <a>scrollable overflow region</a> of |P|.
+    1. |N| <a>has not shifted</a> in the coordinate space of the <a>scrollable
+        overflow region</a> of |P|.
+
+NOTE: The final condition is intended to prevent nodes from being considered
+unstable solely because of a scroll operation.
 
 The <dfn export>unstable node set</dfn> of a {{Document}} |D| is the set
 containing every <a>unstable</a> <a>shadow-including descendant</a> of |D|.
