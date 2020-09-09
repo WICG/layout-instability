@@ -308,7 +308,7 @@ greatest <a>move distance</a> of any {{Node}} in the <a>unstable node set</a> of
 The <dfn export>distance fraction</dfn> of a {{Document}} |D| is the lesser of
 
 * the <a>maximum move distance</a> of |D| divided by the <a>viewport base
-    distance</a>, and
+    distance</a> (or 0 if the viewport base distance is 0), and
 * 1.0.
 
 The <dfn export>node impact region</dfn> of an <a>unstable</a> {{Node}} |N|
@@ -322,7 +322,8 @@ every point in the <a>node impact region</a> of any {{Node}} in the
 <a>unstable node set</a> of |D|.
 
 The <dfn export>impact fraction</dfn> of a {{Document}} |D| is the area of the
-<a>impact region</a> divided by the area of the <a>viewport</a>.
+<a>impact region</a> divided by the area of the <a>viewport</a> (or 0 if the
+area of the viewport is 0).
 
 NOTE: Computing the area of the impact region is an instance of the
 <a href="https://en.wikipedia.org/wiki/Klee%27s_measure_problem">Klee measure
