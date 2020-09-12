@@ -308,7 +308,7 @@ greatest <a>move distance</a> of any {{Node}} in the <a>unstable node set</a> of
 The <dfn export>distance fraction</dfn> of a {{Document}} |D| is the lesser of
 
 * the <a>maximum move distance</a> of |D| divided by the <a>viewport base
-    distance</a> (or 0 if the viewport base distance is 0), and
+    distance</a> (or 0 if the <a>viewport base distance</a> is 0), and
 * 1.0.
 
 The <dfn export>node impact region</dfn> of an <a>unstable</a> {{Node}} |N|
@@ -526,4 +526,3 @@ Security & privacy considerations {#priv-sec}
 
 Layout instability bears an indirect relationship to <a href="https://w3c.github.io/resource-timing/">resource timing</a>, as slow resources could cause intermediate layouts that would not otherwise be performed. Resource timing information can be used by malicious websites for <a>statistical fingerprinting</a>.
 The layout instability API only reports instability in the current browsing context. It does not directly provide any aggregation of instability scores across multiple browsing contexts. Developers can implement such aggregation manually, but browsing contexts with different <a href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin">origins</a> would need to cooperate to share instability scores.
-
