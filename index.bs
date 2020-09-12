@@ -158,36 +158,38 @@ Usage example {#example}
 <em>This section is non-normative.</em>
 
 <pre class="example highlight">
-    // Stores the current layout shift score for the page.
+    let perFrameLayoutShiftData = [];
     let cumulativeLayoutShiftScore = 0;
 
     function updateCLS(entries) {
       for (const entry of entries) {
         // Only count layout shifts without recent user input.
-        if (!entry.hadRecentInput) {
-          cumulativeLayoutShiftScore += entry.value;
-        }
+        if (entry.hadRecentInput)
+          return;
+
+        perFrameLayoutShiftData.push({
+          score: entry.value,
+          timestamp: entry.startTime
+        });
+        cumulativeLayoutShiftScore += entry.value;
       }
     }
 
-    // Detects new layout shift occurrences and updates the
-    // `cumulativeLayoutShiftScore` variable.
+    // Observe all layout shift occurrences.
     const observer = new PerformanceObserver((list) => {
       updateCLS(list.getEntries());
     });
-
     observer.observe({type: 'layout-shift', buffered: true});
 
-    // Sends the final score to your analytics back end once
-    // the page's lifecycle state becomes hidden.
+    // Send final data to an analytics back end once the page is hidden.
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') {
         // Force any pending records to be dispatched.
         updateCLS(observer.takeRecords());
 
-        // Send the final score to your analytics back end
-        // (assumes `sendToAnalytics` is defined elsewhere).
-        sendToAnalytics({cumulativeLayoutShiftScore});
+        // Send data to your analytics back end (assumes `sendToAnalytics` is
+        // defined elsewhere).
+        sendToAnalytics({perFrameLayoutShiftData, cumulativeLayoutShiftScore});
       }
     });
 </pre>
