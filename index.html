@@ -1222,9 +1222,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version 64239377, updated Wed Sep 2 16:55:52 2020 -0700" name="generator">
+  <meta content="Bikeshed version f6ef768c, updated Fri Sep 11 11:29:35 2020 -0700" name="generator">
   <link href="https://wicg.github.io/layout-instability" rel="canonical">
-  <meta content="0ba125637ee5ee5ca4527a998ece82b8d6d90bcd" name="document-revision">
+  <meta content="4edc740f20886a5ff2a7c2470b78cd7736134874" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1482,7 +1482,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Layout Instability API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-09-03">3 September 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-09-12">12 September 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1755,7 +1755,7 @@ greatest <a data-link-type="dfn" href="#move-distance" id="ref-for-move-distance
    <ul>
     <li data-md>
      <p>the <a data-link-type="dfn" href="#maximum-move-distance" id="ref-for-maximum-move-distance">maximum move distance</a> of <var>D</var> divided by the <a data-link-type="dfn" href="#viewport-base-distance" id="ref-for-viewport-base-distance">viewport base
-distance</a>, and</p>
+distance</a> (or 0 if the <a data-link-type="dfn" href="#viewport-base-distance" id="ref-for-viewport-base-distance①">viewport base distance</a> is 0), and</p>
     <li data-md>
      <p>1.0.</p>
    </ul>
@@ -1768,7 +1768,8 @@ distance</a>, and</p>
    </ul>
    <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="impact-region">impact region</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document③">Document</a></code> <var>D</var> is the set containing
 every point in the <a data-link-type="dfn" href="#node-impact-region" id="ref-for-node-impact-region">node impact region</a> of any <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#node" id="ref-for-node①⓪">Node</a></code> in the <a data-link-type="dfn" href="#unstable-node-set" id="ref-for-unstable-node-set②">unstable node set</a> of <var>D</var>.</p>
-   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="impact-fraction">impact fraction</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document④">Document</a></code> <var>D</var> is the area of the <a data-link-type="dfn" href="#impact-region" id="ref-for-impact-region">impact region</a> divided by the area of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport⑨">viewport</a>.</p>
+   <p>The <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="impact-fraction">impact fraction</dfn> of a <code class="idl"><a data-link-type="idl" href="https://dom.spec.whatwg.org/#document" id="ref-for-document④">Document</a></code> <var>D</var> is the area of the <a data-link-type="dfn" href="#impact-region" id="ref-for-impact-region">impact region</a> divided by the area of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport⑨">viewport</a> (or 0 if the
+area of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport①⓪">viewport</a> is 0).</p>
    <p class="note" role="note"><span>NOTE:</span> Computing the area of the impact region is an instance of the <a href="https://en.wikipedia.org/wiki/Klee%27s_measure_problem">Klee measure
 problem</a> in two dimensions. A solution using a sweep line and a segment tree,
 with time complexity <i>O</i>(<i>n</i> lg <i>n</i>) for <i>n</i> unstable nodes,
@@ -1783,7 +1784,7 @@ instability of the page.</p>
    <h3 class="heading settled" data-level="2.4" id="sec-input-exclusion"><span class="secno">2.4. </span><span class="content">Input Exclusion</span><a class="self-link" href="#sec-input-exclusion"></a></h3>
    <p>An <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="excluding-input">excluding input</dfn> is any event from an input device which
 signals a user’s active interaction with the document, or any event which
-directly changes the size of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport①⓪">viewport</a>.</p>
+directly changes the size of the <a data-link-type="dfn" href="https://www.w3.org/TR/cssom-view-1/#viewport" id="ref-for-viewport①①">viewport</a>.</p>
    <p>Excluding inputs generally include <a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a>, <a href="https://www.w3.org/TR/uievents/#keydown">keydown</a>, and <a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a>.
 However, an event whose only effect is to begin or update a fling or scroll
 gesture is not an excluding input.</p>
@@ -2188,8 +2189,8 @@ The layout instability API only reports instability in the current browsing cont
     <li><a href="#ref-for-viewport">1.1. Cumulative Layout Shift (CLS)</a> <a href="#ref-for-viewport①">(2)</a>
     <li><a href="#ref-for-viewport②">2.1. Basic Concepts</a> <a href="#ref-for-viewport③">(2)</a> <a href="#ref-for-viewport④">(3)</a> <a href="#ref-for-viewport⑤">(4)</a>
     <li><a href="#ref-for-viewport⑥">2.2. Unstable Nodes</a>
-    <li><a href="#ref-for-viewport⑦">2.3. Layout Shift Value</a> <a href="#ref-for-viewport⑧">(2)</a> <a href="#ref-for-viewport⑨">(3)</a>
-    <li><a href="#ref-for-viewport①⓪">2.4. Input Exclusion</a>
+    <li><a href="#ref-for-viewport⑦">2.3. Layout Shift Value</a> <a href="#ref-for-viewport⑧">(2)</a> <a href="#ref-for-viewport⑨">(3)</a> <a href="#ref-for-viewport①⓪">(4)</a>
+    <li><a href="#ref-for-viewport①①">2.4. Input Exclusion</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-document">
@@ -2652,7 +2653,7 @@ Element Timing spec and into a place more suitable for reuse here.<a href="#issu
   <aside class="dfn-panel" data-for="viewport-base-distance">
    <b><a href="#viewport-base-distance">#viewport-base-distance</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-viewport-base-distance">2.3. Layout Shift Value</a>
+    <li><a href="#ref-for-viewport-base-distance">2.3. Layout Shift Value</a> <a href="#ref-for-viewport-base-distance①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="move-vector">
