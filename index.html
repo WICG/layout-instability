@@ -1224,7 +1224,7 @@ Possible extra rowspan handling
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version f6ef768c, updated Fri Sep 11 11:29:35 2020 -0700" name="generator">
   <link href="https://wicg.github.io/layout-instability" rel="canonical">
-  <meta content="4edc740f20886a5ff2a7c2470b78cd7736134874" name="document-revision">
+  <meta content="c718f4ba5dc66c6c391d4d43519c351245fb92d3" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1616,36 +1616,38 @@ of significant value to developers who are attempting to diagnose an
 occurrence of layout instability.</p>
     <h3 class="heading settled" data-level="1.3" id="example"><span class="secno">1.3. </span><span class="content">Usage example</span><a class="self-link" href="#example"></a></h3>
     <p><em>This section is non-normative.</em></p>
-<pre class="example highlight" id="example-0bb99929"><a class="self-link" href="#example-0bb99929"></a><c- c1>// Stores the current layout shift score for the page.</c->
+<pre class="example highlight" id="example-2a8523f7"><a class="self-link" href="#example-2a8523f7"></a><c- a>let</c-> perFrameLayoutShiftData <c- o>=</c-> <c- p>[];</c->
 <c- a>let</c-> cumulativeLayoutShiftScore <c- o>=</c-> <c- mi>0</c-><c- p>;</c->
 
 <c- a>function</c-> updateCLS<c- p>(</c->entries<c- p>)</c-> <c- p>{</c->
   <c- k>for</c-> <c- p>(</c-><c- kr>const</c-> entry <c- k>of</c-> entries<c- p>)</c-> <c- p>{</c->
     <c- c1>// Only count layout shifts without recent user input.</c->
-    <c- k>if</c-> <c- p>(</c-><c- o>!</c->entry<c- p>.</c->hadRecentInput<c- p>)</c-> <c- p>{</c->
-      cumulativeLayoutShiftScore <c- o>+=</c-> entry<c- p>.</c->value<c- p>;</c->
-    <c- p>}</c->
+    <c- k>if</c-> <c- p>(</c->entry<c- p>.</c->hadRecentInput<c- p>)</c->
+      <c- k>return</c-><c- p>;</c->
+
+    perFrameLayoutShiftData<c- p>.</c->push<c- p>({</c->
+      score<c- o>:</c-> entry<c- p>.</c->value<c- p>,</c->
+      timestamp<c- o>:</c-> entry<c- p>.</c->startTime
+    <c- p>});</c->
+    cumulativeLayoutShiftScore <c- o>+=</c-> entry<c- p>.</c->value<c- p>;</c->
   <c- p>}</c->
 <c- p>}</c->
 
-<c- c1>// Detects new layout shift occurrences and updates the</c->
-<c- c1>// `cumulativeLayoutShiftScore` variable.</c->
+<c- c1>// Observe all layout shift occurrences.</c->
 <c- kr>const</c-> observer <c- o>=</c-> <c- k>new</c-> PerformanceObserver<c- p>((</c->list<c- p>)</c-> <c- p>=></c-> <c- p>{</c->
   updateCLS<c- p>(</c->list<c- p>.</c->getEntries<c- p>());</c->
 <c- p>});</c->
-
 observer<c- p>.</c->observe<c- p>({</c->type<c- o>:</c-> <c- t>'layout-shift'</c-><c- p>,</c-> buffered<c- o>:</c-> <c- kc>true</c-><c- p>});</c->
 
-<c- c1>// Sends the final score to your analytics back end once</c->
-<c- c1>// the page’s lifecycle state becomes hidden.</c->
+<c- c1>// Send final data to an analytics back end once the page is hidden.</c->
 document<c- p>.</c->addEventListener<c- p>(</c-><c- t>'visibilitychange'</c-><c- p>,</c-> <c- p>()</c-> <c- p>=></c-> <c- p>{</c->
   <c- k>if</c-> <c- p>(</c->document<c- p>.</c->visibilityState <c- o>===</c-> <c- t>'hidden'</c-><c- p>)</c-> <c- p>{</c->
     <c- c1>// Force any pending records to be dispatched.</c->
     updateCLS<c- p>(</c->observer<c- p>.</c->takeRecords<c- p>());</c->
 
-    <c- c1>// Send the final score to your analytics back end</c->
-    <c- c1>// (assumes `sendToAnalytics` is defined elsewhere).</c->
-    sendToAnalytics<c- p>({</c->cumulativeLayoutShiftScore<c- p>});</c->
+    <c- c1>// Send data to your analytics back end (assumes `sendToAnalytics` is</c->
+    <c- c1>// defined elsewhere).</c->
+    sendToAnalytics<c- p>({</c->perFrameLayoutShiftData<c- p>,</c-> cumulativeLayoutShiftScore<c- p>});</c->
   <c- p>}</c->
 <c- p>});</c->
 </pre>
