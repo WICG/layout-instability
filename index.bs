@@ -323,7 +323,7 @@ every point in the <a>node impact region</a> of any {{Node}} in the
 
 The <dfn export>impact fraction</dfn> of a {{Document}} |D| is the area of the
 <a>impact region</a> divided by the area of the <a>viewport</a> (or 0 if the
-area of the viewport is 0).
+area of the <a>viewport</a> is 0).
 
 NOTE: Computing the area of the impact region is an instance of the
 <a href="https://en.wikipedia.org/wiki/Klee%27s_measure_problem">Klee measure
