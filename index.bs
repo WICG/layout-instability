@@ -215,15 +215,14 @@ is defined as follows:
     starting point of |N| in |C| is the two-dimensional offset in <a>pixel
     units</a> from the origin of |C| to the <a>flow-relative</a> starting corner
     of the first <a>fragment</a> of the <a>principal box</a> of |N|, calculated
-    as if every <a>transformed element</a> in the <a>node document</a> of |N|
-    had a <a>transformation matrix</a> equal to the identity matrix.
+    as if every <a>transformed element</a> had a <a>transformation matrix</a>
+    equal to the identity matrix.
 
 * If |N| is a <a>text node</a>, the starting point of |N| in |C| is the
     two-dimensional offset in <a>pixel units</a> from the origin of C to the
     <a>flow-relative</a> starting corner of the first <a>line box</a> generated
-    by |N|, calculated as if every <a>transformed element</a> in the
-    <a>node document</a> of |N| had a <a>transformation matrix</a> equal
-    to the identity matrix.
+    by |N|, calculated as if every <a>transformed element</a> had a
+    <a>transformation matrix</a> equal to the identity matrix.
 
 NOTE: The CSS transform is ignored for the calculation of the starting point,
 to ensure that a node is not made unstable by a transform change. However, the CSS
