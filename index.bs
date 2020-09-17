@@ -274,7 +274,7 @@ A {{Node}} |N| is <dfn export>unstable</dfn> if:
 * |N| is either
     * an {{Element}} which generates one or more <a>boxes</a>, or
     * a <a>text node</a>; and
-* the computed value of the <a>visibility</a> property for |N| is "visible"; and
+* the <a>computed value</a> of the <a>visibility</a> property for |N| is "visible"; and
 * |N| <a>has shifted</a> in the coordinate space of the <a>viewport</a>; and
 * |N| <a>has shifted</a> in the coordinate space of the <a>initial containing
     block</a>; and
@@ -292,7 +292,7 @@ unstable solely because of a scroll operation.
 
 ISSUE: We may wish to exclude other kinds of "invisible" nodes in addition to
 visibility:hidden, such as opacity:0, or nodes of nonzero size which paint
-no content.
+no content. See <a href="https://github.com/WICG/layout-instability/issues/61">discussion</a>.
 
 The <dfn export>unstable node set</dfn> of a {{Document}} |D| is the set
 containing every <a>unstable</a> <a>shadow-including descendant</a> of |D|.
