@@ -1319,9 +1319,9 @@ Possible extra rowspan handling
 	}
 </style>
   <link href="https://www.w3.org/StyleSheets/TR/2016/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version a18c8f28, updated Wed Sep 16 17:34:49 2020 -0700" name="generator">
+  <meta content="Bikeshed version b8157505, updated Mon Sep 21 08:44:17 2020 -0700" name="generator">
   <link href="https://wicg.github.io/layout-instability" rel="canonical">
-  <meta content="3047605f637af2f0d3ce441ce7a2a0d553e6f9ff" name="document-revision">
+  <meta content="3c3132d7e74884c9ccc6c05d69966b35dc535f43" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -2146,7 +2146,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Layout Instability API</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-09-17">17 September 2020</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Community Group Report, <time class="dt-updated" datetime="2020-09-21">21 September 2020</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -2602,8 +2602,11 @@ representation</a> of <var>N</var>.</p>
     </ol>
    </div>
    <h2 class="heading settled" data-level="6" id="priv-sec"><span class="secno">6. </span><span class="content">Security &amp; privacy considerations</span><a class="self-link" href="#priv-sec"></a></h2>
-   <p>Layout instability bears an indirect relationship to <a href="https://w3c.github.io/resource-timing/">resource timing</a>, as slow resources could cause intermediate layouts that would not otherwise be performed. Resource timing information can be used by malicious websites for <a data-link-type="dfn" href="https://w3c.github.io/resource-timing/#sec-privacy-security" id="ref-for-sec-privacy-security">statistical fingerprinting</a>.
-The layout instability API only reports instability in the current browsing context. It does not directly provide any aggregation of instability scores across multiple browsing contexts. Developers can implement such aggregation manually, but browsing contexts with different <a href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin">origins</a> would need to cooperate to share instability scores.</p>
+   <p>Layout instability bears an indirect relationship to <a href="https://w3c.github.io/resource-timing/">resource timing</a>, as slow resources could cause intermediate layouts that would not otherwise be performed.
+Resource timing information can be used by malicious websites for <a data-link-type="dfn" href="https://w3c.github.io/resource-timing/#sec-privacy-security" id="ref-for-sec-privacy-security">statistical fingerprinting</a>.
+The layout instability API only reports instability in the current browsing context.
+It does not directly provide any aggregation of instability scores across multiple browsing contexts.
+Developers can implement such aggregation manually, but browsing contexts with different <a href="https://html.spec.whatwg.org/multipage/origin.html#concept-origin">origins</a> would need to cooperate to share instability scores.</p>
   </main>
   <div data-fill-with="conformance">
    <h2 class="no-ref no-num heading settled" id="conformance"><span class="content"> Conformance</span><a class="self-link" href="#conformance"></a></h2>
