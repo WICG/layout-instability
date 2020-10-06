@@ -465,7 +465,7 @@ When asked to <dfn export>report the layout shift</dfn> for an active
     1. Set |newEntry|'s {{PerformanceEntry/entryType}} attribute to
         <code>"layout-shift"</code>.
     1. Set |newEntry|'s {{PerformanceEntry/startTime}} attribute to <a>current
-        high resolution time</a>.
+        high resolution time</a> given |D|'s <a>relevant global object</a>.
     1. Set |newEntry|'s {{PerformanceEntry/duration}} attribute to 0.
     1. Set |newEntry|'s <dfn attribute for=LayoutShift>value</dfn> attribute to
         the current <a>layout shift value</a> of |D|.
