@@ -70,6 +70,8 @@ urlPrefix: https://www.w3.org/TR/geometry-1/; spec: GEOMETRY-1;
     type: dfn; url: #rectangle; text: Rectangle
 urlPrefix: https://wicg.github.io/element-timing/; spec: ELEMENT-TIMING;
     type: dfn; url: #get-an-element; text: get an element;
+urlPrefix: https://www.w3.org/TR/css-color-3; spec: CSS-COLOR-3;
+    type: dfn; url: #transparency; text: opacity;
 </pre>
 <pre class=link-defaults>
 spec:css-break-4; type:dfn; text:fragment
@@ -274,7 +276,8 @@ A {{Node}} |N| is <dfn export>unstable</dfn> if:
 * |N| is either
     * an {{Element}} which generates one or more <a>boxes</a>, or
     * a <a>text node</a>; and
-* the <a>computed value</a> of the <a>visibility</a> property for |N| is "visible"; and
+* currently and <a>in the previous frame</a>, the <a>computed value</a> of the <a>visibility</a> property for |N| equals "visible"; and
+* currently and <a>in the previous frame</a>, the <a>computed value</a> of the <a>opacity</a> property for |N| is not equal to "0"; and
 * |N| <a>has shifted</a> in the coordinate space of the <a>viewport</a>; and
 * |N| <a>has shifted</a> in the coordinate space of the <a>initial containing
     block</a>; and
@@ -289,10 +292,6 @@ A {{Node}} |N| is <dfn export>unstable</dfn> if:
 
 NOTE: The final condition is intended to prevent nodes from being considered
 unstable solely because of a scroll operation.
-
-ISSUE: We may wish to exclude other kinds of "invisible" nodes in addition to
-visibility:hidden, such as opacity:0, or nodes of nonzero size which paint
-no content. See <a href="https://github.com/WICG/layout-instability/issues/61">discussion</a>.
 
 The <dfn export>unstable node set</dfn> of a {{Document}} |D| is the set
 containing every <a>unstable</a> <a>shadow-including descendant</a> of |D|.
