@@ -322,10 +322,10 @@ viewport width</a> and the <a>visual viewport height</a>.
 The <dfn export>move vector</dfn> of a {{Node}} |N| is the two-dimensional
 offset in <a>pixel units</a> from
 
-* the <a>previous frame starting point</a> of |N| in the coordinate space of the
-    <a>viewport</a>, to
-* the <a>starting point</a> of |N| in the coordinate space of the
-    <a>viewport</a>.
+* the <a>previous frame transform-indifferent starting point</a> of |N| in
+    the coordinate space of the <a>viewport</a>, to
+* the <a>transform-indifferent starting point</a> of |N| in the coordinate
+    space of the <a>viewport</a>.
 
 The <dfn export>move distance</dfn> of a {{Node}} |N| is the greater of
 
