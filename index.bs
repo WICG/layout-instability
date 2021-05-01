@@ -413,9 +413,12 @@ The user agent may delay the reporting of layout shifts after a
 until such time as it is known that the event does not begin a fling or scroll
 gesture.
 
-The <a href="https://www.w3.org/TR/uievents/#event-type-mousemove">mousemove</a> and
-<a href="https://www.w3.org/TR/pointerevents/#the-pointermove-event">pointermove</a>
-events are also not excluding inputs.
+The <a href="https://www.w3.org/TR/uievents/#event-type-mousemove">mousemove</a> events after the
+<a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a> event and the
+<a href="https://www.w3.org/TR/pointerevents/#the-pointermove-event">pointermove</a> events after
+the <a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event,
+which trigger dragging elements around or resizing elements but not scrolling, should be excluding
+inputs.
 
 {{LayoutShift}} interface {#sec-layout-shift}
 =======================================
