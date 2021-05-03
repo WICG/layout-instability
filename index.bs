@@ -405,12 +405,12 @@ Excluding inputs generally include
 <a href="https://www.w3.org/TR/uievents/#keydown">keydown</a>,
 <a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a>, and
 <a>change events</a>.
-However, an event whose only effect is to begin or update a fling or scroll
+However, an event whose only effect is to begin or update a flick or scroll
 gesture is not an excluding input.
 
 The user agent may delay the reporting of layout shifts after a
 <a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event
-until such time as it is known that the event does not begin a fling or scroll
+until such time as it is known that the event does not begin a flick or scroll
 gesture.
 
 The <a href="https://www.w3.org/TR/uievents/#event-type-mousemove">mousemove</a> and
