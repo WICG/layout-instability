@@ -416,9 +416,11 @@ gesture.
 The <a href="https://www.w3.org/TR/uievents/#event-type-mousemove">mousemove</a> events after the
 <a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a> event and the
 <a href="https://www.w3.org/TR/pointerevents/#the-pointermove-event">pointermove</a> events after
-the <a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event,
-which trigger dragging elements around or resizing elements but not scrolling, should be excluding
-inputs.
+the <a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event
+with no <a href="https://www.w3.org/TR/pointerevents/#the-pointercancel-event">pointercancel</a>
+event fired, which trigger dragging elements around or resizing elements but not scrolling, should be excluding inputs.
+The <a href="https://www.w3.org/TR/pointerevents/#the-pointercancel-event">pointercancel</a> event is
+fired when touch scroll starts, so it is not an excluding input.
 
 {{LayoutShift}} interface {#sec-layout-shift}
 =======================================
