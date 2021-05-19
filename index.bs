@@ -12,6 +12,7 @@ Repository: https://github.com/WICG/layout-instability
 Abstract: This document defines an API that provides web page authors with insights into the stability of their pages based on movements of the elements on the page.
 Default Highlight: js
 Complain About: accidental-2119 yes
+Include Mdn Panels: no
 </pre>
 
 <pre class=anchors>
