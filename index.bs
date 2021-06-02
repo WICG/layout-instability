@@ -413,14 +413,17 @@ The user agent may delay the reporting of layout shifts after a
 until such time as it is known that the event does not begin a fling or scroll
 gesture.
 
-The <a href="https://www.w3.org/TR/uievents/#event-type-mousemove">mousemove</a> events after the
-<a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a> event and the
-<a href="https://www.w3.org/TR/pointerevents/#the-pointermove-event">pointermove</a> events after
-the <a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event
-with no <a href="https://www.w3.org/TR/pointerevents/#the-pointercancel-event">pointercancel</a>
-event fired, which trigger dragging elements around or resizing elements but not scrolling, should be excluding inputs.
-The <a href="https://www.w3.org/TR/pointerevents/#the-pointercancel-event">pointercancel</a> event is
-fired when touch scroll starts, so it is not an excluding input.
+All the <a href="https://www.w3.org/TR/pointerevents/#the-pointermove-event">pointermove</a> events after
+the <a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event are not excluding inputs,
+but the follow-up <a href="https://www.w3.org/TR/pointerevents/#the-pointerup-event">pointerup</a> event
+without seeing any <a href="https://www.w3.org/TR/pointerevents/#the-pointercancel-event">pointercancel</a> event
+is an excluding input. The <a href="https://www.w3.org/TR/pointerevents/#the-pointercancel-event">pointercancel</a> event
+is fired when the touch scroll starts, so it is not an excluding input.
+
+All the <a href="https://www.w3.org/TR/uievents/#event-type-mousemove">mousemove</a> events between
+a <a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a> event and a
+<a href="https://www.w3.org/TR/uievents/#event-type-mouseup">mouseup</a> event and the
+<a href="https://www.w3.org/TR/uievents/#event-type-mouseup">mouseup</a> event should be excluding inputs.
 
 {{LayoutShift}} interface {#sec-layout-shift}
 =======================================
