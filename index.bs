@@ -408,22 +408,27 @@ Excluding inputs generally include
 However, an event whose only effect is to begin or update a fling or scroll
 gesture is not an excluding input.
 
-The user agent may delay the reporting of layout shifts after a
-<a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event
-until such time as it is known that the event does not begin a fling or scroll
-gesture.
+The user agent buffers the layout shifts of
+<a href="https://www.w3.org/TR/pointerevents/#the-pointermove-event">pointermove</a> events after a
+<a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event and
+<a href="https://www.w3.org/TR/uievents/#event-type-mousemove">mousemove</a> events after a
+<a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a> event until a
+<a href="https://www.w3.org/TR/pointerevents/#the-pointerup-event">pointerup</a> event and a
+<a href="https://www.w3.org/TR/uievents/#event-type-mouseup">mouseup</a> event is received, which turn into touch and mouse drag actions.
+These <a href="https://www.w3.org/TR/pointerevents/#the-pointermove-event">pointermove</a> events,
+<a href="https://www.w3.org/TR/uievents/#event-type-mousemove">mousemove</a> events, 
+<a href="https://www.w3.org/TR/pointerevents/#the-pointerup-event">pointerup</a> event and
+<a href="https://www.w3.org/TR/uievents/#event-type-mouseup">mouseup</a> event are all excluding inputs.
+However, if a <a href="https://www.w3.org/TR/pointerevents/#the-pointercancel-event">pointercancel</a> event
+is received instead, which means a fling or scroll is happending, the accumulate layout shifts score of the previous
+<a href="https://www.w3.org/TR/pointerevents/#the-pointermove-event">pointermove</a> events are reported, and these
+<a href="https://www.w3.org/TR/pointerevents/#the-pointermove-event">pointermove</a> events and the
+<a href="https://www.w3.org/TR/pointerevents/#the-pointercancel-event">pointercancel</a> event are not excluding inputs.
 
-All the <a href="https://www.w3.org/TR/pointerevents/#the-pointermove-event">pointermove</a> events after
-the <a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event are not excluding inputs,
-but the follow-up <a href="https://www.w3.org/TR/pointerevents/#the-pointerup-event">pointerup</a> event
-without seeing any <a href="https://www.w3.org/TR/pointerevents/#the-pointercancel-event">pointercancel</a> event
-is an excluding input. The <a href="https://www.w3.org/TR/pointerevents/#the-pointercancel-event">pointercancel</a> event
-is fired when the touch scroll starts, so it is not an excluding input.
-
-All the <a href="https://www.w3.org/TR/uievents/#event-type-mousemove">mousemove</a> events between
-a <a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a> event and a
-<a href="https://www.w3.org/TR/uievents/#event-type-mouseup">mouseup</a> event and the
-<a href="https://www.w3.org/TR/uievents/#event-type-mouseup">mouseup</a> event should be excluding inputs.
+The <a href="https://www.w3.org/TR/uievents/#event-type-mousemove">mousemove</a> and
+<a href="https://www.w3.org/TR/pointerevents/#the-pointermove-event">pointermove</a> events without seeing any
+<a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a> event and
+<a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event before are also not excluding inputs.
 
 {{LayoutShift}} interface {#sec-layout-shift}
 =======================================
