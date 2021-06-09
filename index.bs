@@ -414,7 +414,7 @@ The user agent buffers the layout shifts of
 <a href="https://www.w3.org/TR/uievents/#event-type-mousemove">mousemove</a> events after a
 <a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a> event until a
 <a href="https://www.w3.org/TR/pointerevents/#the-pointerup-event">pointerup</a> event and a
-<a href="https://www.w3.org/TR/uievents/#event-type-mouseup">mouseup</a> event is received, which turn into touch and mouse drag actions.
+<a href="https://www.w3.org/TR/uievents/#event-type-mouseup">mouseup</a> event are received, which turn into touch and mouse drag actions.
 These <a href="https://www.w3.org/TR/pointerevents/#the-pointermove-event">pointermove</a> events,
 <a href="https://www.w3.org/TR/uievents/#event-type-mousemove">mousemove</a> events, 
 <a href="https://www.w3.org/TR/pointerevents/#the-pointerup-event">pointerup</a> event and
@@ -428,7 +428,7 @@ is received instead, which means a fling or scroll is happending, the accumulate
 The <a href="https://www.w3.org/TR/uievents/#event-type-mousemove">mousemove</a> and
 <a href="https://www.w3.org/TR/pointerevents/#the-pointermove-event">pointermove</a> events without seeing any
 <a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a> event and
-<a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event before are also not excluding inputs.
+<a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event before are not excluding inputs.
 
 {{LayoutShift}} interface {#sec-layout-shift}
 =======================================
