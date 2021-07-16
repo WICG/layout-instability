@@ -408,18 +408,14 @@ Excluding inputs generally include
 However, an event whose only effect is to begin or update a fling or scroll
 gesture is not an excluding input.
 
-The user agent may delay the reporting of layout shifts after a
-<a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event or a
-<a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a> event until a
-<a href="https://www.w3.org/TR/pointerevents/#the-pointerup-event">pointerup</a> event or a
-<a href="https://www.w3.org/TR/uievents/#event-type-mouseup">mouseup</a> event are received, which turn into touch and mouse drag actions.
-These <a href="https://www.w3.org/TR/pointerevents/#the-pointermove-event">pointermove</a> events,
-<a href="https://www.w3.org/TR/uievents/#event-type-mousemove">mousemove</a> events, 
-<a href="https://www.w3.org/TR/pointerevents/#the-pointerup-event">pointerup</a> event and
-<a href="https://www.w3.org/TR/uievents/#event-type-mouseup">mouseup</a> event are all excluding inputs.
-However, if a <a href="https://www.w3.org/TR/pointerevents/#the-pointercancel-event">pointercancel</a> event
-is received instead, which means a fling or scroll is happening, the
-<a href="https://www.w3.org/TR/pointerevents/#the-pointercancel-event">pointercancel</a> event is not an excluding input.
+* When a <a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event or
+a <a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a> event is received, the
+user agent starts buffering the layout shifts.
+* When a <a href="https://www.w3.org/TR/pointerevents/#the-pointercancel-event">pointercancel</a> event
+is received, all the accumulated layout shift score in the buffer is reported, and it is not an excluding input.
+* When a <a href="https://www.w3.org/TR/pointerevents/#the-pointerup-event">pointerup</a> event or a
+<a href="https://www.w3.org/TR/uievents/#event-type-mouseup">mouseup</a> event is received, the buffer is reset and
+the layout shift score is not reported. They are excluding inputs.
 
 {{LayoutShift}} interface {#sec-layout-shift}
 =======================================
