@@ -409,13 +409,15 @@ However, an event whose only effect is to begin or update a fling or scroll
 gesture is not an excluding input.
 
 * When a <a href="https://www.w3.org/TR/pointerevents/#the-pointerdown-event">pointerdown</a> event or
-a <a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a> event is received, the
-user agent starts buffering the layout shifts.
+    a <a href="https://www.w3.org/TR/uievents/#event-type-mousedown">mousedown</a> event is received, the
+    user agent starts buffering the layout shifts.
 * When a <a href="https://www.w3.org/TR/pointerevents/#the-pointercancel-event">pointercancel</a> event
-is received, all the accumulated layout shift score in the buffer is reported, and it is not an excluding input.
+    is received, all the accumulated layout shift score in the buffer is reported, and it is not an excluding input.
 * When a <a href="https://www.w3.org/TR/pointerevents/#the-pointerup-event">pointerup</a> event or a
-<a href="https://www.w3.org/TR/uievents/#event-type-mouseup">mouseup</a> event is received, the buffer is reset and
-the layout shift score is not reported. They are excluding inputs.
+    <a href="https://www.w3.org/TR/uievents/#event-type-mouseup">mouseup</a> event is received, the buffer is reset.
+    The <a href="https://www.w3.org/TR/pointerevents/#the-pointerup-event">pointerup</a> or
+    <a href="https://www.w3.org/TR/uievents/#event-type-mouseup">mouseup</a> event is considered an excluding input
+    and then the layout shifts are reported with no score change.
 
 {{LayoutShift}} interface {#sec-layout-shift}
 =======================================
