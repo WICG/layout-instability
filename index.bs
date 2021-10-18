@@ -271,9 +271,15 @@ The <dfn export>previous frame visual representation</dfn> of a {{Node}} |N| is
 the set which, <a>in the previous frame</a>, was the <a>visual
 representation</a> of |N|.
 
+Each user agent defines a <dfn>number of pixels to significance</dfn>, an integer which is used to
+compute whether movement is considered as a layout shift. This flexibility is provided so that the
+user agent can adjust for performance or based on user experience considerations.
+
 Point |A| <dfn>differs significantly</dfn> from point |B| if |A| and |B|
-differ by 3 or more <a>pixel units</a> in either the horizontal or vertical
-direction.
+differ by <a>number of pixels to significance</a> or more <a>pixel units</a> in either the
+horizontal or vertical direction.
+
+Note: Chrome has defined <a>number of pixels to significance</a> as 3.
 
 Unstable Nodes {#sec-unstable-nodes}
 ------------------------------------
