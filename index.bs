@@ -101,6 +101,14 @@ the severity of layout instability at a particular time.  The method of computin
 it considers both the area of the region impacted by instability and the distance
 by which elements on the page are shifted.
 
+The values exposed by this specification are not meant to be used to serve as
+"layout change observers" for a couple of reasons. First, they are tied to the
+PerformanceObserver, hence the dispatch of the callbacks can be done lazily by
+the user agent if it deems this necessary to avoid impacting performance of the
+site. Second, very small layout shifts can be ignored by the user agent. Thus,
+it is not advised to rely on this API as a way of running any JavaScript that
+impacts the user-visible behavior of a website.
+
 Cumulative Layout Shift (CLS) {#cumulative-layout-shift}
 ---------------------------------------
 
