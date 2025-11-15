@@ -466,6 +466,12 @@ contexts. This allows developers to detect support for the Layout Instability AP
   };
 </pre>
 
+NOTE: The {{LayoutShiftAttribution/previousRect}} and {{LayoutShiftAttribution/currentRect}}
+attributes report rectangles in <a>CSS pixels</a>, consistent with other Web Platform APIs
+such as {{Element/getBoundingClientRect()}}, {{IntersectionObserver}}, and {{ResizeObserver}}.
+This provides a device-independent coordinate system that simplifies correlation of layout
+shift measurements with other DOM measurements.
+
 Each {{LayoutShiftAttribution}} is associated with a {{Node}} (its
 <dfn>associated node</dfn>).
 
@@ -582,10 +588,10 @@ run the following steps:
 1. Set the <a>associated node</a> of |A| to |N|.
 1. Set the <dfn attribute for=LayoutShiftAttribution>previousRect</dfn> attribute
     of |A| to the smallest <a>Rectangle</a> containing the <a>previous frame visual
-    representation</a> of |N|.
+    representation</a> of |N|, in <a>CSS pixels</a>.
 1. Set the <dfn attribute for=LayoutShiftAttribution>currentRect</dfn> attribute
     of |A| to the smallest <a>Rectangle</a> containing the <a>visual
-    representation</a> of |N|.
+    representation</a> of |N|, in <a>CSS pixels</a>.
 1. Return |A|.
 
 </div>
