@@ -75,6 +75,14 @@ urlPrefix: https://www.w3.org/TR/css-color-3; spec: CSS-COLOR-3;
     type: dfn; url: #transparency; text: opacity;
 urlPrefix: https://html.spec.whatwg.org/multipage;
     type: dfn; url: #event-change; text: change event;
+urlPrefix: https://html.spec.whatwg.org/multipage/browsers.html; spec: HTML;
+    type: dfn; url: #browsing-context; text: browsing context;
+    type: dfn; url: #top-level-browsing-context; text: top-level browsing context;
+    type: dfn; url: #child-browsing-context; text: child browsing context;
+    type: dfn; url: #list-of-the-descendant-browsing-contexts; text: descendant browsing context;
+urlPrefix: https://html.spec.whatwg.org/multipage/webappapis.html; spec: HTML;
+    type: dfn; url: #event-loop-processing-model; text: event loop processing model;
+    type: dfn; url: #update-the-rendering; text: update the rendering;
 </pre>
 <pre class=link-defaults>
 spec:css-break-4; type:dfn; text:fragment
@@ -124,12 +132,12 @@ API does not expose these values.)
 
 * The <dfn export>document cumulative layout shift (DCLS) score</dfn> is the
     sum of every <a>layout shift value</a> that is reported inside a single
-    <a href="https://html.spec.whatwg.org/multipage/browsers.html#browsing-context">browsing context</a>.
+    <a>browsing context</a>.
     (The DCLS score does not account for layout instability inside descendant browsing contexts.)
 
 * The <dfn export>cumulative layout shift (CLS) score</dfn> is the sum of every
     <a>layout shift value</a> that is reported inside a <a>top-level browsing context</a>,
-    plus a fraction (the <a>subframe weighting factor</a>) of each <a>layout shift value</a> that is reported inside any <a href="https://html.spec.whatwg.org/multipage/browsers.html#list-of-the-descendant-browsing-contexts">descendant browsing context</a>.
+    plus a fraction (the <a>subframe weighting factor</a>) of each <a>layout shift value</a> that is reported inside any <a>descendant browsing context</a>.
 
 * The <dfn export>subframe weighting factor</dfn> for a <a>layout shift value</a>
     in a <a>child browsing context</a> is the fraction of the top-level <a>viewport</a> that is occupied by the <a>viewport</a> of the child browsing context.
