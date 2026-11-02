@@ -537,8 +537,7 @@ When asked to <dfn export>report the layout shift</dfn> for an active
 
 1. If the current <a>layout shift value</a> of |D| is not 0:
     1. Create a new {{LayoutShift}} object |newEntry| with |D|'s [=relevant realm=].
-    1. Set |newEntry|'s {{PerformanceEntry/name}} attribute to
-        <code>"layout-shift"</code>.
+    1. Set |newEntry|'s {{PerformanceEntry/name}} attribute to the empty string.
     1. Set |newEntry|'s {{PerformanceEntry/entryType}} attribute to
         <code>"layout-shift"</code>.
     1. Set |newEntry|'s {{PerformanceEntry/startTime}} attribute to <a>current
