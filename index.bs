@@ -79,35 +79,63 @@ Cumulative Layout Shift (CLS) {#cumulative-layout-shift}
 
 <em>This section is non-normative.</em>
 
-The <a>layout shift value</a> represents a single point in time, but it is also useful
-to have a value to represent the total instability of the page for the period of
-time the user spends on it.
+The <a>layout shift value</a> describes one animation frame.
+<a href="https://web.dev/articles/cls">Cumulative Layout Shift (CLS)</a> describes
+the largest burst of unexpected layout shifts during the lifetime of a page.
+These scores are computed from the {{LayoutShift}} entries this specification
+exposes, but are not themselves exposed by the API.
 
-To that end we propose two values that a user agent or a developer is able to compute to
-obtain such a representation.  (These definitions are non-normative, because the
-API does not expose these values.)
+Only entries whose {{LayoutShift/hadRecentInput}} is false contribute to the score.
+Process those entries in order of their {{PerformanceEntry/startTime}}, rather
+than the time the observer callback runs.
+
+A <dfn export>layout shift session window</dfn> starts with the first eligible shift.
+Each later eligible shift joins the current window if it occurs less than
+1,000 milliseconds after the previous eligible shift and less than
+5,000 milliseconds after the first shift in that window.
+Otherwise, it starts a new window.
+A gap of exactly 1,000 milliseconds, or a shift exactly 5,000 milliseconds after
+the first shift, starts a new window.
+Excluded entries do not extend a window.
+The score of a window is the sum of its contributing <a>layout shift values</a>.
 
 * The <dfn export>document cumulative layout shift (DCLS) score</dfn> is the
-    sum of every <a>layout shift value</a> that is reported inside a single
-    <a>browsing context</a>.
-    (The DCLS score does not account for layout instability inside descendant browsing contexts.)
-
-* The <dfn export>cumulative layout shift (CLS) score</dfn> is the sum of every
-    <a>layout shift value</a> that is reported inside a <a>top-level browsing context</a>,
-    plus a fraction (the <a>subframe weighting factor</a>) of each <a>layout shift value</a> that is reported inside any <a>descendant browsing context</a>.
-
+    largest <a>layout shift session window</a> score inside a single
+    <a>browsing context</a>, or zero if there are no eligible shifts.
+    It does not include shifts inside descendant browsing contexts.
+* The <dfn export>cumulative layout shift (CLS) score</dfn> is the largest
+    <a>layout shift session window</a> score for a <a>top-level browsing context</a>
+    and its <a>descendant browsing contexts</a>, or zero if there are no eligible shifts.
+    Combine the eligible shifts into one timeline, with times expressed relative
+    to the same origin, before forming windows.
+    Each shift in the top-level context contributes its <a>layout shift value</a>.
+    Each shift in a descendant context contributes its <a>layout shift value</a>
+    multiplied by the <a>subframe weighting factor</a>.
 * The <dfn export>subframe weighting factor</dfn> for a <a>layout shift value</a>
-    in a <a>child browsing context</a> is the fraction of the top-level <a>viewport</a> that is occupied by the <a>viewport</a> of the child browsing context.
+    in a <a>child browsing context</a> is the fraction of the top-level <a>viewport</a>
+    that is occupied by the <a>viewport</a> of the child browsing context.
 
-The cumulative layout shift score is expected to have a general correspondence to
-the severity of layout instability for the lifetime of a page.
+For example, shifts with values 0.1 and 0.2 at 100 and 600 milliseconds form a
+window with score 0.3.
+A shift with value 0.25 at 1,600 milliseconds starts a new window, so the score
+remains 0.3 rather than increasing to 0.55.
+Keep the largest window score as later shifts arrive.
 
-The developer can use this API to compute the DCLS or CLS scores,
-by summing the values as they are reported to the observer,
-and taking the "final" score at the time of the
-{{Document/visibilitychange}} event.
+A {{PerformanceObserver}} in one document does not receive the entries from its
+child frames, so the <a href="#example">usage example</a> computes DCLS for the
+observed document.
+Computing CLS needs the weighted shifts from the descendant contexts too.
+Adding the largest scores from separate documents would combine windows that
+might have occurred at different times.
 
-This strategy is illustrated in the usage example.
+Report the largest score seen so far on {{Document/visibilitychange}} when the
+document becomes hidden, after processing any pending observer records.
+If the user returns to the page, continue observing and report again when it
+becomes hidden next.
+The example illustrates windowing, rather than every part of a production
+measurement. Page lifecycle handling, including starting a new measurement after
+restoration from the back/forward cache, is described in the
+<a href="https://web.dev/articles/cls#measure_cls_in_javascript">CLS measurement guidance</a>.
 
 Source attribution {#source-attribution}
 ----------------------------------------
@@ -140,19 +168,32 @@ Usage example {#example}
 
 <pre class="example highlight">
     let perFrameLayoutShiftData = [];
-    let cumulativeLayoutShiftScore = 0;
+    let documentCumulativeLayoutShiftScore = 0;
+    let sessionScore = 0;
+    let sessionStartTime;
+    let previousShiftTime;
 
-    function updateCLS(entries) {
+    function updateDCLS(entries) {
       for (const entry of entries) {
         // Only count layout shifts without recent user input.
         if (entry.hadRecentInput)
-          return;
+          continue;
 
         perFrameLayoutShiftData.push({
           score: entry.value,
           timestamp: entry.startTime
         });
-        cumulativeLayoutShiftScore += entry.value;
+        if (previousShiftTime !== undefined &&
+            entry.startTime - previousShiftTime < 1000 &&
+            entry.startTime - sessionStartTime < 5000) {
+          sessionScore += entry.value;
+        } else {
+          sessionScore = entry.value;
+          sessionStartTime = entry.startTime;
+        }
+        previousShiftTime = entry.startTime;
+        documentCumulativeLayoutShiftScore = Math.max(
+          documentCumulativeLayoutShiftScore, sessionScore);
 
         // Sources are sorted by impact area in descending order.
         // The first element contributed most to the layout shift.
@@ -164,19 +205,19 @@ Usage example {#example}
 
     // Observe all layout shift occurrences.
     const observer = new PerformanceObserver((list) => {
-      updateCLS(list.getEntries());
+      updateDCLS(list.getEntries());
     });
     observer.observe({type: 'layout-shift', buffered: true});
 
-    // Send final data to an analytics back end once the page is hidden.
+    // Report the current score each time the page becomes hidden.
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') {
         // Force any pending records to be dispatched.
-        updateCLS(observer.takeRecords());
+        updateDCLS(observer.takeRecords());
 
         // Send data to your analytics back end (assumes `sendToAnalytics` is
         // defined elsewhere).
-        sendToAnalytics({perFrameLayoutShiftData, cumulativeLayoutShiftScore});
+        sendToAnalytics({perFrameLayoutShiftData, documentCumulativeLayoutShiftScore});
       }
     });
 </pre>
