@@ -4,7 +4,7 @@
   <title>Layout Instability API</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version caf0aeb39, updated Mon Dec 15 22:51:46 2025 +0000" name="generator">
+  <meta content="Bikeshed version e0b165ae4, updated Mon Nov 2 15:16:49 2026 -0800" name="generator">
   <link href="https://wicg.github.io/layout-instability" rel="canonical">
   <meta content="dark light" name="color-scheme">
   <link href="https://www.w3.org/StyleSheets/TR/2021/dark.css" media="(prefers-color-scheme: dark)" rel="stylesheet" type="text/css">
@@ -301,7 +301,7 @@ pre .property::before, pre .property::after {
 </style>
 <style>/* Boilerplate: style-counters */
 body {
-    counter-reset: example figure issue;
+    counter-reset: example figure issue table;
 }
 .issue {
     counter-increment: issue;
@@ -327,6 +327,13 @@ figcaption {
 figcaption:not(.no-marker)::before {
     content: "Figure " counter(figure) " ";
 }
+
+figure.table figcaption {
+    counter-increment: table;
+}
+figure.table figcaption:not(.no-marker)::before {
+    content: "Table " counter(table) " ";
+}
 </style>
 <style>/* Boilerplate: style-dfn-panel */
 :root {
@@ -351,14 +358,17 @@ figcaption:not(.no-marker)::before {
     height: auto;
     max-height: 500px;
     overflow: auto;
+    margin: 0;
     padding: 0.5em 0.75em;
     font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
     background: var(--dfnpanel-bg);
     color: var(--dfnpanel-text);
     border: outset 0.2em;
     white-space: normal; /* in case it's moved into a pre */
+    inset: auto;
+    position-area: bottom span-right;
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
 }
-.dfn-panel:not(.on) { display: none; }
 .dfn-panel * { margin: 0; padding: 0; text-indent: 0; }
 .dfn-panel > b { display: block; }
 .dfn-panel a { color: var(--dfnpanel-text); }
@@ -378,6 +388,9 @@ figcaption:not(.no-marker)::before {
 .dfn-panel.activated {
     display: inline-block;
     position: fixed;
+    position-area: none;
+    top: auto;
+    right: auto;
     left: 8px;
     bottom: 2em;
     margin: 0 auto;
@@ -434,7 +447,8 @@ figcaption:not(.no-marker)::before {
     opacity: 1;
 }
 
-.dfn-paneled[role="button"] { cursor: help; }
+.dfn-paneled { cursor: help; }
+.dfn-paneled > .dfn-panelbutton { all: unset; }
 
 .highlighted {
     animation: target-fade 3s;
@@ -688,6 +702,30 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     c-[vm] { color: #cb4b16 } /* Name.Variable.Magic */
     c-[il] { color: #657b83 } /* Literal.Number.Integer.Long */
 }
+
+@media print {
+    /* Darken colors for print that would otherwise print too faintly */
+    c-[c]  { color: #555555 } /* Comment */
+    c-[d]  { color: #555555 } /* Comment.Multiline */
+    c-[cp] { color: #555555 } /* Comment.Preproc */
+    c-[c1] { color: #555555 } /* Comment.Single */
+    c-[cs] { color: #555555 } /* Comment.Special */
+    c-[o]  { color: #222222 } /* Operator */
+    c-[p]  { color: #222222 } /* Punctuation */
+    c-[ow] { color: #222222 } /* Operator.Word */
+    c-[s]  { color: #664400 } /* Literal.String */
+    c-[t]  { color: #664400 } /* Literal.String.Single */
+    c-[u]  { color: #664400 } /* Literal.String.Double */
+    c-[sb] { color: #664400 } /* Literal.String.Backtick */
+    c-[sc] { color: #664400 } /* Literal.String.Char */
+    c-[sd] { color: #664400 } /* Literal.String.Doc */
+    c-[se] { color: #664400 } /* Literal.String.Escape */
+    c-[sh] { color: #664400 } /* Literal.String.Heredoc */
+    c-[si] { color: #664400 } /* Literal.String.Interpol */
+    c-[sx] { color: #664400 } /* Literal.String.Other */
+    c-[sr] { color: #664400 } /* Literal.String.Regex */
+    c-[ss] { color: #664400 } /* Literal.String.Symbol */
+}
 </style>
 <style>/* Boilerplate: style-var-click-highlighting */
 /*
@@ -736,7 +774,7 @@ var[data-var-color="6"] { --var-vg: #FFBCF2; }
   <div class="head">
    <h1 class="no-ref p-name" id="title">Layout Instability API</h1>
    <p id="w3c-state"><a href="https://www.w3.org/standards/types/#CG-DRAFT">Draft Community Group Report</a>,
-    <time class="dt-updated" datetime="2025-12-17">17 December 2025</time></p>
+    <time class="dt-updated" datetime="2026-11-04">4 November 2026</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -751,8 +789,8 @@ var[data-var-color="6"] { --var-vg: #FFBCF2; }
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="https://www.w3.org/policies/#copyright">Copyright</a> © 2025 the Contributors to the Layout Instability API Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
-A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available.
+   <p class="copyright" data-fill-with="copyright"><a href="https://www.w3.org/policies/#copyright">Copyright</a> © 2026 the Contributors to the Layout Instability API Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+A human-readable <a href="https://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available.
 </p>
    <hr title="Separator for header">
   </div>
@@ -772,7 +810,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
   there is a limited opt-out and other conditions apply.
 
   Learn more about
-  <a href="http://www.w3.org/community/">W3C Community and Business Groups</a>.
+  <a href="https://www.w3.org/community/">W3C Community and Business Groups</a>.
 </p>
    <p></p>
   </div>
@@ -819,7 +857,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
      <ol class="toc">
       <li><a href="#normative"><span class="secno"></span> <span class="content">Normative References</span></a>
-      <li><a href="#informative"><span class="secno"></span> <span class="content">Informative References</span></a>
+      <li><a href="#informative"><span class="secno"></span> <span class="content">Non-Normative References</span></a>
      </ol>
     <li><a href="#idl-index"><span class="secno"></span> <span class="content">IDL Index</span></a>
     <li><a href="#issues-index"><span class="secno"></span> <span class="content">Issues Index</span></a>
@@ -1179,8 +1217,8 @@ contexts. This allows developers to detect support for the Layout Instability AP
 <pre class="def highlight idl">[<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed" id="ref-for-Exposed①"><c- g>Exposed</c-></a>=<c- n>Window</c->]
 <c- b>interface</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="interface" data-export id="layoutshiftattribution"><code class="highlight"><c- g>LayoutShiftAttribution</c-></code></dfn> {
   <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://dom.spec.whatwg.org/#node" id="ref-for-node①⑤"><c- n>Node</c-></a>? <dfn class="dfn-paneled idl-code" data-dfn-for="LayoutShiftAttribution" data-dfn-type="attribute" data-export data-readonly data-type="Node?" id="dom-layoutshiftattribution-node"><code class="highlight"><c- g>node</c-></code></dfn>;
-  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://drafts.csswg.org/geometry/#domrectreadonly" id="ref-for-domrectreadonly"><c- n>DOMRectReadOnly</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="DOMRectReadOnly" href="#dom-layoutshiftattribution-previousrect" id="ref-for-dom-layoutshiftattribution-previousrect"><c- g>previousRect</c-></a>;
-  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://drafts.csswg.org/geometry/#domrectreadonly" id="ref-for-domrectreadonly①"><c- n>DOMRectReadOnly</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="DOMRectReadOnly" href="#dom-layoutshiftattribution-currentrect" id="ref-for-dom-layoutshiftattribution-currentrect"><c- g>currentRect</c-></a>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://drafts.csswg.org/geometry-1/#domrectreadonly" id="ref-for-domrectreadonly"><c- n>DOMRectReadOnly</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="DOMRectReadOnly" href="#dom-layoutshiftattribution-previousrect" id="ref-for-dom-layoutshiftattribution-previousrect"><c- g>previousRect</c-></a>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://drafts.csswg.org/geometry-1/#domrectreadonly" id="ref-for-domrectreadonly①"><c- n>DOMRectReadOnly</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="DOMRectReadOnly" href="#dom-layoutshiftattribution-currentrect" id="ref-for-dom-layoutshiftattribution-currentrect"><c- g>currentRect</c-></a>;
 };
 </pre>
    <p class="note" role="note"><span class="marker">NOTE:</span> The <code class="idl"><a data-link-type="idl" href="#dom-layoutshiftattribution-previousrect" id="ref-for-dom-layoutshiftattribution-previousrect①">previousRect</a></code> and <code class="idl"><a data-link-type="idl" href="#dom-layoutshiftattribution-currentrect" id="ref-for-dom-layoutshiftattribution-currentrect①">currentRect</a></code>
@@ -1522,7 +1560,7 @@ to cooperate to share instability scores.</p>
    <li>
     <a data-link-type="biblio">[GEOMETRY-1]</a> defines the following terms:
     <ul>
-     <li><span class="dfn-paneled" id="e591032b">DOMRectReadOnly</span>
+     <li><span class="dfn-paneled" id="956a2c19">DOMRectReadOnly</span>
      <li><span class="dfn-paneled" id="f8357697">Rectangle</span>
     </ul>
    <li>
@@ -1620,7 +1658,7 @@ to cooperate to share instability scores.</p>
    <dt id="biblio-element-timing">[ELEMENT-TIMING]
    <dd><a href="https://w3c.github.io/element-timing/"><cite>Element Timing API</cite></a>. Editor's Draft. URL: <a href="https://w3c.github.io/element-timing/">https://w3c.github.io/element-timing/</a>
    <dt id="biblio-geometry-1">[GEOMETRY-1]
-   <dd>Simon Pieters; Chris Harrelson. <a href="https://drafts.fxtf.org/geometry/"><cite>Geometry Interfaces Module Level 1</cite></a>. URL: <a href="https://drafts.fxtf.org/geometry/">https://drafts.fxtf.org/geometry/</a>
+   <dd>Sebastian Zartner; Yehonatan Daniv. <a href="https://drafts.csswg.org/geometry/"><cite>Geometry Interfaces Module Level 1</cite></a>. URL: <a href="https://drafts.csswg.org/geometry/">https://drafts.csswg.org/geometry/</a>
    <dt id="biblio-hr-time-2">[HR-TIME-2]
    <dd>Ilya Grigorik. <a href="https://w3c.github.io/hr-time/"><cite>High Resolution Time Level 2</cite></a>. URL: <a href="https://w3c.github.io/hr-time/">https://w3c.github.io/hr-time/</a>
    <dt id="biblio-html">[HTML]
@@ -1638,7 +1676,7 @@ to cooperate to share instability scores.</p>
    <dt id="biblio-webidl">[WEBIDL]
    <dd>Edgar Chen; Timothy Gu. <a href="https://webidl.spec.whatwg.org/"><cite>Web IDL Standard</cite></a>. Living Standard. URL: <a href="https://webidl.spec.whatwg.org/">https://webidl.spec.whatwg.org/</a>
   </dl>
-  <h3 class="heading no-num no-ref settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
+  <h3 class="heading no-num no-ref settled" id="informative"><span class="content">Non-Normative References</span><a class="self-link" href="#informative"></a></h3>
   <dl>
    <dt id="biblio-intersection-observer">[INTERSECTION-OBSERVER]
    <dd>Stefan Zager; Emilio Cobos Álvarez; Traian Captan. <a href="https://w3c.github.io/IntersectionObserver/"><cite>Intersection Observer</cite></a>. URL: <a href="https://w3c.github.io/IntersectionObserver/">https://w3c.github.io/IntersectionObserver/</a>
@@ -1658,8 +1696,8 @@ to cooperate to share instability scores.</p>
 [<a class="idl-code" data-link-type="extended-attribute" href="https://webidl.spec.whatwg.org/#Exposed"><c- g>Exposed</c-></a>=<c- n>Window</c->]
 <c- b>interface</c-> <a href="#layoutshiftattribution"><code class="highlight"><c- g>LayoutShiftAttribution</c-></code></a> {
   <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://dom.spec.whatwg.org/#node"><c- n>Node</c-></a>? <a data-readonly data-type="Node?" href="#dom-layoutshiftattribution-node"><code class="highlight"><c- g>node</c-></code></a>;
-  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://drafts.csswg.org/geometry/#domrectreadonly"><c- n>DOMRectReadOnly</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="DOMRectReadOnly" href="#dom-layoutshiftattribution-previousrect"><c- g>previousRect</c-></a>;
-  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://drafts.csswg.org/geometry/#domrectreadonly"><c- n>DOMRectReadOnly</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="DOMRectReadOnly" href="#dom-layoutshiftattribution-currentrect"><c- g>currentRect</c-></a>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://drafts.csswg.org/geometry-1/#domrectreadonly"><c- n>DOMRectReadOnly</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="DOMRectReadOnly" href="#dom-layoutshiftattribution-previousrect"><c- g>previousRect</c-></a>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="https://drafts.csswg.org/geometry-1/#domrectreadonly"><c- n>DOMRectReadOnly</c-></a> <a class="idl-code" data-link-type="attribute" data-readonly data-type="DOMRectReadOnly" href="#dom-layoutshiftattribution-currentrect"><c- g>currentRect</c-></a>;
 };
 
 </pre>
@@ -1894,6 +1932,7 @@ let dfnPanelData = {
 "8a524bdc": {"dfnID":"8a524bdc","dfnText":"transformed element","external":true,"refSections":[{"refs":[{"id":"ref-for-transformed-element"}],"title":"2.1. Basic Concepts"}],"url":"https://drafts.csswg.org/css-transforms-1/#transformed-element"},
 "8c800cdf": {"dfnID":"8c800cdf","dfnText":"double","external":true,"refSections":[{"refs":[{"id":"ref-for-idl-double"}],"title":"3. LayoutShift interface"}],"url":"https://webidl.spec.whatwg.org/#idl-double"},
 "90f31f6c": {"dfnID":"90f31f6c","dfnText":"top-level browsing context","external":true,"refSections":[{"refs":[{"id":"ref-for-top-level-browsing-context"}],"title":"1.1. Cumulative Layout Shift (CLS)"}],"url":"https://html.spec.whatwg.org/multipage/browsers.html#top-level-browsing-context"},
+"956a2c19": {"dfnID":"956a2c19","dfnText":"DOMRectReadOnly","external":true,"refSections":[{"refs":[{"id":"ref-for-domrectreadonly"},{"id":"ref-for-domrectreadonly\u2460"}],"title":"4. LayoutShiftAttribution interface"}],"url":"https://drafts.csswg.org/geometry-1/#domrectreadonly"},
 "96c16e60": {"dfnID":"96c16e60","dfnText":"Node","external":true,"refSections":[{"refs":[{"id":"ref-for-node"},{"id":"ref-for-node\u2460"},{"id":"ref-for-node\u2461"},{"id":"ref-for-node\u2462"},{"id":"ref-for-node\u2463"},{"id":"ref-for-node\u2464"}],"title":"2.1. Basic Concepts"},{"refs":[{"id":"ref-for-node\u2465"},{"id":"ref-for-node\u2466"},{"id":"ref-for-node\u2467"},{"id":"ref-for-node\u2468"}],"title":"2.2. Unstable Nodes"},{"refs":[{"id":"ref-for-node\u2460\u24ea"},{"id":"ref-for-node\u2460\u2460"},{"id":"ref-for-node\u2460\u2461"},{"id":"ref-for-node\u2460\u2462"},{"id":"ref-for-node\u2460\u2463"}],"title":"2.3. Layout Shift Value"},{"refs":[{"id":"ref-for-node\u2460\u2464"},{"id":"ref-for-node\u2460\u2465"},{"id":"ref-for-node\u2460\u2466"}],"title":"4. LayoutShiftAttribution interface"},{"refs":[{"id":"ref-for-node\u2460\u2467"},{"id":"ref-for-node\u2460\u2468"}],"title":"5.2. Report the layout shift sources"}],"url":"https://dom.spec.whatwg.org/#node"},
 "9bdefa58": {"dfnID":"9bdefa58","dfnText":"fragment","external":true,"refSections":[{"refs":[{"id":"ref-for-fragment"},{"id":"ref-for-fragment\u2460"}],"title":"2.1. Basic Concepts"}],"url":"https://drafts.csswg.org/css-break-4/#fragment"},
 "9be179f5": {"dfnID":"9be179f5","dfnText":"IntersectionObserver","external":true,"refSections":[{"refs":[{"id":"ref-for-intersectionobserver"}],"title":"4. LayoutShiftAttribution interface"}],"url":"https://w3c.github.io/IntersectionObserver/#intersectionobserver"},
@@ -1928,7 +1967,6 @@ let dfnPanelData = {
 "e2fb9018": {"dfnID":"e2fb9018","dfnText":"visual viewport width","external":true,"refSections":[{"refs":[{"id":"ref-for-dom-visualviewport-width"}],"title":"2.3. Layout Shift Value"}],"url":"https://wicg.github.io/visual-viewport/index.html#dom-visualviewport-width"},
 "e421a890": {"dfnID":"e421a890","dfnText":"visibility","external":true,"refSections":[{"refs":[{"id":"ref-for-visibility"}],"title":"2.2. Unstable Nodes"}],"url":"https://www.w3.org/TR/CSS2/visufx.html#visibility"},
 "e5150578": {"dfnID":"e5150578","dfnText":"visual viewport height","external":true,"refSections":[{"refs":[{"id":"ref-for-dom-visualviewport-height"}],"title":"2.3. Layout Shift Value"}],"url":"https://wicg.github.io/visual-viewport/index.html#dom-visualviewport-height"},
-"e591032b": {"dfnID":"e591032b","dfnText":"DOMRectReadOnly","external":true,"refSections":[{"refs":[{"id":"ref-for-domrectreadonly"},{"id":"ref-for-domrectreadonly\u2460"}],"title":"4. LayoutShiftAttribution interface"}],"url":"https://drafts.csswg.org/geometry/#domrectreadonly"},
 "e9075a2b": {"dfnID":"e9075a2b","dfnText":"change event","external":true,"refSections":[{"refs":[{"id":"ref-for-event-change"}],"title":"2.4. Input Exclusion"}],"url":"https://html.spec.whatwg.org/multipage#event-change"},
 "e99bd18e": {"dfnID":"e99bd18e","dfnText":"relevant global object","external":true,"refSections":[{"refs":[{"id":"ref-for-concept-relevant-global"}],"title":"5.1. Report the layout shift"}],"url":"https://html.spec.whatwg.org/multipage/webappapis.html#concept-relevant-global"},
 "efd1ec5d": {"dfnID":"efd1ec5d","dfnText":"object","external":true,"refSections":[{"refs":[{"id":"ref-for-idl-object"}],"title":"3. LayoutShift interface"}],"url":"https://webidl.spec.whatwg.org/#idl-object"},
@@ -1972,16 +2010,6 @@ let dfnPanelData = {
 
 document.addEventListener("DOMContentLoaded", ()=>{
     genAllDfnPanels();
-
-    document.body.addEventListener("click", (e) => {
-        // If not handled already, just hide all dfn panels.
-        hideAllDfnPanels();
-    });
-});
-
-window.addEventListener("resize", () => {
-    // Pin any visible dfn panel
-    queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(el=>positionDfnPanel(el));
 });
 
 function genAllDfnPanels() {
@@ -1993,16 +2021,17 @@ function genAllDfnPanels() {
             continue;
         }
         dfn.panelData = panelData;
-        insertDfnPopupAction(dfn);
+        genDfnPanel(dfn, panelData);
     }
 }
 
 function genDfnPanel(dfn, { dfnID, url, dfnText, refSections, external }) {
-    const dfnPanel = mk.aside({
-        class: "dfn-panel on",
+    const dfnPanel = mk.dialog({
+        class: "dfn-panel",
         id: `infopanel-for-${dfnID}`,
+        popover: "hint",
         "data-for": dfnID,
-        "aria-labelled-by":`infopaneltitle-for-${dfnID}`,
+        "aria-labelledby": `infopaneltitle-for-${dfnID}`,
         },
         mk.span({id:`infopaneltitle-for-${dfnID}`, style:"display:none"},
             `Info about the '${dfnText}' ${external?"external":""} reference.`),
@@ -2034,106 +2063,34 @@ function genDfnPanel(dfn, { dfnID, url, dfnText, refSections, external }) {
         event.stopPropagation();
         refocusOnTarget(event);
     });
-    dfnPanel.addEventListener('keydown', (event) => {
-        if(event.keyCode == 27) { // Escape key
-            hideDfnPanel({dfnPanel});
-            event.stopPropagation();
-            event.preventDefault();
+
+    dfnPanel.addEventListener('toggle', event=>{
+        if(event.newState == "closed") {
+            unpinDfnPanel(dfnPanel);
         }
     });
 
     dfnPanel.dfn = dfn;
     dfn.dfnPanel = dfnPanel;
+    dfn.after(dfnPanel);
+    const button = mk.button(
+        {
+            class:"dfn-panelbutton",
+            "popovertarget":dfnPanel.id
+        },
+        ...dfn.childNodes
+    );
+    dfn.append(button);
     return dfnPanel;
-}
-
-
-
-function hideAllDfnPanels() {
-    // Delete the currently-active dfn panel.
-    queryAll(".dfn-panel").forEach(dfnPanel=>hideDfnPanel({dfnPanel}));
-}
-
-function showDfnPanel(dfn) {
-    hideAllDfnPanels(); // Only display one at a time.
-
-    dfn.setAttribute("aria-expanded", "true");
-
-    const dfnPanel = genDfnPanel(dfn, dfn.panelData);
-
-    // Give the dfn a unique tabindex, and then
-    // give all the tabbable panel bits successive indexes.
-    let tabIndex = 100;
-    dfn.tabIndex = tabIndex++;
-    const tabbable = dfnPanel.querySelectorAll(":is(a, button)");
-    for (const el of tabbable) {
-        el.tabIndex = tabIndex++;
-    }
-
-    append(document.body, dfnPanel);
-    positionDfnPanel(dfnPanel);
-}
-
-function positionDfnPanel(dfnPanel) {
-    const dfn = dfnPanel.dfn;
-    const dfnPos = getBounds(dfn);
-    dfnPanel.style.top = dfnPos.bottom + "px";
-    dfnPanel.style.left = dfnPos.left + "px";
-
-    const panelPos = dfnPanel.getBoundingClientRect();
-    const panelMargin = 8;
-    const maxRight = document.body.parentNode.clientWidth - panelMargin;
-    if (panelPos.right > maxRight) {
-        const overflowAmount = panelPos.right - maxRight;
-        const newLeft = Math.max(panelMargin, dfnPos.left - overflowAmount);
-        dfnPanel.style.left = newLeft + "px";
-    }
 }
 
 function pinDfnPanel(dfnPanel) {
     // Switch it to "activated" state, which pins it.
     dfnPanel.classList.add("activated");
-    dfnPanel.style.position = "fixed";
-    dfnPanel.style.left = null;
-    dfnPanel.style.top = null;
 }
 
-function hideDfnPanel({dfn, dfnPanel}) {
-    if(!dfnPanel) dfnPanel = dfn.dfnPanel;
-    if(!dfn) dfn = dfnPanel.dfn;
-    dfn.dfnPanel = undefined;
-    dfnPanel.dfn = undefined;
-    dfn.setAttribute("aria-expanded", "false");
-    dfn.tabIndex = undefined;
-    dfnPanel.remove()
-}
-
-function toggleDfnPanel(dfn) {
-    if(dfn.dfnPanel) {
-        hideDfnPanel(dfn);
-    } else {
-        showDfnPanel(dfn);
-    }
-}
-
-function insertDfnPopupAction(dfn) {
-    dfn.setAttribute('role', 'button');
-    dfn.setAttribute('aria-expanded', 'false')
-    dfn.tabIndex = 0;
-    dfn.classList.add('has-dfn-panel');
-    dfn.addEventListener('click', (event) => {
-        toggleDfnPanel(dfn);
-        event.stopPropagation();
-    });
-    dfn.addEventListener('keypress', (event) => {
-        const kc = event.keyCode;
-        // 32->Space, 13->Enter
-        if(kc == 32 || kc == 13) {
-            toggleDfnPanel(dfn);
-            event.stopPropagation();
-            event.preventDefault();
-        }
-    });
+function unpinDfnPanel(dfnPanel) {
+    dfnPanel.classList.remove("activated");
 }
 
 function refocusOnTarget(event) {
@@ -2143,21 +2100,6 @@ function refocusOnTarget(event) {
         // This is needed after browser scrolls to the destination.
         target.focus();
     });
-}
-
-// TODO: shared util
-// Returns the root-level absolute position {left and top} of element.
-function getBounds(el, relativeTo=document.body) {
-    const relativeRect = relativeTo.getBoundingClientRect();
-    const elRect = el.getBoundingClientRect();
-    const top = elRect.top - relativeRect.top;
-    const left = elRect.left - relativeRect.left;
-    return {
-        top,
-        left,
-        bottom: top + elRect.height,
-        right: left + elRect.width,
-    }
 }
 
 function scrollToTargetAndHighlight(event) {
@@ -2411,7 +2353,7 @@ let refsData = {
 "https://drafts.csswg.org/css-writing-modes-4/#block-axis": {"displayText":"block axis","export":true,"for_":[],"level":"4","normative":true,"shortname":"css-writing-modes","spec":"css-writing-modes-4","status":"current","text":"block axis","type":"dfn","url":"https://drafts.csswg.org/css-writing-modes-4/#block-axis"},
 "https://drafts.csswg.org/css-writing-modes-4/#flow-relative": {"displayText":"flow-relative","export":true,"for_":[],"level":"4","normative":true,"shortname":"css-writing-modes","spec":"css-writing-modes-4","status":"current","text":"flow-relative","type":"dfn","url":"https://drafts.csswg.org/css-writing-modes-4/#flow-relative"},
 "https://drafts.csswg.org/cssom-view-1/#dom-element-getboundingclientrect": {"displayText":"getBoundingClientRect()","export":true,"for_":["Element"],"level":"1","normative":true,"shortname":"cssom-view","spec":"cssom-view-1","status":"current","text":"getBoundingClientRect()","type":"method","url":"https://drafts.csswg.org/cssom-view-1/#dom-element-getboundingclientrect"},
-"https://drafts.csswg.org/geometry/#domrectreadonly": {"displayText":"DOMRectReadOnly","export":true,"for_":[],"level":"1","normative":true,"shortname":"geometry","spec":"geometry-1","status":"current","text":"DOMRectReadOnly","type":"interface","url":"https://drafts.csswg.org/geometry/#domrectreadonly"},
+"https://drafts.csswg.org/geometry-1/#domrectreadonly": {"displayText":"DOMRectReadOnly","export":true,"for_":[],"level":"1","normative":true,"shortname":"geometry","spec":"geometry-1","status":"current","text":"DOMRectReadOnly","type":"interface","url":"https://drafts.csswg.org/geometry-1/#domrectreadonly"},
 "https://drafts.csswg.org/resize-observer-1/#resizeobserver": {"displayText":"ResizeObserver","export":true,"for_":[],"level":"1","normative":true,"shortname":"resize-observer","spec":"resize-observer-1","status":"current","text":"ResizeObserver","type":"interface","url":"https://drafts.csswg.org/resize-observer-1/#resizeobserver"},
 "https://html.spec.whatwg.org/multipage#event-change": {"displayText":"change event","export":true,"for_":[],"level":"1","normative":true,"shortname":"layout-instability","spec":"","status":"anchor-block","text":"change event","type":"dfn","url":"https://html.spec.whatwg.org/multipage#event-change"},
 "https://html.spec.whatwg.org/multipage/browsers.html#browsing-context": {"displayText":"browsing context","export":true,"for_":[],"level":"","normative":true,"shortname":"html","spec":"html","status":"anchor-block","text":"browsing context","type":"dfn","url":"https://html.spec.whatwg.org/multipage/browsers.html#browsing-context"},
