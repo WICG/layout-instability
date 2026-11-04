@@ -4,7 +4,7 @@ local: index.bs
 	bikeshed --die-on=warning spec index.bs index.html
 
 index.html: index.bs
-	@ (HTTP_STATUS=$$(curl https://api.csswg.org/bikeshed/ \
+	@ (HTTP_STATUS=$$(curl https://www.w3.org/publications/spec-generator/?type=bikeshed-spec \
 	                       --output index.html \
 	                       --write-out "%{http_code}" \
 	                       --header "Accept: text/plain, text/html" \
