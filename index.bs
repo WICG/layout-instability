@@ -28,8 +28,6 @@ urlPrefix: https://www.w3.org/TR/CSS2/visufx.html; spec: CSS2;
     type: dfn; url: #propdef-visibility; text: visibility;
 urlPrefix: https://www.w3.org/TR/geometry-1/; spec: GEOMETRY-1;
     type: dfn; url: #rectangle; text: Rectangle
-urlPrefix: https://wicg.github.io/element-timing/; spec: ELEMENT-TIMING;
-    type: dfn; url: #get-an-element; text: get an element;
 urlPrefix: https://w3c.github.io/uievents/; spec: UIEVENTS;
     type: event; url: #event-type-keydown; text: keydown;
 urlPrefix: https://html.spec.whatwg.org/multipage/indices.html; spec: HTML;
@@ -455,21 +453,15 @@ shift measurements with other DOM measurements.
 Each {{LayoutShiftAttribution}} is associated with a {{Node}} (its
 <dfn>associated node</dfn>).
 
-The getter of the {{LayoutShiftAttribution/node}} attribute
-of a {{LayoutShiftAttribution}} instance |A| invokes the <a>get an element</a>
-algorithm with the <a>associated node</a> of |A|, and the <a>node document</a>
-of the <a>associated node</a> of |A|, as inputs, and returns the result of
-that algorithm.
+The {{LayoutShiftAttribution/node}} attribute's getter must perform the following steps:
+<div algorithm="LayoutShiftAttribution node">
+    1. If [=this=]'s [=associated node=] is not [=exposed for paint timing=] given null, return null.
+    1. Return [=this=]'s [=associated node=].
+</div>
 
-Note: The use of the <a>get an element</a> algorithm ensures that
+Note: Checking whether the node is [=exposed for paint timing=] ensures that
 the {{LayoutShiftAttribution/node}} attribute
 is null if the attributed node is no longer connected, or is inside a shadow root.
-
-Issue: The <a>get an element</a> algorithm should be moved out of the
-Element Timing spec and into a place more suitable for reuse here.
-
-Issue: The <a>get an element</a> algorithm should be generalized to accept
-{{Node}} instead of {{Element}}.
 
 The {{LayoutShiftAttribution/previousRect}}
 and {{LayoutShiftAttribution/currentRect}}
