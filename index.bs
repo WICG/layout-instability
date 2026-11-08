@@ -587,7 +587,7 @@ Security & privacy considerations {#priv-sec}
 Layout instability bears an indirect relationship to
 [[RESOURCE-TIMING]], as slow resources could cause
 intermediate layouts that would not otherwise be performed. Resource timing information can be used
-by malicious websites for [=statistical fingerprinting=]. The layout instability API only reports
+by malicious websites for [=statistical fingerprinting=]. The Layout Instability API only reports
 instability in the current browsing context. It does not directly provide any aggregation of
 instability scores across multiple browsing contexts. Developers can implement such aggregation
 manually, but browsing contexts with different
