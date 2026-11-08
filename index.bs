@@ -22,12 +22,8 @@ urlPrefix: https://w3c.github.io/resource-timing/; spec: RESOURCE-TIMING;
 urlPrefix: https://www.w3.org/TR/cssom-view-1/; spec: CSSOM-VIEW-1;
     type: dfn; url: #css-pixels; text: CSS pixels;
     type: dfn; url: #viewport; text: viewport;
-    type: dfn; url: #dom-visualviewport-width; text: visual viewport width;
-    type: dfn; url: #dom-visualviewport-height; text: visual viewport height;
-urlPrefix: https://www.w3.org/TR/CSS2/visufx.html; spec: CSS2;
-    type: dfn; url: #propdef-visibility; text: visibility;
 urlPrefix: https://www.w3.org/TR/geometry-1/; spec: GEOMETRY-1;
-    type: dfn; url: #rectangle; text: Rectangle
+    type: dfn; url: #rectangle; text: rectangle;
 urlPrefix: https://w3c.github.io/uievents/; spec: UIEVENTS;
     type: event; url: #event-type-keydown; text: keydown;
 urlPrefix: https://html.spec.whatwg.org/multipage/indices.html; spec: HTML;
@@ -68,7 +64,7 @@ by which elements on the page are shifted.
 
 The values exposed by this specification are not meant to be used to serve as
 "layout change observers" for a couple of reasons. First, they are tied to the
-PerformanceObserver, hence the dispatch of the callbacks can be done lazily by
+{{PerformanceObserver}}, hence the dispatch of the callbacks can be done lazily by
 the user agent if it deems this necessary to avoid impacting performance of the
 site. Second, very small layout shifts can be ignored by the user agent. Thus,
 it is not advised to rely on this API as a way of running any JavaScript that
@@ -79,7 +75,7 @@ Cumulative Layout Shift (CLS) {#cumulative-layout-shift}
 
 <em>This section is non-normative.</em>
 
-The <a>layout shift value</a> represents a single point in time, but it is also useful
+The [=layout shift value=] represents a single point in time, but it is also useful
 to have a value to represent the total instability of the page for the period of
 time the user spends on it.
 
@@ -88,16 +84,16 @@ obtain such a representation.  (These definitions are non-normative, because the
 API does not expose these values.)
 
 * The <dfn export>document cumulative layout shift (DCLS) score</dfn> is the
-    sum of every <a>layout shift value</a> that is reported inside a single
-    <a>browsing context</a>.
+    sum of every [=layout shift value=] that is reported inside a single
+    [=browsing context=].
     (The DCLS score does not account for layout instability inside descendant browsing contexts.)
 
 * The <dfn export>cumulative layout shift (CLS) score</dfn> is the sum of every
-    <a>layout shift value</a> that is reported inside a <a>top-level browsing context</a>,
-    plus a fraction (the <a>subframe weighting factor</a>) of each <a>layout shift value</a> that is reported inside any <a>descendant browsing context</a>.
+    [=layout shift value=] that is reported inside a [=top-level browsing context=],
+    plus a fraction (the [=subframe weighting factor=]) of each [=layout shift value=] that is reported inside any [=descendant browsing context=].
 
-* The <dfn export>subframe weighting factor</dfn> for a <a>layout shift value</a>
-    in a <a>child browsing context</a> is the fraction of the top-level <a>viewport</a> that is occupied by the <a>viewport</a> of the child browsing context.
+* The <dfn export>subframe weighting factor</dfn> for a [=layout shift value=]
+    in a [=child browsing context=] is the fraction of the top-level [=viewport=] that is occupied by the [=viewport=] of the child browsing context.
 
 The cumulative layout shift score is expected to have a general correspondence to
 the severity of layout instability for the lifetime of a page.
@@ -201,19 +197,19 @@ Basic Concepts {#sec-basic-concepts}
 The <dfn export>starting point</dfn> of a {{Node}} |N| in a coordinate space |C|
 is defined as follows:
 
-* If |N| is an {{Element}} which generates one or more <a>boxes</a>, the
-    starting point of |N| in |C| is the two-dimensional offset in <a>pixel
-    units</a> from the origin of |C| to the <a>flow-relative</a> starting corner
-    of the first <a>fragment</a> of the <a>principal box</a> of |N|.
+* If |N| is an {{Element}} which generates one or more [=boxes=], the
+    starting point of |N| in |C| is the two-dimensional offset in [=pixel
+    units=] from the origin of |C| to the [=flow-relative=] starting corner
+    of the first [=fragment=] of the [=principal box=] of |N|.
 
-* If |N| is a <a>text node</a>, the starting point of |N| in |C| is the
-    two-dimensional offset in <a>pixel units</a> from the origin of |C| to the
-    <a>flow-relative</a> starting corner of the first <a>line box</a> generated
+* If |N| is a [=text node=], the starting point of |N| in |C| is the
+    two-dimensional offset in [=pixel units=] from the origin of |C| to the
+    [=flow-relative=] starting corner of the first [=line box=] generated
     by |N|.
 
 The <dfn export>transform-indifferent starting point</dfn> of a {{Node}} |N| in a
-coordinate space |C| is the <a>starting point</a> of |N| in |C|, calculated as if
-every <a>transformed element</a> had a <a>transformation matrix</a> equal to the
+coordinate space |C| is the [=starting point=] of |N| in |C|, calculated as if
+every [=transformed element=] had a [=transformation matrix=] equal to the
 identity matrix.
 
 NOTE: To determine whether a node has shifted, we consider the starting point
@@ -225,90 +221,90 @@ exclusion of points outside of the viewport.
 The <dfn export>visual representation</dfn> of a {{Node}} |N| is defined as
 follows:
 
-* If |N| is an {{Element}} which generates one or more <a>boxes</a>, the visual
+* If |N| is an {{Element}} which generates one or more [=boxes=], the visual
     representation of |N| is the set of all points that lie within the bounds of
-    any <a>fragment</a> of any <a>box</a> generated by |N|, in the coordinate
-    space of the <a>viewport</a>, excluding any points that lie outside of the
-    <a>viewport</a>.
+    any [=fragment=] of any [=box=] generated by |N|, in the coordinate
+    space of the [=viewport=], excluding any points that lie outside of the
+    [=viewport=].
 
-* If |N| is a <a>text node</a>, the visual representation of |N| is the set of
-    all points that lie within the bounds of any <a>line box</a> generated by
-    |N|, in the coordinate space of the <a>viewport</a>, excluding any points
-    that lie outside of the <a>viewport</a>.
+* If |N| is a [=text node=], the visual representation of |N| is the set of
+    all points that lie within the bounds of any [=line box=] generated by
+    |N|, in the coordinate space of the [=viewport=], excluding any points
+    that lie outside of the [=viewport=].
 
 A condition holds <dfn export>in the previous frame</dfn> if it was true at the
 point in time immediately after the most recently completed invocation of the
-<a>report the layout shift</a> algorithm.
+[=report the layout shift=] algorithm.
 
 The <dfn export>previous frame starting point</dfn> of a {{Node}} |N| in a
-coordinate space |C| is the point which, <a>in the previous frame</a>, was the
-<a>starting point</a> of |N| in |C|.
+coordinate space |C| is the point which, [=in the previous frame=], was the
+[=starting point=] of |N| in |C|.
 
 The <dfn export>previous frame transform-indifferent starting point</dfn> of a
-{{Node}} |N| in a coordinate space |C| is the point which, <a>in the previous
-frame</a>, was the <a>transform-indifferent starting point</a> of |N| in |C|.
+{{Node}} |N| in a coordinate space |C| is the point which, [=in the previous
+frame=], was the [=transform-indifferent starting point=] of |N| in |C|.
 
 The <dfn export>previous frame visual representation</dfn> of a {{Node}} |N| is
-the set which, <a>in the previous frame</a>, was the <a>visual
-representation</a> of |N|.
+the set which, [=in the previous frame=], was the [=visual
+representation=] of |N|.
 
 Each user agent defines a <dfn>number of pixels to significance</dfn>, an integer which is used to
 compute whether movement is considered as a layout shift. This flexibility is provided so that the
 user agent can adjust for performance or based on user experience considerations.
 
 Point |A| <dfn>differs significantly</dfn> from point |B| if |A| and |B|
-differ by <a>number of pixels to significance</a> or more <a>pixel units</a> in either the
+differ by [=number of pixels to significance=] or more [=pixel units=] in either the
 horizontal or vertical direction.
 
-Note: Chrome has defined <a>number of pixels to significance</a> as 3.
+Note: Chrome has defined [=number of pixels to significance=] as 3.
 
 Unstable Nodes {#sec-unstable-nodes}
 ------------------------------------
 
 A {{Node}} |N| <dfn export>has shifted</dfn> in a coordinate space |C| if:
 
-* the <a>starting point</a> of |N| in |C| <a>differs significantly</a> from the
-    <a>previous frame starting point</a> of |N| in |C|, and
-* the <a>transform-indifferent starting point</a> of |N| in |C| <a>differs
-    significantly</a> from the <a>previous frame transform-indifferent starting
-    point</a> of |N| in |C|.
+* the [=starting point=] of |N| in |C| [=differs significantly=] from the
+    [=previous frame starting point=] of |N| in |C|, and
+* the [=transform-indifferent starting point=] of |N| in |C| [=differs
+    significantly=] from the [=previous frame transform-indifferent starting
+    point=] of |N| in |C|.
 
 Otherwise, |N| <dfn export>has not shifted</dfn> in |C|.
 
 A {{Node}} |N| is an <dfn export>unstable-candidate</dfn> if:
 * |N| is either
-    * an {{Element}} which generates one or more <a>boxes</a>, or
-    * a <a>text node</a>; and
-* currently and <a>in the previous frame</a>, the <a>computed value</a> of the <a>visibility</a>
-    property for |N| equals "visible"; and
-* currently and <a>in the previous frame</a>, the <a>computed value</a> of the <a>opacity</a>
+    * an {{Element}} which generates one or more [=boxes=], or
+    * a [=text node=]; and
+* currently and [=in the previous frame=], the [=computed value=] of the 'visibility'
+    property for |N| equals ''visibility/visible''; and
+* currently and [=in the previous frame=], the [=computed value=] of the 'opacity'
     property for |N| and for every ancestor of |N| is not equal to 0; and
-* |N| <a>has shifted</a> in the coordinate space of the <a>viewport</a>; and
-* |N| <a>has shifted</a> in the coordinate space of the <a>initial containing
-    block</a>; and
+* |N| [=has shifted=] in the coordinate space of the [=viewport=]; and
+* |N| [=has shifted=] in the coordinate space of the [=initial containing
+    block=]; and
 * there does not exist an {{Element}} |P| such that
-    1. currently and <a>in the previous frame</a>, |P| is in the <a>containing
-        block chain</a> of |N|, and
-    1. currently and <a>in the previous frame</a>, |P| has a <a>scrollable
-        overflow region</a>, and
-    1. |P| is not an <a>unstable-candidate</a>, and
-    1. |N| <a>has not shifted</a> in the coordinate space of the <a>scrollable
-        overflow region</a> of |P|.
+    1. currently and [=in the previous frame=], |P| is in the [=containing
+        block chain=] of |N|, and
+    1. currently and [=in the previous frame=], |P| has a [=scrollable
+        overflow region=], and
+    1. |P| is not an [=unstable-candidate=], and
+    1. |N| [=has not shifted=] in the coordinate space of the [=scrollable
+        overflow region=] of |P|.
 
 NOTE: The condition relating to a scrollable overflow region is intended to prevent
 nodes from being considered unstable solely because of a scroll operation.
 
-A {{Node}} |N| is <dfn export>unstable</dfn> if it is an <a>unstable-candidate</a>
-and it is not an <a>inline clip crosser</a>.
+A {{Node}} |N| is <dfn export>unstable</dfn> if it is an [=unstable-candidate=]
+and it is not an [=inline clip crosser=].
 
 A {{Node}} |N| is an <dfn export>inline clip crosser</dfn> if:
-* |N| is an <a>unstable-candidate</a>;
-* either the <a>visual representation</a> or the <a>previous frame visual representation</a>
+* |N| is an [=unstable-candidate=];
+* either the [=visual representation=] or the [=previous frame visual representation=]
     of |N| is empty; and
-* |N| would not be an <a>unstable-candidate</a> if the phrase "either the horizontal or
-    vertical direction" in the definition of <a>differs significantly</a> were replaced
-    by "the vertical direction" (if the <a>block axis</a> of |N| is vertical)
-    or "the horizontal direction" (if the <a>block axis</a> of |N| is horizontal).
+* |N| would not be an [=unstable-candidate=] if the phrase "either the horizontal or
+    vertical direction" in the definition of [=differs significantly=] were replaced
+    by "the vertical direction" (if the [=block axis=] of |N| is vertical)
+    or "the horizontal direction" (if the [=block axis=] of |N| is horizontal).
 
 NOTE: An example of an inline clip crosser is an element that shifts into or
 out of view by moving in the inline direction across the boundary of a containing
@@ -317,7 +313,7 @@ shift in the block flow direction. This can make it easier to build certain type
 of "carousel" user interface controls.
 
 The <dfn export>unstable node set</dfn> of a {{Document}} |D| is the set
-containing every <a>unstable</a> <a>shadow-including descendant</a> of |D|.
+containing every [=unstable=] [=shadow-including descendant=] of |D|.
 
 NOTE: In the first frame, the previous frame starting point does not exist for
 any node, and therefore the unstable node set is empty.
@@ -325,46 +321,46 @@ any node, and therefore the unstable node set is empty.
 Layout Shift Value {#sec-layout-shift-value}
 --------------------------------------------
 
-The <dfn export>viewport base distance</dfn> is the greater of the <a>visual
-viewport width</a> and the <a>visual viewport height</a>.
+The <dfn export>viewport base distance</dfn> is the greater of the {{VisualViewport/width|visual
+viewport width}} and the {{VisualViewport/height|visual viewport height}}.
 
 The <dfn export>move vector</dfn> of a {{Node}} |N| is the two-dimensional
-offset in <a>pixel units</a> from
+offset in [=pixel units=] from
 
-* the <a>previous frame starting point</a> of |N| in the coordinate space of the
-    <a>viewport</a>, to
-* the <a>starting point</a> of |N| in the coordinate space of the
-    <a>viewport</a>.
+* the [=previous frame starting point=] of |N| in the coordinate space of the
+    [=viewport=], to
+* the [=starting point=] of |N| in the coordinate space of the
+    [=viewport=].
 
 The <dfn export>move distance</dfn> of a {{Node}} |N| is the greater of
 
-* the absolute value of the horizontal component of the <a>move vector</a> of
+* the absolute value of the horizontal component of the [=move vector=] of
     |N|, and
-* the absolute value of the vertical component of the <a>move vector</a> of |N|.
+* the absolute value of the vertical component of the [=move vector=] of |N|.
 
 The <dfn export>maximum move distance</dfn> of a {{Document}} |D| is the
-greatest <a>move distance</a> of any {{Node}} in the <a>unstable node set</a> of
-|D|, or 0 if the <a>unstable node set</a> of |D| is empty.
+greatest [=move distance=] of any {{Node}} in the [=unstable node set=] of
+|D|, or 0 if the [=unstable node set=] of |D| is empty.
 
 The <dfn export>distance fraction</dfn> of a {{Document}} |D| is the lesser of
 
-* the <a>maximum move distance</a> of |D| divided by the <a>viewport base
-    distance</a> (or 0 if the <a>viewport base distance</a> is 0), and
+* the [=maximum move distance=] of |D| divided by the [=viewport base
+    distance=] (or 0 if the [=viewport base distance=] is 0), and
 * 1.0.
 
-The <dfn export>node impact region</dfn> of an <a>unstable</a> {{Node}} |N|
+The <dfn export>node impact region</dfn> of an [=unstable=] {{Node}} |N|
 is the set containing
 
-* every point in the <a>visual representation</a> of |N|, and
-* every point in the <a>previous frame visual representation</a> of |N|.
+* every point in the [=visual representation=] of |N|, and
+* every point in the [=previous frame visual representation=] of |N|.
 
 The <dfn export>impact region</dfn> of a {{Document}} |D| is the set containing
-every point in the <a>node impact region</a> of any {{Node}} in the
-<a>unstable node set</a> of |D|.
+every point in the [=node impact region=] of any {{Node}} in the
+[=unstable node set=] of |D|.
 
 The <dfn export>impact fraction</dfn> of a {{Document}} |D| is the area of the
-<a>impact region</a> divided by the area of the <a>viewport</a> (or 0 if the
-area of the <a>viewport</a> is 0).
+[=impact region=] divided by the area of the [=viewport=] (or 0 if the
+area of the [=viewport=] is 0).
 
 NOTE: Computing the area of the impact region is an instance of the
 <a href="https://en.wikipedia.org/wiki/Klee%27s_measure_problem">Klee measure
@@ -372,8 +368,8 @@ problem</a> in two dimensions. A solution using a sweep line and a segment tree,
 with time complexity <i>O</i>(<i>n</i> lg <i>n</i>) for <i>n</i> unstable nodes,
 is described <a href="https://jeffe.cs.illinois.edu/open/klee.html">here</a>.
 
-The <dfn export>layout shift value</dfn> of a {{Document}} |D| is the <a>impact
-fraction</a> of |D| multiplied by the <a>distance fraction</a> of |D|.
+The <dfn export>layout shift value</dfn> of a {{Document}} |D| is the [=impact
+fraction=] of |D| multiplied by the [=distance fraction=] of |D|.
 
 NOTE: The layout shift value takes into account both the fraction of the
 viewport that has been impacted by layout instability as well as the greatest
@@ -386,13 +382,13 @@ Input Exclusion {#sec-input-exclusion}
 
 An <dfn export>excluding input</dfn> is any event from an input device which
 signals a user's active interaction with the document, or any event which
-directly changes the size of the <a>viewport</a>.
+directly changes the size of the [=viewport=].
 
 Excluding inputs generally include
 {{mousedown}},
 {{keydown}},
 {{pointerdown}}, and
-<a>change events</a>.
+[=change events=].
 However, an event whose only effect is to begin or update a flick or scroll
 gesture is not an excluding input.
 
@@ -420,11 +416,20 @@ events are also not excluding inputs.
 </pre>
 
 All attributes have the values which are assigned to them by the steps to
-<a>report the layout shift</a>.
+[=report the layout shift=].
+
+The <dfn attribute for=LayoutShift>value</dfn> attribute returns the [=layout
+shift value=].
+
+The <dfn attribute for=LayoutShift>hadRecentInput</dfn> attribute returns
+whether an [=excluding input=] occurred recently.
+
+The <dfn attribute for=LayoutShift>lastInputTime</dfn> attribute returns the
+time of the most recent [=excluding input=].
 
 The <dfn attribute for=LayoutShift>sources</dfn> attribute returns a
 {{FrozenArray}} of {{LayoutShiftAttribution}} objects, sorted in descending order
-by impact area. The first element has the largest <a>node impact region</a> and
+by impact area. The first element has the largest [=node impact region=] and
 represents the element that contributed most to the layout shift.
 
 A user agent implementing the Layout Instability API must include
@@ -445,7 +450,7 @@ contexts. This allows developers to detect support for the Layout Instability AP
 </pre>
 
 NOTE: The {{LayoutShiftAttribution/previousRect}} and {{LayoutShiftAttribution/currentRect}}
-attributes report rectangles in <a>CSS pixels</a>, consistent with other Web Platform APIs
+attributes report rectangles in [=CSS pixels=], consistent with other Web Platform APIs
 such as {{Element/getBoundingClientRect()}}, {{IntersectionObserver}}, and {{ResizeObserver}}.
 This provides a device-independent coordinate system that simplifies correlation of layout
 shift measurements with other DOM measurements.
@@ -453,7 +458,7 @@ shift measurements with other DOM measurements.
 Each {{LayoutShiftAttribution}} is associated with a {{Node}} (its
 <dfn>associated node</dfn>).
 
-The {{LayoutShiftAttribution/node}} attribute's getter must perform the following steps:
+The <dfn attribute for=LayoutShiftAttribution>node</dfn> attribute's getter must perform the following steps:
 <div algorithm="LayoutShiftAttribution node">
     1. If [=this=]'s [=associated node=] is not [=exposed for paint timing=] given null, return null.
     1. Return [=this=]'s [=associated node=].
@@ -463,48 +468,48 @@ Note: Checking whether the node is [=exposed for paint timing=] ensures that
 the {{LayoutShiftAttribution/node}} attribute
 is null if the attributed node is no longer connected, or is inside a shadow root.
 
-The {{LayoutShiftAttribution/previousRect}}
-and {{LayoutShiftAttribution/currentRect}}
+The <dfn attribute for=LayoutShiftAttribution>previousRect</dfn>
+and <dfn attribute for=LayoutShiftAttribution>currentRect</dfn>
 attributes have the values which are assigned to them by the steps to
-<a>create the attribution</a>.
+[=create the attribution=].
 
 Processing model {#sec-processing-model}
 ========================================
 
-Within the <a>update the rendering</a> step of the <a>event loop processing
-model</a>, a user agent implementing the Layout Instability API MUST perform the
-following step after the step that invokes the <a>mark paint timing</a>
+Within the [=update the rendering=] step of the [=event loop processing
+model=], a user agent implementing the Layout Instability API MUST perform the
+following step after the step that invokes the [=mark paint timing=]
 algorithm:
 
-1. For each fully active {{Document}} in <em>docs</em>, invoke the algorithm to
-    <a>report the layout shift</a> for that {{Document}}.
+1. For each [=fully active=] {{Document}} in <em>docs</em>, invoke the algorithm to
+    [=report the layout shift=] for that {{Document}}.
 
 Report the layout shift {#sec-report-layout-shift}
 -----------------------------------------------------
 
 <div algorithm="report the layout shift">
-When asked to <dfn export>report the layout shift</dfn> for an active
+When asked to <dfn export>report the layout shift</dfn> for a [=fully active=]
 {{Document}} |D|, run the following steps:
 
-1. If the current <a>layout shift value</a> of |D| is not 0:
+1. If the current [=layout shift value=] of |D| is not 0:
     1. Create a new {{LayoutShift}} object |newEntry| with |D|'s [=relevant realm=].
     1. Set |newEntry|'s {{PerformanceEntry/name}} attribute to the empty string.
     1. Set |newEntry|'s {{PerformanceEntry/entryType}} attribute to
         <code>"layout-shift"</code>.
-    1. Set |newEntry|'s {{PerformanceEntry/startTime}} attribute to <a>current
-        high resolution time</a> given |D|'s <a>relevant global object</a>.
+    1. Set |newEntry|'s {{PerformanceEntry/startTime}} attribute to [=current
+        high resolution time=] given |D|'s [=relevant global object=].
     1. Set |newEntry|'s {{PerformanceEntry/duration}} attribute to 0.
-    1. Set |newEntry|'s <dfn attribute for=LayoutShift>value</dfn> attribute to
-        the current <a>layout shift value</a> of |D|.
-    1. Set |newEntry|'s <dfn attribute for=LayoutShift>lastInputTime</dfn>
-        attribute to the time of the most recent <a>excluding input</a>, or 0 if
+    1. Set |newEntry|'s {{LayoutShift/value}} attribute to
+        the current [=layout shift value=] of |D|.
+    1. Set |newEntry|'s {{LayoutShift/lastInputTime}}
+        attribute to the time of the most recent [=excluding input=], or 0 if
         no excluding input has occurred during the browsing session.
-    1. Set |newEntry|'s <dfn attribute for=LayoutShift>hadRecentInput</dfn>
+    1. Set |newEntry|'s {{LayoutShift/hadRecentInput}}
         attribute to <code>true</code> if {{LayoutShift/lastInputTime}} is less
         than 500 milliseconds in the past, and <code>false</code> otherwise.
     1. Set |newEntry|'s {{LayoutShift/sources}} attribute
-        to the result of invoking the algorithm to <a>report the layout shift
-        sources</a> for |D|.
+        to the result of invoking the algorithm to [=report the layout shift
+        sources=] for |D|.
     1. [=queue a PerformanceEntry|Queue the PerformanceEntry=]
         |newEntry| object.
 
@@ -514,19 +519,19 @@ Report the layout shift sources {#sec-report-layout-shift-sources}
 ------------------------------------------------------------------
 
 <div algorithm="report the layout shift sources">
-When asked to <dfn>report the layout shift sources</dfn> for an active
+When asked to <dfn>report the layout shift sources</dfn> for a [=fully active=]
 {{Document}} |D|, run the following steps:
 
 1. Let |C| be an empty [=list=] of {{Node}} objects.
 
-1. For each member |N| of the <a>unstable node set</a> of |D|, run these steps:
+1. For each member |N| of the [=unstable node set=] of |D|, run these steps:
 
     1. If there exists any member |existingNode| of |C| such that the
-        <a>node impact region</a> of |N| is a subset of the
-        <a>node impact region</a> of |existingNode|, then continue.
+        [=node impact region=] of |N| is a subset of the
+        [=node impact region=] of |existingNode|, then continue.
     1. Otherwise, if there exists any member |existingNode| of |C| such
-        that the <a>node impact region</a> of |existingNode| is a subset
-        of the <a>node impact region</a> of |N|, then [=list/replace=]
+        that the [=node impact region=] of |existingNode| is a subset
+        of the [=node impact region=] of |N|, then [=list/replace=]
         the first such member |existingNode| with |N| in |C|.
     1. Otherwise, if there are fewer than 5 members of |C|, then
         [=list/append=] |N| to |C|.
@@ -537,25 +542,25 @@ When asked to <dfn>report the layout shift sources</dfn> for an active
     1. Otherwise, run these steps:
 
         1. Let |smallest| be the first member of |C| whose
-            <a>node impact region</a> is not greater in area than
-            the <a>node impact region</a> of any other member of |C|.
-        1. If the area of the <a>node impact region</a> of |N| is
-            greater than the area of the <a>node impact region</a>
+            [=node impact region=] is not greater in area than
+            the [=node impact region=] of any other member of |C|.
+        1. If the area of the [=node impact region=] of |N| is
+            greater than the area of the [=node impact region=]
             of |smallest|, then
             [=list/replace=]
             |smallest| with |N| in |C|.
 
 1. [=list/sort in descending order|Sort=]
     |C| in descending order, with |a| being less than |b| if the area
-    of the <a>node impact region</a> of |a| is less than the area
-    of the <a>node impact region</a> of |b|.
+    of the [=node impact region=] of |a| is less than the area
+    of the [=node impact region=] of |b|.
 
     NOTE: This ensures that the {{LayoutShift/sources}}
     attribute exposes layout shift sources in descending order by impact area,
     with the element that contributed most to the layout shift appearing first.
 
 1. Return a {{FrozenArray}} of {{LayoutShiftAttribution}} objects created
-    by running the algorithm to <a>create the attribution</a> once
+    by running the algorithm to [=create the attribution=] once
     for each member of |C|.
 
 </div>
@@ -565,13 +570,13 @@ When asked to <dfn>create the attribution</dfn> for a {{Node}} |N|,
 run the following steps:
 
 1. Create a new {{LayoutShiftAttribution}} object |A| with |N|'s [=relevant realm=].
-1. Set the <a>associated node</a> of |A| to |N|.
-1. Set the <dfn attribute for=LayoutShiftAttribution>previousRect</dfn> attribute
-    of |A| to the smallest <a>Rectangle</a> containing the <a>previous frame visual
-    representation</a> of |N|, in <a>CSS pixels</a>.
-1. Set the <dfn attribute for=LayoutShiftAttribution>currentRect</dfn> attribute
-    of |A| to the smallest <a>Rectangle</a> containing the <a>visual
-    representation</a> of |N|, in <a>CSS pixels</a>.
+1. Set the [=associated node=] of |A| to |N|.
+1. Set the {{LayoutShiftAttribution/previousRect}} attribute
+    of |A| to the smallest [=rectangle=] containing the [=previous frame visual
+    representation=] of |N|, in [=CSS pixels=].
+1. Set the {{LayoutShiftAttribution/currentRect}} attribute
+    of |A| to the smallest [=rectangle=] containing the [=visual
+    representation=] of |N|, in [=CSS pixels=].
 1. Return |A|.
 
 </div>
@@ -580,9 +585,9 @@ Security & privacy considerations {#priv-sec}
 ===============================================
 
 Layout instability bears an indirect relationship to
-<a href="https://w3c.github.io/resource-timing/">resource timing</a>, as slow resources could cause
+[[RESOURCE-TIMING]], as slow resources could cause
 intermediate layouts that would not otherwise be performed. Resource timing information can be used
-by malicious websites for <a>statistical fingerprinting</a>. The layout instability API only reports
+by malicious websites for [=statistical fingerprinting=]. The Layout Instability API only reports
 instability in the current browsing context. It does not directly provide any aggregation of
 instability scores across multiple browsing contexts. Developers can implement such aggregation
 manually, but browsing contexts with different
