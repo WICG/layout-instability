@@ -505,7 +505,8 @@ When asked to <dfn export>report the layout shift</dfn> for a [=fully active=]
         attribute to the time of the most recent [=excluding input=], or 0 if
         no excluding input has occurred during the browsing session.
     1. Set |newEntry|'s {{LayoutShift/hadRecentInput}}
-        attribute to <code>true</code> if {{LayoutShift/lastInputTime}} is less
+        attribute to <code>true</code> if an [=excluding input=] has occurred
+        during the browsing session and {{LayoutShift/lastInputTime}} is less
         than 500 milliseconds in the past, and <code>false</code> otherwise.
     1. Set |newEntry|'s {{LayoutShift/sources}} attribute
         to the result of invoking the algorithm to [=report the layout shift
